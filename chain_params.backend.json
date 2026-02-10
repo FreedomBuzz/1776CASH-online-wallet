@@ -1,0 +1,102 @@
+{
+    "main": {
+        "name": "mainnet",
+        "collateralInSats": 400000000000,
+        "isTestnet": false,
+        "TICKER": "1776CASH",
+        "PUBKEY_PREFIX": [
+            "G"
+        ],
+        "STAKING_PREFIX": "P",
+        "PUBKEY_ADDRESS": [
+            38
+        ],
+        "EXCHANGE_ADDRESS_PREFIX": [
+            2,
+            23,
+            118
+        ],
+        "STAKING_ADDRESS": [
+            57
+        ],
+        "SECRET_KEY": 184,
+        "BIP44_TYPE": 1776,
+        "BIP44_TYPE_LEDGER": 1776,
+        "PROTOCOL_VERSION": 70929,
+        "MASTERNODE_PORT": 17776,
+        "SHIELD_PREFIX": "c7",
+        "Explorers": [
+            {
+                "name": "Local Explorer",
+                "url": "/"
+            }
+        ],
+        "Nodes": [
+            {
+                "name": "Local RPC Bridge",
+                "url": "/mainnet"
+            }
+        ],
+        "Consensus": {},
+        "coinbaseMaturity": 100,
+        "budgetCycleBlocks": 43200,
+        "proposalFee": 5000000000,
+        "proposalFeeConfirmRequirement": 6,
+        "maxPaymentCycles": 6,
+        "maxPayment": 43200000000000,
+        "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
+        "stakeSplitTarget": 50000000000,
+        "mnReward": 600000000,
+        "defaultStartingShieldBlock": 0
+    },
+    "testnet": {
+        "name": "testnet",
+        "collateralInSats": 400000000000,
+        "isTestnet": true,
+        "TICKER": "1776CASH",
+        "PUBKEY_PREFIX": [
+            "G"
+        ],
+        "EXCHANGE_ADDRESS_PREFIX": [
+            2,
+            23,
+            118
+        ],
+        "STAKING_PREFIX": "P",
+        "PUBKEY_ADDRESS": [
+            38
+        ],
+        "STAKING_ADDRESS": [
+            57
+        ],
+        "SECRET_KEY": 184,
+        "BIP44_TYPE": 1,
+        "BIP44_TYPE_LEDGER": 1,
+        "PROTOCOL_VERSION": 70929,
+        "MASTERNODE_PORT": 27776,
+        "SHIELD_PREFIX": "tc7",
+        "Explorers": [
+            {
+                "name": "Local Explorer",
+                "url": "/"
+            }
+        ],
+        "Nodes": [
+            {
+                "name": "Local RPC Bridge",
+                "url": "/testnet"
+            }
+        ],
+        "Consensus": {},
+        "coinbaseMaturity": 15,
+        "budgetCycleBlocks": 144,
+        "proposalFee": 5000000000,
+        "proposalFeeConfirmRequirement": 3,
+        "maxPaymentCycles": 20,
+        "maxPayment": 144000000000,
+        "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
+        "stakeSplitTarget": 50000000000,
+        "mnReward": 600000000,
+        "defaultStartingShieldBlock": 0
+    }
+}
