@@ -10,7 +10,7 @@ export class KoinlyExport extends TxExport {
                 res.push([
                     this.convertToUTCDateTime(t.time * 1000),
                     t.amount,
-                    'PIVX',
+                    '1776CASH',
                     this.getLabel(t.type),
                     t.id,
                 ]);

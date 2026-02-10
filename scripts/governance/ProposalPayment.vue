@@ -27,7 +27,7 @@ const nProposalValue = computed(
             <br />
             <b class="governFiatSize" data-testid="proposalFiat"
                 >{{ nProposalValue.toLocaleString('en-gb') }}
-                <span style="color: #7c1dea">{{
+                <span style="color: #EB1B24">{{
                     strCurrency.toUpperCase()
                 }}</span></b
             ></span

@@ -11,7 +11,13 @@ export class AsyncInterval {
     }
     async #setInterval(cb, timeOut) {
         while (this.#active) {
-            await cb();
+            try {
+                await cb();
+            } catch (e) {
+                // Keep the interval alive even if one tick fails.
+                // Network outages are expected and should not cause unhandled rejections.
+                console.error(e);
+            }
             await sleep(timeOut);
         }
     }

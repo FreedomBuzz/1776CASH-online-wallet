@@ -73,11 +73,21 @@ function importMasternode() {
                             <div class="container">
                                 <span
                                     style="
-                                        color: #af9cc6;
+                                        color: #a6abc0;
                                         margin-bottom: 23px;
                                         display: block;
                                     "
-                                    >This action requires <b>10,000 PIV</b> in
+                                    >This action requires
+                                    <b
+                                        >{{
+                                            (
+                                                cChainParams.current
+                                                    .collateralInSats / COIN
+                                            ).toLocaleString('en-gb')
+                                        }}
+                                        {{ cChainParams.current.TICKER }}</b
+                                    >
+                                    in
                                     collateral.</span
                                 >
                                 <input class="hide-element" type="text" />
@@ -85,7 +95,7 @@ function importMasternode() {
                                     <p
                                         style="
                                             margin-bottom: 6px;
-                                            color: #af9cc6;
+                                            color: #a6abc0;
                                         "
                                     >
                                         Choose your Masternode type

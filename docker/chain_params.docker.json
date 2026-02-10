@@ -27,22 +27,14 @@
         "SHIELD_PREFIX": "c7",
         "Explorers": [
             {
-                "name": "Jimmy",
-                "url": "https://1776cash.com"
-            },
-            {
-                "name": "Michael",
-                "url": "https://1776cash.com"
+                "name": "Local Explorer",
+                "url": "http://localhost:8081"
             }
         ],
         "Nodes": [
             {
-                "name": "Jimmy",
-                "url": "https://1776cash.com/mainnet"
-            },
-            {
-                "name": "Michael",
-                "url": "https://1776cash.com/mainnet"
+                "name": "Local RPC Bridge",
+                "url": "http://localhost:8082/mainnet"
             }
         ],
         "Consensus": {},
@@ -54,8 +46,8 @@
         "maxPayment": 43200000000000,
         "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
         "stakeSplitTarget": 50000000000,
-        "defaultStartingShieldBlock": 0,
-        "mnReward": 600000000
+        "mnReward": 600000000,
+        "defaultStartingShieldBlock": 0
     },
     "testnet": {
         "name": "testnet",
@@ -85,14 +77,14 @@
         "SHIELD_PREFIX": "tc7",
         "Explorers": [
             {
-                "name": "Jimmy",
-                "url": "https://1776cash.com"
+                "name": "Local Explorer",
+                "url": "http://localhost:8081"
             }
         ],
         "Nodes": [
             {
-                "name": "Jimmy",
-                "url": "https://1776cash.com/testnet"
+                "name": "Local RPC Bridge",
+                "url": "http://localhost:8082/testnet"
             }
         ],
         "Consensus": {},
@@ -104,7 +96,7 @@
         "maxPayment": 144000000000,
         "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
         "stakeSplitTarget": 50000000000,
-        "defaultStartingShieldBlock": 0,
-        "mnReward": 600000000
+        "mnReward": 600000000,
+        "defaultStartingShieldBlock": 0
     }
 }

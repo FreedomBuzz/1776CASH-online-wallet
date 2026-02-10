@@ -1,9 +1,9 @@
 <script setup>
-import { nextTick, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, ref, toRefs, watch } from 'vue';
 import { translation } from '../i18n';
 import BottomPopup from '../BottomPopup.vue';
 import { validateAmount } from '../legacy';
-import { COIN } from '../chain_params';
+import { COIN, cChainParams } from '../chain_params';
 import { getAddressColor, promptForContact } from '../contacts-book';
 const props = defineProps({
     unstake: Boolean,
@@ -21,6 +21,7 @@ const amount = defineModel('amount', {
 const ownerAddress = ref('');
 const ownerAddressColor = ref('');
 const amountCurrency = ref('');
+const ticker = computed(() => cChainParams.current.TICKER);
 
 function maxBalance() {
     emit('maxBalance');
@@ -90,22 +91,22 @@ async function selectContact() {
                             <span
                                 class="input-group-text"
                                 style="
-                                    background-color: #e9deff;
-                                    color: #af9cc6;
-                                    border: 2px solid #af9cc6;
+                                    background-color: #DEDEE0;
+                                    color: #b9bfd4;
+                                    border: 2px solid #b9bfd4;
                                     border-left: 0px;
                                 "
                             >
-                                PIVX
+                                {{ ticker }}
                             </span>
                             <span
                                 class="input-group-text p-0"
                                 data-i18n="sendAmountCoinsMax"
                                 style="
                                     cursor: pointer;
-                                    background-color: #7f20ff;
-                                    border: 2px solid #af9cc6;
-                                    color: #e9deff;
+                                    background-color: #202656;
+                                    border: 2px solid #b9bfd4;
+                                    color: #DEDEE0;
                                     font-weight: 700;
                                     padding: 0px 10px 0px 10px !important;
                                 "
@@ -135,9 +136,9 @@ async function selectContact() {
                             <span
                                 class="input-group-text pl-0"
                                 style="
-                                    background-color: #e9deff;
-                                    color: #af9cc6;
-                                    border: 2px solid #af9cc6;
+                                    background-color: #DEDEE0;
+                                    color: #b9bfd4;
+                                    border: 2px solid #b9bfd4;
                                     border-left: 0px;
                                 "
                                 >{{ currency }}</span

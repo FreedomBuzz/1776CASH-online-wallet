@@ -1,26 +1,72 @@
-version: '3'
+version: "3.9"
+
 services:
-    pivx:
+    node:
         build:
-            context: .
-            dockerfile: docker/Dockerfile.pivx
+            context: ${CHAIN_SRC_DIR:-/Users/m1chl/Desktop/PIVX}
+            dockerfile: ${CHAIN_DOCKERFILE:-/Users/m1chl/Desktop/MyPIVXWallet/docker/Dockerfile.node}
+        container_name: 1776cash-node
+        command:
+            - -server=1
+            - -testnet=1
+            - -printtoconsole=1
+            - -txindex=1
+            - -listen=1
+            - -rpcbind=0.0.0.0
+            - -rpcallowip=0.0.0.0/0
+            - -rpcport=27778
+            - -zmqpubhashtx=tcp://0.0.0.0:38349
+            - -zmqpubhashblock=tcp://0.0.0.0:38349
+            - -rpcuser=rpc
+            - -rpcpassword=1776rpc
         ports:
-            - 51470:51470
+            - "27778:27778"
+            - "38349:38349"
+        volumes:
+            - 1776cash-testnet-data:/root/.pivx
+        restart: unless-stopped
+
     explorer:
         build:
-            context: .
-            dockerfile: docker/Dockerfile.explorer
+            context: ${EXPLORER_SRC_DIR:-/Users/m1chl/Desktop/PIVX-BlockExplorer}
+            dockerfile: ${EXPLORER_DOCKERFILE:-/Users/m1chl/Desktop/MyPIVXWallet/docker/Dockerfile.explorer}
+        container_name: 1776cash-explorer
+        depends_on:
+            - node
         ports:
-            - 8081:443
+            - "8081:443"
+        volumes:
+            - ./docker/blockchainconfig.json:/explorer/blockchainconfig.json:ro
+        restart: unless-stopped
+
     rpc:
         build:
-            context: .
-            dockerfile: docker/Dockerfile.rpc
+            context: ${RPC_SRC_DIR:-/Users/m1chl/Desktop/PivxNodeController}
+            dockerfile: ${RPC_DOCKERFILE:-/Users/m1chl/Desktop/MyPIVXWallet/docker/Dockerfile.rpc}
+        container_name: 1776cash-rpc-bridge
+        depends_on:
+            - node
+        env_file:
+            - ./docker/.env.rpc
+        environment:
+            - RPC_HOST=node
         ports:
-            - 8082:8080
+            - "8082:8080"
+        restart: unless-stopped
+
     mpw:
         build:
             context: .
             dockerfile: docker/Dockerfile
+            args:
+                CHAIN_PARAMS_FILE: docker/chain_params.docker.json
+        container_name: 1776cash-wallet
+        depends_on:
+            - explorer
+            - rpc
         ports:
-            - 8080:80
+            - "8080:80"
+        restart: unless-stopped
+
+volumes:
+    1776cash-testnet-data:

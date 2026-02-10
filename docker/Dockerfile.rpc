@@ -1,11 +1,33 @@
-FROM node:alpine3.18
-RUN apk add git
-WORKDIR /node
-RUN git clone https://github.com/PIVX-Labs/PivxNodeController.git
-WORKDIR PivxNodeController
-RUN git checkout url
-COPY docker/.env.rpc .env
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
 RUN npm ci
+
+COPY . .
+
+# Patch upstream controller to support container-to-container RPC host resolution.
+RUN node <<'EOF'
+const fs = require('fs');
+const p = 'rpc.js';
+let s = fs.readFileSync(p, 'utf8');
+
+if (!s.includes('const rpcHost = process.env["RPC_HOST"] || "127.0.0.1";')) {
+    s = s.replace(
+        'const testnetRpcPort = process.env["TESTNET_RPC_PORT"];',
+        'const testnetRpcPort = process.env["TESTNET_RPC_PORT"];\nconst rpcHost = process.env["RPC_HOST"] || "127.0.0.1";'
+    );
+}
+
+s = s.replace(
+    'http://127.0.0.1:${isTestnet ? testnetRpcPort : rpcPort}/',
+    'http://${rpcHost}:${isTestnet ? testnetRpcPort : rpcPort}/'
+);
+
+fs.writeFileSync(p, s);
+EOF
+
 ENTRYPOINT ["node"]
 CMD ["app.js"]
 EXPOSE 8080

@@ -4,10 +4,10 @@ import { Transaction } from '../transaction.js';
 /**
  * @typedef {Object} XPUBAddress
  * @property {string} type - Type of address (always 'XPUBAddress' for XPUBInfo classes)
- * @property {string} name - PIVX address string
+ * @property {string} name - 1776CASH address string
  * @property {string} path - BIP44 path of the address derivation
  * @property {number} transfers - Number of transfers involving the address
- * @property {number} decimals - Decimal places in the amounts (PIVX has 8 decimals)
+ * @property {number} decimals - Decimal places in the amounts (1776CASH has 8 decimals)
  * @property {string} balance - Current balance of the address (satoshi)
  * @property {string} totalReceived - Total ever received by the address (satoshi)
  * @property {string} totalSent - Total ever sent from the address (satoshi)
@@ -318,7 +318,7 @@ export class RPCNodeNetwork extends Network {
      * @param {String} options.url - Url of the proposal
      * @param {Number} options.nPayments - Number of cycles this proposal is gonna last
      * @param {Number} options.start - Superblock of when the proposal is going to start
-     * @param {String} options.address - Base58 encoded PIVX address
+     * @param {String} options.address - Base58 encoded 1776CASH address
      * @param {Number} options.monthlyPayment - Payment amount per cycle in satoshi
      * @param {String} options.txid - Transaction id of the proposal fee
      */
@@ -360,11 +360,13 @@ export class RPCNodeNetwork extends Network {
     #getSaplingParamsUrl() {
         // Hack: sapling params is currently not hosted on the rpc subdomain, but
         // the main domain.
-        // e.g.: Not rpc.duddino.com, but duddino.com/sapling-output.params
+        // e.g.: Not rpc.host.com/mainnet, but host.com/sapling-output.params
         return this.strUrl
             .replace('rpc.', '')
             .replace('rpc2.', '')
-            .replace('/mainnet', '');
+            .replace('/mainnet', '')
+            .replace('/testnet', '')
+            .replace('/regtest', '');
     }
 
     async getSaplingOutput() {
@@ -424,14 +426,14 @@ export class ExplorerNetwork extends Network {
     /**
      * Returns the n-th page of transactions belonging to addr
      * @param {number} nStartHeight - The minimum transaction block height
-     * @param {string} addr - a PIVX address or xpub
+     * @param {string} addr - a 1776CASH address or xpub
      * @param {number} n - index of the page
      * @param {number} pageSize - the maximum number of transactions in the page
      * @returns {Promise<Object>}
      */
     async #getPage(nStartHeight, addr, n, pageSize) {
         if (!(isXPub(addr) || isStandardAddress(addr))) {
-            throw new Error('must provide either a PIVX address or a xpub');
+            throw new Error('must provide either a 1776CASH address or a xpub');
         }
         const strRoot = `/api/v2/${isXPub(addr) ? 'xpub/' : 'address/'}${addr}`;
         const strCoreParams = `?details=txs&from=${nStartHeight}&pageSize=${pageSize}&page=${n}`;
@@ -442,7 +444,7 @@ export class ExplorerNetwork extends Network {
     /**
      * Returns the n-th page of transactions belonging to addr
      * @param {number} nStartHeight - The minimum transaction block height
-     * @param {string} addr - a PIVX address or xpub
+     * @param {string} addr - a 1776CASH address or xpub
      * @param {number} n - index of the page
      * @returns {Promise<Array<Transaction>>}
      */
@@ -463,7 +465,7 @@ export class ExplorerNetwork extends Network {
     /**
      * Returns the number of pages of transactions belonging to addr
      * @param {number} nStartHeight - The minimum transaction block height
-     * @param {string} addr - a PIVX address or xpub
+     * @param {string} addr - a 1776CASH address or xpub
      * @returns {Promise<number>}
      */
     async getNumPages(nStartHeight, addr) {

@@ -64,7 +64,7 @@ function runAction(cAlert) {
             v-for="alert of foldedAlerts.filter(
                 (a) => a.value.original.show !== false
             )"
-            :key="alert.value.original.message"
+            :key="`${alert.value.original.created}-${alert.value.original.message}`"
             data-testid="alerts"
         >
             <Alert

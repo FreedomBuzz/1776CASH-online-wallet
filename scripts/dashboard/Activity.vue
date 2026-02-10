@@ -267,7 +267,7 @@ async function parseTXs(arrTXs) {
 
 const rewardsText = computed(() => {
     const strBal = rewardAmount.value.toLocaleString('en-GB');
-    return `${strBal} <span style="font-size:15px; opacity: 0.55;">${ticker.value}</span>`;
+    return `${strBal} <span style="font-size:15px; opacity: 0.72; color: #f5f7ff;">${ticker.value}</span>`;
 });
 
 watch(
@@ -379,7 +379,8 @@ watch(
                                         <span
                                             style="
                                                 font-weight: 300;
-                                                opacity: 0.55;
+                                                opacity: 0.72;
+                                                color: #f5f7ff;
                                             "
                                             >&nbsp;{{ ticker }}</span
                                         ></b

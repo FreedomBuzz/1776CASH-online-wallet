@@ -2,7 +2,7 @@
 import iWalletPlus from '../../assets/icons/icon-wallet-plus.svg';
 import { useWallets } from '../composables/use_wallet.js';
 import { computed, ref, watch, nextTick } from 'vue';
-import { COIN } from '../chain_params';
+import { COIN, cChainParams } from '../chain_params';
 import { storeToRefs } from 'pinia';
 import { useSettings } from '../composables/use_settings';
 import { sleep } from '../utils';
@@ -36,6 +36,8 @@ const totalBalance = computed(() => {
         );
     }, 0);
 });
+
+const ticker = computed(() => cChainParams.current.TICKER);
 
 const vClickOutside = {
     beforeMount(el, binding) {
@@ -125,7 +127,7 @@ async function restoreWallet() {
                         <span style="margin-right: 5px">{{
                             formatBalance(totalBalance)
                         }}</span>
-                        <span class="walletsTicker">PIV</span>
+                        <span class="walletsTicker">{{ ticker }}</span>
                     </div>
                     <i
                         class="fa-solid fa-angle-down walletsArrow"
@@ -157,7 +159,7 @@ async function restoreWallet() {
                     <span
                         style="
                             text-transform: uppercase;
-                            color: #9221ff;
+                            color: #202656;
                             font-size: 13px;
                             text-wrap: nowrap;
                         "
@@ -169,7 +171,7 @@ async function restoreWallet() {
                     >
                     <span
                         style="
-                            border-top: 1px solid #9221ff;
+                            border-top: 1px solid #202656;
                             width: 100%;
                             height: 4px;
                             margin-left: 13px;
@@ -203,7 +205,7 @@ async function restoreWallet() {
                         color:
                             wallet.getKeyToExport() ===
                             wallets.activeWallet.getKeyToExport()
-                                ? '#9221FF'
+                                ? '#202656'
                                 : '',
                     }"
                 >
@@ -214,13 +216,13 @@ async function restoreWallet() {
                                 (wallet.balance + wallet.shieldBalance) / COIN
                             )
                         }}</span>
-                        <span class="walletsTicker">PIV</span>
+                        <span class="walletsTicker">{{ ticker }}</span>
                     </div>
                 </div>
             </div>
             <hr
                 style="
-                    border-top: 1px solid #9421ff;
+                    border-top: 1px solid #202656;
                     margin-left: -14px;
                     margin-right: -14px;
                 "

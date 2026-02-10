@@ -62,7 +62,7 @@ function isValidStr(str) {
             <h4>{{ translation.popupCreateProposal }}</h4>
             <span
                 style="
-                    color: #af9cc6;
+                    color: #a6abc0;
                     font-size: 1rem;
                     margin-bottom: 23px;
                     display: block;
@@ -80,7 +80,7 @@ function isValidStr(str) {
                     <p
                         style="
                             margin-bottom: 12px;
-                            color: #af9cc6;
+                            color: #a6abc0;
                             font-size: 1rem;
                             font-weight: 500;
                         "
@@ -101,7 +101,7 @@ function isValidStr(str) {
                     <p
                         style="
                             margin-bottom: 12px;
-                            color: #af9cc6;
+                            color: #a6abc0;
                             font-size: 1rem;
                             font-weight: 500;
                         "
@@ -112,7 +112,7 @@ function isValidStr(str) {
                         name="proposalUrl"
                         data-testid="proposalUrl"
                         :max-length="64"
-                        placeholder="https://forum.pivx.org/..."
+                        placeholder="https://forum.1776cash.com/..."
                         :validation-function="
                             (value) => {
                                 const isValid = isValidStr(value);
@@ -132,7 +132,7 @@ function isValidStr(str) {
                     <p
                         style="
                             margin-bottom: 12px;
-                            color: #af9cc6;
+                            color: #a6abc0;
                             font-size: 1rem;
                             font-weight: 500;
                         "
@@ -150,7 +150,7 @@ function isValidStr(str) {
                     <p
                         style="
                             margin-bottom: 12px;
-                            color: #af9cc6;
+                            color: #a6abc0;
                             font-size: 1rem;
                             font-weight: 500;
                         "
@@ -169,7 +169,7 @@ function isValidStr(str) {
                         <p
                             style="
                                 margin-bottom: 12px;
-                                color: #af9cc6;
+                                color: #a6abc0;
                                 font-size: 1rem;
                                 font-weight: 500;
                             "
@@ -329,7 +329,7 @@ function isValidStr(str) {
 <style>
 .proposalConfirmLabel {
     margin-bottom: 0px;
-    color: #af9cc6;
+    color: #a6abc0;
     font-size: 1rem;
     font-weight: 500;
 }
@@ -352,7 +352,7 @@ function isValidStr(str) {
 }
 
 .proposalConfirmText.link a {
-    color: #9221ff;
+    color: #202656;
     font-size: 87.5%;
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
         'Courier New', monospace !important;
@@ -363,6 +363,6 @@ function isValidStr(str) {
 }
 
 code {
-    color: #e9deff;
+    color: #dedee0;
 }
 </style>

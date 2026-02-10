@@ -51,7 +51,7 @@ async function getWalletDataset() {
         arrBreakdown.push({
             type: translation.chartPublicAvailable,
             balance: spendable_bal / COIN,
-            colour: '#C898F5',
+            colour: '#DEDEE0',
         });
     }
 
@@ -61,7 +61,7 @@ async function getWalletDataset() {
         arrBreakdown.push({
             type: 'Shield Available',
             balance: shield_spendable / COIN,
-            colour: '#9131EA',
+            colour: '#202656',
         });
     }
 
@@ -71,7 +71,7 @@ async function getWalletDataset() {
         arrBreakdown.push({
             type: 'Shield Pending',
             balance: shield_pending / COIN,
-            colour: '#5e169c',
+            colour: '#121437',
         });
     }
 
@@ -80,7 +80,7 @@ async function getWalletDataset() {
         arrBreakdown.push({
             type: translation.chartImmatureBalance,
             balance: immature_bal / COIN,
-            colour: '#4A1399',
+            colour: '#4a547d',
         });
     }
     // Staking (Locked)
@@ -89,7 +89,7 @@ async function getWalletDataset() {
         arrBreakdown.push({
             type: 'Staking',
             balance: spendable_cold_bal / COIN,
-            colour: '#721DEA',
+            colour: '#EB1B24',
         });
     }
 
@@ -113,7 +113,7 @@ async function getWalletDataset() {
         arrBreakdown.push({
             type: 'Masternodes',
             balance: masternodeValue,
-            colour: 'rgba(19, 13, 30, 1)',
+            colour: 'rgba(10, 13, 34, 1)',
         });
     return arrBreakdown;
 }
@@ -123,7 +123,7 @@ async function getWalletDataset() {
  * @param {Array<WalletDatasetPoint>} arrBreakdown - The dataset to render
  */
 export async function generateWalletBreakdown(arrBreakdown) {
-    // Render the PIVX logo in the centre of the "Wallet Doughnut"
+    // Render the 1776CASH logo in the centre of the "Wallet Doughnut"
     const image = new Image();
     const svg = (await import('../assets/icons/image-pivx-logo.svg')).default;
     const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
@@ -166,7 +166,7 @@ export async function generateWalletBreakdown(arrBreakdown) {
                 legend: {
                     display: false,
                     labels: {
-                        color: '#FFFFFF',
+                        color: '#DEDEE0',
                         font: {
                             size: 16,
                         },
@@ -202,7 +202,7 @@ export function generateLegendBreakdown(arrBreakdown) {
                 )} <span style="opacity:0.55; font-size:13px;">${
             cChainParams.current.TICKER
         }</span></span>
-                <span style="font-size:13px; color:#c0b1d2;">${
+                <span style="font-size:13px; color:#aeb7d0;">${
                     cPoint.type
                 }</span>
             </div>

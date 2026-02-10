@@ -16,7 +16,7 @@ function exportToCsv() {
 
     const downloadLink = document.createElement('a');
     downloadLink.href = csvURL;
-    downloadLink.download = 'MPW-transactions.csv';
+    downloadLink.download = '1776CASH-transactions.csv';
 
     document.body.appendChild(downloadLink);
     downloadLink.click();
@@ -35,7 +35,7 @@ function exportToCsv() {
             <template #header>
                 <h3
                     class="modal-title"
-                    style="text-align: center; width: 100%; color: #8e21ff"
+                    style="text-align: center; width: 100%; color: #EB1B24"
                 >
                     {{ translation.exportToCsv }}
                 </h3>

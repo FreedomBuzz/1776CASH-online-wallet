@@ -41,13 +41,13 @@ watch(
                 data-target="#walletBreakdownModal"
             >
                 <span class="dashboardActionIcon" v-html="pStats"></span><br />
-                <span style="color: #eddaffc7">{{ translation.balance }}</span>
+                <span style="color: #dedee0c7">{{ translation.balance }}</span>
             </div>
             <div class="col-3 p-0 cur-pointer">
                 <a :href="walletUrl" target="_blank">
                     <span class="dashboardActionIcon" v-html="pCompass"></span
                     ><br />
-                    <span style="color: #eddaffc7">{{
+                    <span style="color: #dedee0c7">{{
                         translation.explorer
                     }}</span>
                 </a>
@@ -63,7 +63,7 @@ watch(
             >
                 <span class="dashboardActionIcon" v-html="pAddressBook"></span
                 ><br />
-                <span style="color: #eddaffc7">{{ translation.contacts }}</span>
+                <span style="color: #dedee0c7">{{ translation.contacts }}</span>
             </div>
             <div
                 class="col-3 p-0 cur-pointer"
@@ -71,7 +71,7 @@ watch(
                 data-target="#redeemCodeModal"
             >
                 <span class="dashboardActionIcon" v-html="pGift"></span><br />
-                <span style="color: #eddaffc7">{{ translation.giftCode }}</span>
+                <span style="color: #dedee0c7">{{ translation.giftCode }}</span>
             </div>
         </div>
     </center>

@@ -69,7 +69,7 @@ const proposalStatus = computed(() => {
             :class="proposalStatus.statusClass"
             >{{ proposalStatus.status }}</span
         ><br />
-        <span style="color: #9482b1" data-testid="proposalFunding"
+        <span style="color: #9aa2c8" data-testid="proposalFunding"
             >({{ proposalStatus.funding }})</span
         ><br />
     </span>
@@ -78,11 +78,11 @@ const proposalStatus = computed(() => {
             font-size: 12px;
             line-height: 15px;
             display: block;
-            color: #9482b1;
+            color: #9aa2c8;
         "
         data-testid="proposalPercentage"
     >
-        <b style="color: #e9deff"
+        <b style="color: #dedee0"
             >{{ proposalStatus.netYesPercent.toFixed(1) }}%</b
         ><br />
         {{ translation.proposalNetYes }}

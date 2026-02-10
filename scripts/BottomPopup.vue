@@ -45,7 +45,7 @@ defineEmits(['close']);
     min-height: 155px;
     transition: 0.4s;
     font-size: 15px;
-    border: 1px solid #42117e;
+    border: 1px solid #1d265a;
 }
 @media (min-width: 768px) {
     .bottomPopup {
@@ -65,7 +65,7 @@ defineEmits(['close']);
 }
 
 .bottomPopup .sendHeaderoText {
-    color: #e9deff;
+    color: #dedee0;
     font-size: 21px;
     font-weight: 500;
     font-family: Montserrat, sans-serif !important;

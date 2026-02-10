@@ -14,7 +14,14 @@ import { sleep } from './utils.js';
  *
  * @todo Allow an array of Oracle instances for better privacy and decentralisation
  */
-export const ORACLE_BASE = 'https://pivxla.bz/oracle/api/v1';
+// Use same-origin by default to avoid browser CORS restrictions in development.
+// In production on 1776cash.com this resolves to:
+// https://1776cash.com/oracle/api/v1
+export const ORACLE_BASE = '/oracle/api/v1';
+// Oracle is not deployed yet; keep UI stable but avoid network fetches.
+export const ORACLE_ENABLED = false;
+const ORACLE_RETRY_LIMIT = 3;
+const FALLBACK_CURRENCIES = ['usd', 'eur', 'gbp', 'btc'];
 
 /**
  * An Oracle instance
@@ -31,6 +38,55 @@ export class Oracle {
      * This flag massively lowers bandwidth by only fetching the bulk once, falling to per-currency APIs afterwards.
      */
     #fLoadedCurrencies = false;
+    #nOracleFailures = 0;
+    #fOracleDisabled = false;
+
+    constructor() {
+        // Avoid network calls when oracle is intentionally disabled.
+        // Keep this path side-effect free (no debug logging) to prevent
+        // early startup issues during module initialization.
+        if (!ORACLE_ENABLED) {
+            this.#fOracleDisabled = true;
+            this.#ensureFallbackCurrencies();
+            this.#fLoadedCurrencies = true;
+        }
+    }
+
+    #markOracleSuccess() {
+        this.#nOracleFailures = 0;
+    }
+
+    #ensureFallbackCurrencies() {
+        const now = Math.floor(Date.now() / 1000);
+        for (const currency of FALLBACK_CURRENCIES) {
+            if (!this.mapCurrencies.has(currency)) {
+                this.mapCurrencies.set(currency, {
+                    currency,
+                    value: 0,
+                    last_updated: now,
+                });
+            }
+        }
+    }
+
+    #disableOracle(reason = 'oracle unavailable') {
+        if (this.#fOracleDisabled) return;
+        this.#fOracleDisabled = true;
+        this.#ensureFallbackCurrencies();
+        this.#fLoadedCurrencies = true;
+        debugWarn(DebugTopics.NET, `Oracle disabled: ${reason}`);
+    }
+
+    #markOracleFailure(reason) {
+        this.#nOracleFailures += 1;
+        debugWarn(
+            DebugTopics.NET,
+            `Oracle request failed (${this.#nOracleFailures}/${ORACLE_RETRY_LIMIT}): ${reason}`
+        );
+        if (this.#nOracleFailures >= ORACLE_RETRY_LIMIT) {
+            this.#disableOracle(reason);
+        }
+    }
 
     /**
      * Get the cached price in a specific display currency
@@ -57,14 +113,23 @@ export class Oracle {
      * @return {Promise<Number>}
      */
     async getPrice(strCurrency) {
+        if (this.#fOracleDisabled) return this.getCachedPrice(strCurrency);
         try {
             const cReq = await fetch(`${ORACLE_BASE}/price/${strCurrency}`);
 
             // If the request fails, we'll try to fallback to cache, otherwise return a safe empty state
-            if (!cReq.ok) return this.getCachedPrice(strCurrency);
+            if (!cReq.ok) {
+                if (cReq.status === 404) {
+                    this.#disableOracle('oracle route not found (404)');
+                    return this.getCachedPrice(strCurrency);
+                }
+                this.#markOracleFailure(`HTTP ${cReq.status} on price`);
+                return this.getCachedPrice(strCurrency);
+            }
 
             /** @type {Currency} */
             const cCurrency = await cReq.json();
+            this.#markOracleSuccess();
 
             // Update it
             this.mapCurrencies.set(strCurrency, cCurrency);
@@ -79,6 +144,7 @@ export class Oracle {
                     ' price!'
             ),
                 debugWarn(DebugTopics.NET, e);
+            this.#markOracleFailure(e?.message || 'price fetch failed');
             return this.getCachedPrice(strCurrency);
         }
     }
@@ -92,14 +158,27 @@ export class Oracle {
      * @returns {Promise<Array<Currency>>} - A list of Oracle-supported display currencies
      */
     async getCurrencies() {
+        if (this.#fOracleDisabled) return this.getCachedCurrencies();
         try {
             const cReq = await fetch(`${ORACLE_BASE}/currencies`);
 
             // If the request fails, we'll try to fallback to cache, otherwise return a safe empty state
-            if (!cReq.ok) return this.getCachedCurrencies();
+            if (!cReq.ok) {
+                if (cReq.status === 404) {
+                    this.#disableOracle('oracle route not found (404)');
+                    return this.getCachedCurrencies();
+                }
+                this.#markOracleFailure(`HTTP ${cReq.status} on currencies`);
+                return this.getCachedCurrencies();
+            }
 
             /** @type {Array<Currency>} */
             const arrCurrencies = await cReq.json();
+            if (!Array.isArray(arrCurrencies) || arrCurrencies.length === 0) {
+                this.#markOracleFailure('empty/invalid currencies payload');
+                return this.getCachedCurrencies();
+            }
+            this.#markOracleSuccess();
 
             // Loop each currency and update the cache
             for (const cCurrency of arrCurrencies) {
@@ -112,6 +191,7 @@ export class Oracle {
         } catch (e) {
             debugWarn(DebugTopics.NET, 'Oracle: Failed to fetch currencies!'),
                 debugWarn(DebugTopics.NET, e);
+            this.#markOracleFailure(e?.message || 'currencies fetch failed');
 
             return this.getCachedCurrencies();
         }

@@ -429,7 +429,7 @@ export async function renderSavedPromos() {
                      cCode.address
                  }" class="wallet-code ptr" onclick="MPW.toClipboard(this)" data-copy="${sanitizeHTML(
             cCode.code
-        )}" style="display: inline !important; color: #e83e8c;">${sanitizeHTML(
+        )}" style="display: inline !important; color: #eb1b24;">${sanitizeHTML(
             trimmedCode
         )}</code></td>
                  <td>${fNew || !cCode.fSynced ? '...' : nBal}</td>
@@ -456,7 +456,7 @@ export async function renderSavedPromos() {
 export async function promosToCSV() {
     const arrCSV = [
         // Titles
-        ['Promo Code', 'PIV (Remaining)', 'Funding Address'],
+        ['Promo Code', '1776CASH (Remaining)', 'Funding Address'],
         // Content
     ];
 
@@ -557,7 +557,7 @@ export async function updatePromoCreationTick(fRecursive = false) {
         strHTML =
             `
              <tr>
-                 <td><code class="wallet-code active" style="display: inline !important; color: #e83e8c!important;">${trimmedCode}</code></td>
+                 <td><code class="wallet-code active" style="display: inline !important; color: var(--theme-accent);">${trimmedCode}</code></td>
                  <td>${cThread.amount}</td>
                  <td>
                     <i class="fa-solid fa-ban ptr" style="margin-right:4px;" onclick="MPW.deletePromoCode('${cThread.code}')"></i>

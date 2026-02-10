@@ -30,6 +30,7 @@ export {
     toggleAdvancedMode,
     toggleAutoLockWallet,
     changePassword,
+    setThemeMode,
 } from './settings.js';
 export {
     promoConfirm,

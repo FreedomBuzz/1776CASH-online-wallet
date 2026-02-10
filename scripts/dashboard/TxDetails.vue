@@ -59,7 +59,7 @@ const emit = defineEmits(['close']);
 }
 
 .memo-title {
-    color: #d5adff !important;
+    color: #7f91d6 !important;
     font-size: 22px;
     font-weight: 600;
     margin: 0;
@@ -69,7 +69,7 @@ const emit = defineEmits(['close']);
 }
 
 .memo-icon {
-    color: #9221ff;
+    color: #202656;
     font-size: 20px;
 }
 
@@ -87,7 +87,7 @@ const emit = defineEmits(['close']);
         rgba(43, 9, 80, 0.4),
         rgba(115, 0, 255, 0.1)
     );
-    border: 1px solid #6222ab;
+    border: 1px solid #1d265a;
     border-radius: 12px;
     padding: 20px;
     transition: all 0.3s ease-in-out;
@@ -102,12 +102,12 @@ const emit = defineEmits(['close']);
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(to bottom, #9221ff, #6410c7);
+    background: linear-gradient(to bottom, #202656, #202656);
     border-radius: 2px;
 }
 
 .memo-text {
-    color: #e9deff;
+    color: #DEDEE0;
     font-size: 16px;
     line-height: 1.6;
     font-family: 'Montserrat', sans-serif;
@@ -123,7 +123,7 @@ const emit = defineEmits(['close']);
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #7a7387;
+    color: #9aa2c8;
     font-size: 16px;
     gap: 15px;
     padding: 30px 20px;
@@ -131,7 +131,7 @@ const emit = defineEmits(['close']);
 
 .empty-icon {
     font-size: 32px;
-    color: #7a7387;
+    color: #9aa2c8;
     opacity: 0.6;
 }
 

@@ -10,6 +10,7 @@ import {
     isXPub,
     sanitizeHTML,
 } from './misc.js';
+import { BIP21_PREFIX } from './chain_params.js';
 import { scanQRCode } from './scanner.js';
 import { activeWallet, hasEncryptedWallet } from './wallet.js';
 import { useWallets } from './composables/use_wallet.js';
@@ -105,8 +106,8 @@ export async function renderContacts(account, fPrompt = false) {
     if (!fPrompt) {
         // Lastly, inject the "Add Account" UI to the table
         strHTML += `
-            <div class="shadowInnerCard" style="font-family: 'Montserrat'; text-align: start; margin: 0px 15px; border-radius: 10px; border: 1px solid #42117e; background-color: #25183d; padding: 13px 13px; margin-bottom: 28px;">
-                <label style="color:#af9cc6; font-size: 15px; font-weight: 500; margin-bottom: 17px;">Add new contact</label>
+            <div class="shadowInnerCard" style="font-family: 'Montserrat'; text-align: start; margin: 0px 15px; border-radius: 10px; border: 1px solid #1d265a; background-color: #161a45; padding: 13px 13px; margin-bottom: 28px;">
+                <label style="color:#b9bfd4; font-size: 15px; font-weight: 500; margin-bottom: 17px;">Add new contact</label>
                 <input id="contactsNameInput" style="margin-bottom:17px;" placeholder="${translation.name}" autocomplete="nope">
                 <input id="contactsAddressInput" style="margin-bottom:17px;" placeholder="${translation.addressOrXPub}" autocomplete="nope">
 
@@ -132,7 +133,7 @@ export async function renderContacts(account, fPrompt = false) {
         // Render an editable Contacts Table
         strHTML += `<div class="shadowInnerCard${
             account.contacts.length === 0 ? ' d-none' : ''
-        }" style="font-family: 'Montserrat'; text-align: start; margin: 0px 15px; border-radius: 10px; border: 1px solid #42117e; background-color: #25183d; padding: 13px 9px;">
+        }" style="font-family: 'Montserrat'; text-align: start; margin: 0px 15px; border-radius: 10px; border: 1px solid #1d265a; background-color: #161a45; padding: 13px 9px;">
         <div style="max-height: 270px; overflow: auto;">`;
 
         for (const cContact of account.contacts || []) {
@@ -140,18 +141,18 @@ export async function renderContacts(account, fPrompt = false) {
                 ? cContact.pubkey.slice(0, 32) + '…'
                 : cContact.pubkey;
             strHTML += `
-            <div class="d-flex px-3 py-3 contactItem" style="padding-left: 10px !important; border-bottom: 1px solid #461584;">
+            <div class="d-flex px-3 py-3 contactItem" style="padding-left: 10px !important; border-bottom: 1px solid #1d265a;">
                 <div>
-                    <img onclick="MPW.guiAddContactImage('${i}')" class="ptr" style="margin-right:20px; width: 50px; height: 50px; border-radius: 100%; background-color: white; border: 2px solid #d5adff;" ${
+                    <img onclick="MPW.guiAddContactImage('${i}')" class="ptr" style="margin-right:20px; width: 50px; height: 50px; border-radius: 100%; background-color: white; border: 2px solid #7f91d6;" ${
                 cContact.icon ? 'src="' + cContact.icon + '"' : ''
             }>
                 </div>
                 <div style="width: 100%; line-height: 15px; margin-top: -6px;">
-                    <span id="contactsName${i}" onclick="MPW.guiEditContactNamePrompt('${i}')" style="word-wrap: anywhere; cursor:pointer; color: #e9deff; font-weight: 500; margin-top: 8px; display: block;">${sanitizeHTML(
+                    <span id="contactsName${i}" onclick="MPW.guiEditContactNamePrompt('${i}')" style="word-wrap: anywhere; cursor:pointer; color: #DEDEE0; font-weight: 500; margin-top: 8px; display: block;">${sanitizeHTML(
                 cContact.label
             )}</span>
                     <span id="contactsAddress${i}" style="word-wrap: anywhere; font-size: 13px; position: relative; top: 10px;">
-                        <code style="background-color: #1a122d; color: #7c659e; padding: 7px 10px; font-size: 13px; border-radius: 9px;">
+                        <code style="background-color: #161a45; color: #a6abc0; padding: 7px 10px; font-size: 13px; border-radius: 9px;">
                             ${sanitizeHTML(strPubkey).substring(0, 17)}...
                         </code>
                     </span>
@@ -176,18 +177,18 @@ export async function renderContacts(account, fPrompt = false) {
                 ? cContact.pubkey.slice(0, 32) + '…'
                 : cContact.pubkey;
             strHTML += `
-            <div class="d-flex px-3 py-3 contactItem ptr" id="contactsSelector${i}" style="border-bottom: 1px solid #461584;">
+            <div class="d-flex px-3 py-3 contactItem ptr" id="contactsSelector${i}" style="border-bottom: 1px solid #1d265a;">
                 <div id="contactsAvatarContainer${i}">
-                    <img id="contactsAvatar${i}" class="ptr" style="margin-right:20px; width: 50px; height: 50px; border-radius: 100%; background-color: white; border: 2px solid #d5adff;" ${
+                    <img id="contactsAvatar${i}" class="ptr" style="margin-right:20px; width: 50px; height: 50px; border-radius: 100%; background-color: white; border: 2px solid #7f91d6;" ${
                 cContact.icon ? 'src="' + cContact.icon + '"' : ''
             }>
                 </div>
                 <div id="contactsNameContainer${i}" style="width: 100%; line-height: 15px; margin-top: -6px;">
-                    <span id="contactsName${i}" style="word-wrap: anywhere; color: #e9deff; font-weight: 600; margin-top: 8px; display: block;">${sanitizeHTML(
+                    <span id="contactsName${i}" style="word-wrap: anywhere; color: #DEDEE0; font-weight: 600; margin-top: 8px; display: block;">${sanitizeHTML(
                 sanitizeHTML(cContact.label)
             )}</span>
                     <span style="word-wrap: anywhere; font-size: 13px; position: relative; top: 10px;">
-                        <code id="contactsAddress${i}" style="background-color: #1a122d; color: #7c659e; padding: 7px 10px; font-size: 13px; border-radius: 9px;">
+                        <code id="contactsAddress${i}" style="background-color: #161a45; color: #a6abc0; padding: 7px 10px; font-size: 13px; border-radius: 9px;">
                             ${sanitizeHTML(strPubkey).substring(0, 23)}...
                         </code>
                     </span>
@@ -395,8 +396,8 @@ async function renderContactModal() {
         // Update the QR section
         if (await hasEncryptedWallet()) {
             doms.domModalQR.innerHTML = `
-                <b style="margin-bottom: 9px; display: block; font-size: 16px; color:#af9cc6; font-weight: 500;">${translation.setupYourContact}</b>
-                <p style="font-size: 14px; color:#827592; font-weight: 500;">${translation.receiveWithContact}</p>
+                <b style="margin-bottom: 9px; display: block; font-size: 16px; color:#b9bfd4; font-weight: 500;">${translation.setupYourContact}</b>
+                <p style="font-size: 14px; color:#9aa2c8; font-weight: 500;">${translation.receiveWithContact}</p>
                 <input id="setContactName" class="placeholderCenter" placeholder="${translation.username}" style="text-align: center;"></input>
                 <button class="pivx-button-small-cancel" style="height: 42px; width: 167px;" onclick="MPW.guiSetAccountName('setContactName')"><span class="buttoni-text">${translation.createContact}</span></button>`;
         } else {
@@ -423,7 +424,7 @@ function renderAddress(strAddress) {
     const domQR = document.getElementById('receiveModalEmbeddedQR');
     try {
         // Update the QR section
-        createQR('pivx:' + strAddress, domQR, 10);
+        createQR(`${BIP21_PREFIX}:` + strAddress, domQR, 10);
         domQR.firstChild.style.width = '100%';
         domQR.firstChild.style.height = 'auto';
         domQR.firstChild.classList.add('no-antialias');

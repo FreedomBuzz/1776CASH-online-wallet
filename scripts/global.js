@@ -153,6 +153,18 @@ export async function start() {
         domPageContainer: document.getElementById('page-container'),
     };
 
+    // Apply light/dark regime from local override, defaulting to light.
+    const applyThemeClass = (theme) => {
+        document.body.classList.toggle('theme-dark', theme === 'dark');
+        document.body.classList.toggle('theme-light', theme !== 'dark');
+    };
+    const savedTheme = localStorage.getItem('walletTheme');
+    const initialTheme =
+        savedTheme === 'dark' || savedTheme === 'light'
+            ? savedTheme
+            : 'light';
+    applyThemeClass(initialTheme);
+
     // Set Copyright year on footer
     document.getElementById('copyrightYear').innerHTML =
         new Date().getFullYear();
@@ -233,7 +245,11 @@ export async function start() {
 }
 
 async function refreshPriceDisplay() {
-    await cOracle.getPrice(strCurrency);
+    try {
+        await cOracle.getPrice(strCurrency);
+    } catch (e) {
+        debugError(DebugTopics.NET, 'Price refresh failed', e);
+    }
     getEventEmitter().emit('price-update');
 }
 
@@ -597,9 +613,9 @@ function errorHandler(e) {
     try {
         createAlert('warning', message);
     } catch (_) {
-        // Something as gone wrong, so we fall back to the default alert
-        // This can happen on early errors for example
-        alert(message);
+        // If alert rendering is unavailable during early startup, avoid
+        // browser-native dialogs and log instead.
+        console.error(message);
     }
 }
 

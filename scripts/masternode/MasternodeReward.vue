@@ -42,7 +42,7 @@ function getActivityUrl(tx) {
             >
             <span class="rewardsBadge" style="font-size: 20px">
                 {{ total }}
-                <span style="font-size: 15px; opacity: 0.55">PIV</span>
+                <span style="font-size: 15px; opacity: 0.72; color: #f5f7ff">{{ cChainParams.current.TICKER }}</span>
             </span>
         </span>
         <div class="scrollTable">
@@ -98,7 +98,7 @@ function getActivityUrl(tx) {
                                 ></span>
                                 <b>
                                     <span
-                                        style="font-weight: 300; opacity: 0.55"
+                                        style="font-weight: 300; opacity: 0.72; color: #f5f7ff"
                                         >&nbsp;{{
                                             cChainParams.current.TICKER
                                         }}</span

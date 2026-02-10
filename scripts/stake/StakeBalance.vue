@@ -103,8 +103,8 @@ function submit() {
             >
                 <div
                     style="
-                        background-color: #32224e61;
-                        border: 2px solid #361562;
+                        background-color: #1d265a61;
+                        border: 2px solid #1d265a;
                         border-radius: 5px;
                     "
                 >
@@ -200,7 +200,7 @@ function submit() {
             <template #header>
                 <h3
                     class="modal-title"
-                    style="text-align: center; width: 100%; color: #8e21ff"
+                    style="text-align: center; width: 100%; color: #EB1B24"
                 >
                     Set your Cold Staking address
                 </h3>

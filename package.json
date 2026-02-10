@@ -1,7 +1,7 @@
 {
-    "name": "mypivxwallet",
+    "name": "1776cash-wallet",
     "version": "2.1.2",
-    "description": "Wallet for PIVX",
+    "description": "Wallet for 1776CASH",
     "main": "scripts/index.js",
     "type": "module",
     "scripts": {
@@ -23,19 +23,19 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/PIVX-Labs/MyPIVXWallet.git"
+        "url": "git+https://github.com/FreedomBuzz/1776CASH.git"
     },
     "keywords": [
         "crypto",
-        "PIVX",
+        "1776CASH",
         "wallet"
     ],
-    "author": "PIVX Labs",
+    "author": "1776CASH Team",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/PIVX-Labs/MyPIVXWallet/issues"
+        "url": "https://github.com/FreedomBuzz/1776CASH/issues"
     },
-    "homepage": "https://github.com/PIVX-Labs/MyPIVXWallet#readme",
+    "homepage": "https://github.com/FreedomBuzz/1776CASH#readme",
     "devDependencies": {
         "@fluent/langneg": "^0.7.0",
         "@oreillymedia/cypress-playback": "^3.0.9",

@@ -26,9 +26,9 @@ function submit() {
             </h5>
         </template>
         <template #body>
-            <div style="color: #a49bb5" data-testid="seedphraseModal">
+            <div style="color: #a6abc0" data-testid="seedphraseModal">
                 <center>
-                    <div style="color: #c4becf !important">
+                    <div style="color: var(--theme-text-muted)">
                         {{ translation.thisIsYourSeed }}
                         <span v-html="translation.writeDownSeed"></span>
                         <br />
@@ -66,7 +66,7 @@ function submit() {
                             margin-top: 6px;
                         "
                         >{{ translation.customWalletName }}
-                        <span style="color: #a082d9">{{
+                        <span style="color: #7f91d6">{{
                             translation.maxEightChars
                         }}</span></span
                     >

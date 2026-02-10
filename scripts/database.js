@@ -113,7 +113,7 @@ export class Database {
             debugError(DebugTopics.DATABASE, '---- end of account dump ----');
             createAlert(
                 'warning',
-                '<b>Account Creation Error</b><br>Logs were dumped in your Browser Console<br>Please submit these privately to PIVX Labs Developers!'
+                '<b>Account Creation Error</b><br>Logs were dumped in your Browser Console<br>Please submit these privately to the 1776CASH Team!'
             );
             throw new Error(
                 'addAccount was called with with an invalid account'
@@ -178,7 +178,7 @@ export class Database {
             debugError(DebugTopics.DATABASE, '---- end of account dump ----');
             createAlert(
                 'warning',
-                '<b>DB Update Error</b><br>Your wallet is safe, logs were dumped in your Browser Console<br>Please submit these privately to PIVX Labs Developers!'
+                '<b>DB Update Error</b><br>Your wallet is safe, logs were dumped in your Browser Console<br>Please submit these privately to the 1776CASH Team!'
             );
             throw new Error(
                 'addAccount was called with with an invalid account'
@@ -199,7 +199,7 @@ export class Database {
             debugError(DebugTopics.DATABASE, '---- end of input dump ----');
             createAlert(
                 'warning',
-                '<b>DB Update Error</b><br>Logs were dumped in your Browser Console<br>Please submit these privately to PIVX Labs Developers!'
+                '<b>DB Update Error</b><br>Logs were dumped in your Browser Console<br>Please submit these privately to the 1776CASH Team!'
             );
             throw new Error(
                 "updateAccount was called, but the account doesn't exist"

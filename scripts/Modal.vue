@@ -13,7 +13,7 @@ const props = defineProps({
             display: flex;
             justify-content: center;
             z-index: 2000;
-            background-color: #201436db;
+            background-color: var(--theme-overlay, #121437db);
         "
     >
         <div v-if="show" class="modal-mask black-text">
@@ -68,16 +68,16 @@ const props = defineProps({
     transform: scale(1.1);
 }
 .black-text {
-    color: black;
+    color: inherit;
 }
 input,
 select,
 textarea {
-    color: #000000;
+    color: inherit;
 }
 
 textarea:focus,
 input:focus {
-    color: #000000;
+    color: inherit;
 }
 </style>

@@ -98,19 +98,24 @@ async function restoreWallet(strReason) {
 }
 
 async function fetchProposals() {
-    const arrProposals = await getNetwork().getProposals({
-        fAllowFinished: false,
-    });
-    if (!arrProposals) return;
-    nextSuperBlock.value = await getNetwork().getNextSuperblock();
-    masternodeCount.value = (await getNetwork().getMasternodeCount())?.total;
+    try {
+        const arrProposals = await getNetwork().getProposals({
+            fAllowFinished: false,
+        });
+        if (!arrProposals) return;
+        nextSuperBlock.value = await getNetwork().getNextSuperblock();
+        masternodeCount.value =
+            (await getNetwork().getMasternodeCount())?.total;
 
-    proposals.value = arrProposals.filter(
-        (a) => a.Yeas + a.Nays < 100 || a.Ratio > 0.25
-    );
-    contestedProposals.value = arrProposals.filter(
-        (a) => a.Yeas + a.Nays >= 100 && a.Ratio <= 0.25
-    );
+        proposals.value = arrProposals.filter(
+            (a) => a.Yeas + a.Nays < 100 || a.Ratio > 0.25
+        );
+        contestedProposals.value = arrProposals.filter(
+            (a) => a.Yeas + a.Nays >= 100 && a.Ratio <= 0.25
+        );
+    } catch (e) {
+        createAlert('warning', translation.failedToConnect, 6500);
+    }
 }
 
 watch(cChainParams, () => fetchProposals());
@@ -286,7 +291,7 @@ async function vote(proposal, voteCode) {
             >
                 <span
                     data-i18n="govNextPayout"
-                    style="font-weight: 400; color: #e9deff; font-size: 20px"
+                    style="font-weight: 400; color: #dedee0; font-size: 20px"
                     >Next Treasury Payout</span
                 >
                 <Flipdown :timeStamp="flipdownTimeStamp" />

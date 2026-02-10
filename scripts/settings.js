@@ -51,6 +51,7 @@ export let fAdvancedMode = false;
 export let fAutoLockWallet = false;
 /** The user's transaction mode, `true` for public, `false` for private */
 export let fPublicMode = true;
+const THEME_STORAGE_KEY = 'walletTheme';
 
 export class Settings {
     /**
@@ -112,6 +113,20 @@ export class Settings {
     }
 }
 
+function applyThemeClass(theme) {
+    const normalizedTheme = theme === 'dark' ? 'dark' : 'light';
+    document.body.classList.toggle('theme-dark', normalizedTheme === 'dark');
+    document.body.classList.toggle('theme-light', normalizedTheme !== 'dark');
+    return normalizedTheme;
+}
+
+export function setThemeMode(theme = 'light') {
+    const normalizedTheme = applyThemeClass(theme);
+    localStorage.setItem(THEME_STORAGE_KEY, normalizedTheme);
+    const domThemeSelect = document.getElementById('themeMode');
+    if (domThemeSelect) domThemeSelect.value = normalizedTheme;
+}
+
 // Users need not look below here.
 // ------------------------------
 // Global Keystore / Wallet Information
@@ -152,6 +167,14 @@ export async function start() {
         setTranslation(evt.target.value);
     };
 
+    // Hook up the 'theme' selector UI
+    const domThemeSelect = document.getElementById('themeMode');
+    if (domThemeSelect) {
+        domThemeSelect.onchange = function (evt) {
+            setThemeMode(evt.target.value);
+        };
+    }
+
     await Promise.all([
         fillExplorerSelect(),
         fillNodeSelect(),
@@ -189,6 +212,10 @@ export async function start() {
     // Set the display decimals
     nDisplayDecimals = displayDecimals;
     doms.domDisplayDecimalsSlider.value = nDisplayDecimals;
+
+    // Apply persisted theme mode (default to light).
+    const strSavedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    setThemeMode(strSavedTheme === 'dark' ? 'dark' : 'light');
 
     // Subscribe to events
     subscribeToNetworkEvents();
@@ -377,7 +404,7 @@ export async function toggleTestnet(
             title: tr(translation.netSwitchUnsavedWarningTitle, [
                 { network: cChainParams.current.name },
             ]),
-            html: `<div style="color:#af9cc6;">
+            html: `<div style="color:#a6abc0;">
             <b>${tr(translation.netSwitchUnsavedWarningSubtitle, [
                 { network: cChainParams.current.name },
             ])}</b>

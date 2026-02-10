@@ -51,15 +51,15 @@ pre {
 textarea,
 input {
     font-family: monospace !important;
-    background-color: #E9DEFF !important;
+    background-color: #dedee0 !important;
     border-radius: 6px;
     margin-bottom: 5px;
     width: 100%;
     height: 43px;
     margin-bottom: 14px;
     transition: all .125s ease-in-out;
-    border: 2px solid #AF9CC6;
-    color: #6410C7 !important;
+    border: 2px solid #a6abc0;
+    color: #202656 !important;
     font-size: 14px;
     padding-left: 12px;
     padding-right: 12px;
@@ -67,17 +67,17 @@ input {
 
 input:focus-visible {
     outline: none;
-    border: 2px solid #dccfec;
+    border: 2px solid #8a92b0;
 }
 
 .balanceInput:focus-visible {
-    border: 2px solid #AF9CC6!important;
+    border: 2px solid #a6abc0!important;
     border-right:0px!important;
 }
 
 .passwordTxtbox {
     font-size: 34px !important;
-    color: #6410C7 !important;
+    color: #202656 !important;
 }
 
 .passwordTxtbox::placeholder {
@@ -87,7 +87,7 @@ input:focus-visible {
 
 input::placeholder {
     font-size: 14px !important;
-    color:#A97DE8!important;
+    color:#7f91d6!important;
     text-align: left;
 }
 
@@ -109,11 +109,11 @@ button {
     color: rgba(255, 255, 255, 0.65);
     border-radius: 15px;
     padding: 12px 25px 12px;
-    background-color: #380c6a;
+    background-color: #161a45;
     border-style: solid;
     border-width: 1px;
     margin: 1px;
-    border-color: #7300ff;
+    border-color: #202656;
     text-align: center;
     font-size: 16px;
     outline: 0;
@@ -121,7 +121,7 @@ button {
 }
 
 progress {
-    color: #7300ff;
+    color: #202656;
     border-radius: 6px;
     border: none;
 }
@@ -131,8 +131,8 @@ progress[value]::-webkit-progress-value {
             rgba(255, 255, 255, 0.25),
             rgba(0, 0, 0, 0.25)),
         -webkit-linear-gradient(left,
-            #380c6a,
-            #7300ff);
+            #161a45,
+            #202656);
 
     border-radius: 6px;
     background-size: 35px 20px, 100% 100%, 100% 100%;
@@ -144,8 +144,8 @@ progress[value]::-moz-progress-bar {
             rgba(255, 255, 255, 0.25),
             rgba(0, 0, 0, 0.25)),
         -moz-linear-gradient(left,
-            #380c6a,
-            #7300ff);
+            #161a45,
+            #202656);
 
     border-radius: 6px;
     background-size: 35px 20px, 100% 100%, 100% 100%;
@@ -196,7 +196,7 @@ progress[value]::-moz-progress-bar {
 }
 
 .small-dark-bg {
-    background: linear-gradient(#32135C 0 0) padding-box, linear-gradient(to top, #771DF3, #9631F4) border-box;
+    background: linear-gradient(#161a45 0 0) padding-box, linear-gradient(to top, #202656, #5f74b8) border-box;
     border: 3px solid transparent;
     border-radius: 100px;
     display: flex;
@@ -230,19 +230,19 @@ progress[value]::-moz-progress-bar {
     margin-bottom: 0px;
     font-family: monospace !important;
     opacity: 0.75;
-    color:#A49DB2;
+    color:#a6abc0;
     font-size: 15px;
 }
 
 .changelog b {
-    color: #A77BFF;
+    color: #7f91d6;
 }
 
 .changelog p .dotSpan {
     padding-left: 7px;
     border-left-style: solid;
     border-left-width: 6px;
-    border-left-color: #9221ff;
+    border-left-color: #202656;
     height: 6px;
     display: inline-block;
     position: relative;
@@ -253,8 +253,8 @@ progress[value]::-moz-progress-bar {
     padding-left: 7px;
     border-left-style: solid;
     border-left-width: 5px;
-    border-left-color: #9221ff;
-    color:#E9DEFF;
+    border-left-color: #202656;
+    color:#dedee0;
     margin-bottom: 13px;
     font-size: 21px;
 }
@@ -268,7 +268,7 @@ progress[value]::-moz-progress-bar {
 .large-box {
     background: rgba(43, 9, 80, 0.55);
     border-radius: 8px;
-    border-color: #6222ab;
+    border-color: #1d265a;
     border-width: 1px;
     border-style: solid;
     margin: 5px;
@@ -276,7 +276,7 @@ progress[value]::-moz-progress-bar {
 
 .large-box:hover {
     background: linear-gradient(217deg, rgb(51, 0, 153, 0.1), rgb(34, 0, 102, 0.3) 70.71%);
-    border-color: #763acf;
+    border-color: #2c4f91;
 
 }
 
@@ -300,7 +300,7 @@ progress[value]::-moz-progress-bar {
 }
 
 .scan-region-highlight-svg {
-    stroke: #6800ff !important;
+    stroke: #202656 !important;
     filter: drop-shadow(0 0 3px rgb(122, 31, 255))
 }
 
@@ -361,7 +361,7 @@ progress[value]::-moz-progress-bar {
 .seed-phrase {
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     background-color: #00000014;
-    color: #8e21ff;
+    color: #202656;
     margin: 10px;
     padding: 10px;
     border-radius: 8px;
@@ -390,7 +390,7 @@ progress[value]::-moz-progress-bar {
 .inline-address {
     font-family: mono;
     background-color: #00000014;
-    color: #8e21ff;
+    color: #202656;
     margin: 10px;
     padding: 3px;
     border-radius: 8px;
@@ -451,11 +451,11 @@ progress[value]::-moz-progress-bar {
 
 /* Create an active/current tablink class */
 .tab button.active {
-    background-color: #9131ea !important;
+    background-color: #2c4f91 !important;
 }
 
 .active {
-    color: #9221FF !important;
+    color: #202656 !important;
 }
 
 /* Style the tab content */
@@ -473,7 +473,7 @@ progress[value]::-moz-progress-bar {
 .frame {
     display: block;
     margin: 0 auto;
-    background: #2B0950BF;
+    background: #161a45BF;
 }
 
 /* DASHBOARD */
@@ -486,9 +486,9 @@ progress[value]::-moz-progress-bar {
     display: block;
     width: 100%;
     height: 87%;
-    border: 1px #4b1282 solid;
+    border: 1px #1d265a solid;
     border-radius: 8px;
-    box-shadow: 2px 2px 15px 2px #4b1271;
+    box-shadow: 2px 2px 15px 2px #1d265a;
     margin: 0 0 280px 0;
     background: linear-gradient(0.25turn, rgba(77, 77, 77, 0.5), rgba(115, 0, 255, 0.3));
 }
@@ -692,7 +692,7 @@ progress[value]::-moz-progress-bar {
     height: 800px !important;
     ;
     background: rgba(72, 2, 125, 0.60);
-    border: 1px solid #a366ff;
+    border: 1px solid #5f74b8;
     border-radius: 8px;
     padding: 5px;
 }
@@ -734,7 +734,7 @@ progress[value]::-moz-progress-bar {
     display: block;
     height: 100px;
     max-width: 100% !important;
-    border-bottom: 1px solid #a366ff;
+    border-bottom: 1px solid #5f74b8;
 }
 
 #pivx-price-box {
@@ -836,7 +836,7 @@ progress[value]::-moz-progress-bar {
 }
 
 .footer a:hover {
-    color: #9621FF;
+    color: #202656;
 }
 
 #dcfooter {
@@ -864,7 +864,7 @@ progress[value]::-moz-progress-bar {
     font-family: Montserrat, sans-serif;
     height: auto;
     padding: 8px 18px;
-    background-image: linear-gradient(183deg, #7B1FD8, #6D1ED8);
+    background-image: linear-gradient(183deg, #202656, #202656);
     position: relative;
     z-index: 1;
     line-height: 1.25em;
@@ -894,7 +894,7 @@ progress[value]::-moz-progress-bar {
     font-family: Montserrat, sans-serif;
     height: auto;
     padding: 14px 20px;
-    background-image: linear-gradient(183deg, #7B1FD8, #6D1ED8);
+    background-image: linear-gradient(183deg, #202656, #202656);
     position: relative;
     z-index: 1;
     line-height: 1.25em;
@@ -924,7 +924,7 @@ progress[value]::-moz-progress-bar {
     outline: none;
     margin: 5px;
     font-family: Montserrat, sans-serif;
-    background: linear-gradient(#32135C 0 0) padding-box, linear-gradient(to top, #771DF3, #9631F4) border-box;
+    background: linear-gradient(#161a45 0 0) padding-box, linear-gradient(to top, #202656, #5f74b8) border-box;
     height: auto;
     padding: 13px 20px;
     position: relative;
@@ -978,7 +978,7 @@ progress[value]::-moz-progress-bar {
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: linear-gradient(183deg, #8e1fef, #741cef);
+    background-image: linear-gradient(183deg, #202656, #202656);
     z-index: -1;
     transition: all .2s ease-in-out;
     opacity: 0;
@@ -991,7 +991,7 @@ progress[value]::-moz-progress-bar {
     font-family: Montserrat, sans-serif;
     height: auto;
     padding: 8px 16px;
-    background-image: linear-gradient(183deg, 7B1FD8, #6D1ED8);
+    background-image: linear-gradient(183deg, 7B1FD8, #202656);
     position: relative;
     z-index: 1;
     line-height: 1.25em;
@@ -1024,7 +1024,7 @@ progress[value]::-moz-progress-bar {
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: linear-gradient(183deg, #8e1fef, #741cef);
+    background-image: linear-gradient(183deg, #202656, #202656);
     z-index: -1;
     transition: all .2s ease-in-out;
     opacity: 0;
@@ -1036,7 +1036,7 @@ progress[value]::-moz-progress-bar {
 
 .pivx-button-outline {
     font: 15px Montserrat, sans-serif !important;
-    background-image: linear-gradient(183deg, #9131EA, #731EEA);
+    background-image: linear-gradient(183deg, #2c4f91, #202656);
     padding: 3px;
     display: flex;
     border-radius:100px;
@@ -1052,7 +1052,7 @@ progress[value]::-moz-progress-bar {
 }
 
 .pivx-button-outline span {
-    background: #37195F;
+    background: #161a45;
     border-radius:100px;
     color: #fffeff;
     padding: 14px 20px;
@@ -1060,7 +1060,7 @@ progress[value]::-moz-progress-bar {
 }
 
 .pivx-button-outline span:hover {
-    background-color:#2f1452;
+    background-color:#161a45;
 }
 
 .pivx-button-outline-small {
@@ -1099,7 +1099,7 @@ progress[value]::-moz-progress-bar {
 /*PIVX WARNINGS*/
 .warning-message {
     display: none;
-    background-color: #9021fe;
+    background-color: #202656;
     padding-top: 20px;
     padding-bottom: 20px;
     margin-bottom: 15px;
@@ -1118,8 +1118,8 @@ progress[value]::-moz-progress-bar {
 
 .alert-danger {
     color: #fff;
-    background-color: #4b1282;
-    border-color: #8300ff;
+    background-color: #1d265a;
+    border-color: #202656;
 }
 
 /*PIVX TEXT CUSTOMS*/
@@ -1143,11 +1143,11 @@ progress[value]::-moz-progress-bar {
     display: block;
     line-height: 1.2em;
     font-weight: 300;
-    color:#E9DEFF;
+    color:#dedee0;
 }
 
 .pivx-bold-title div {
-    color:#E9DEFF;
+    color:#dedee0;
 }
 
 .center-text {
@@ -1160,7 +1160,7 @@ progress[value]::-moz-progress-bar {
 }
 
 .pivx-feature-interior {
-    background: linear-gradient(90deg, #2b1542, #230f3c);
+    background: linear-gradient(90deg, #2b1542, #161a45);
     padding: 25px;
     text-align: center;
     border-radius: 10px;
@@ -1213,7 +1213,7 @@ progress[value]::-moz-progress-bar {
 
 .iconList svg,
 .publicSwitchIcon svg {
-    fill:#9221FF!important;
+    fill:#202656!important;
 }
 
 .iconList svg {
@@ -1242,7 +1242,7 @@ progress[value]::-moz-progress-bar {
     height: 20px;
     max-height: 24px;
     margin: 0;
-    fill: #9621FF;
+    fill: #202656;
     top: 8px;
     position: relative;
 }
@@ -1270,7 +1270,7 @@ progress[value]::-moz-progress-bar {
 .switchWalletIcon svg {
     height: 18px;
     max-height: 18px;
-    fill: #E9DEFF;
+    fill: #dedee0;
 }
 
 .shieldBalanceLogo svg {
@@ -1279,7 +1279,7 @@ progress[value]::-moz-progress-bar {
     height: 16px;
     max-height: 16px;
     margin: 0;
-    fill: #9221FF;
+    fill: #202656;
     position: relative;
     top: 3px;
 }
@@ -1290,7 +1290,7 @@ progress[value]::-moz-progress-bar {
     height: 16px;
     max-height: 16px;
     margin: 0;
-    fill: #7c659e;
+    fill: #6d79ae;
 }
 
 .immatureBalanceSpan {
@@ -1298,7 +1298,7 @@ progress[value]::-moz-progress-bar {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #7c659e;
+    color: #6d79ae;
     font-weight: 400;
     padding-top: 13px;
     padding-bottom: 13px;
@@ -1344,7 +1344,7 @@ progress[value]::-moz-progress-bar {
 }
 
 .purple-icon-link {
-    color: #9621ff;
+    color: #202656;
 }
 
 .purple-icon-link,
@@ -1490,7 +1490,7 @@ a {
     width: 75px;
     max-height: 75px;
     padding: 0;
-    fill: #9621ff;
+    fill: #202656;
 }
 
 .dashboard-title {
@@ -1522,7 +1522,7 @@ a {
     font-size: 14px !important;
     padding-top: 4px;
     padding-bottom: 4px;
-    background: #521685;
+    background: #1d265a;
     border: none;
     resize: none;
     color: white;
@@ -1966,7 +1966,7 @@ a {
         padding-top: 20px;
         height: 250px;
         /*background: linear-gradient(217deg, rgb(51, 0, 153, 0.1), rgb(34, 0, 102, 0.3) 70.71%);*/
-        border-color: #763acf;
+        border-color: #2c4f91;
     }
 
     #title-address-box {
@@ -2335,7 +2335,7 @@ a {
         padding: 30px 20px;
         text-align: center;
         width: 100%;
-        border-bottom: 1px solid #a366ff;
+        border-bottom: 1px solid #5f74b8;
     }
 
     #stake-title,
@@ -2479,7 +2479,7 @@ a {
     margin-top: 4px;
     display: block;
     border-radius: 6px;
-    color: #ede3f7;
+    color: #dedee0;
     font-weight: 900;
 }
 
@@ -2507,23 +2507,23 @@ a {
 
 .newBtn-purple-outline {
     padding: 6px 10px;
-    border: 2px solid #D3BCF1;
+    border: 2px solid #b9bfd4;
     background-color: #fff;
     border-radius: 8px;
-    color: #AD78F3;
+    color: #7f91d6;
     font-size: 14px;
 }
 
 .newBtn-purple-outline:hover {
-    border: 2px solid #D3BCF1;
-    color: #AD78F3;
-    background-color: #f1e9fb;
+    border: 2px solid #b9bfd4;
+    color: #7f91d6;
+    background-color: #f4f4f2;
     box-shadow: none;
 }
 
 .newBtn-purple-outline:focus {
-    border: 2px solid #cba7fa;
-    box-shadow: 0 0 0 0.2rem #cba7fa40;
+    border: 2px solid #7f91d6;
+    box-shadow: 0 0 0 0.2rem #7f91d640;
 }
 
 .navbar-nav .nav-item span {
@@ -2546,8 +2546,8 @@ a {
 
 .dcWallet-balances {
     max-width: 310px;
-    background-color: #301f4c61;
-    border: 2px solid #31135A;
+    background-color: #161a4561;
+    border: 2px solid #161a45;
     border-radius: 10px;
     padding: 3px 0px 0px 0px;
     backdrop-filter: blur(4px);
@@ -2589,8 +2589,8 @@ a {
 .dcWallet-activity {
     max-width: 95svw;
     padding: 14px 16px;
-    background-color: #301f4c61;
-    border: 2px solid #31135A;
+    background-color: #161a4561;
+    border: 2px solid #161a45;
     border-radius: 10px;
     backdrop-filter: blur(4px);
 }
@@ -2608,7 +2608,7 @@ a {
     height: 21px;
     max-height: 21px;
     margin: 0;
-    fill: #f2e2ff;
+    fill: #dedee0;
 }
 
 .dcWallet-warningMessage {
@@ -2619,13 +2619,13 @@ a {
     padding: 8px 12px;
     display: flex;
     line-height: 18px;
-    background: linear-gradient(#32135C 0 0) padding-box, linear-gradient(to top, #771DF3, #9631F4) border-box;
+    background: linear-gradient(#161a45 0 0) padding-box, linear-gradient(to top, #202656, #5f74b8) border-box;
     border: 3px solid transparent;
     border-radius: 100px;
 }
 
 .dcWallet-warningMessage-dark {
-    background: linear-gradient(#221239 0 0) padding-box, linear-gradient(to top, #6e1ed8, #7c1fd8) border-box!important;
+    background: linear-gradient(#161a45 0 0) padding-box, linear-gradient(to top, #202656, #202656) border-box!important;
 }
 
 .dcWallet-warningMessage .messLogo {
@@ -2682,8 +2682,8 @@ a {
 
 .dcWallet-topRightMenu .dropdown-move .dropdown-menu {
     backdrop-filter: blur(5px);
-    background-color: #281c40;
-    border: 1px solid #6d1fd6;
+    background-color: #161a45;
+    border: 1px solid #202656;
 }
 
 .dcWallet-topRightMenu .dropdown-move .dropdown-menu .dropdown-item span {
@@ -2691,7 +2691,7 @@ a {
     padding-left: 5px;
     position: relative;
     top: 0px;
-    color: #eadeffcc;
+    color: #dedee0cc;
 }
 
 .dcWallet-topRightMenu .dropdown-move .dropdown-menu .dropdown-item {
@@ -2720,14 +2720,14 @@ a {
 }
 
 .exportKeysModalColor {
-    background-color: #25183d;
+    background-color: #161a45;
     backdrop-filter: blur(5px);
     color: #fff;
     max-height: 100%;
 }
 
 .exportKeysModalColor h3 {
-    color: #d5adff !important;
+    color: #7f91d6 !important;
 }
 
 .dcWallet-privateKeyDiv {
@@ -2755,7 +2755,7 @@ a {
 
 .dcWallet-privateKeyDiv .blurred {
     color: transparent;
-    text-shadow: 0 0 8px #e83e8c;
+    text-shadow: 0 0 8px #eb1b24;
 }
 
 .dcWallet-privateKeyDiv h3 {
@@ -2774,7 +2774,7 @@ a {
     font-size: 15px;
     display: block;
     margin-bottom: 30px;
-    background: -webkit-linear-gradient(0deg, #8b4dfa, #F51E72);
+    background: -webkit-linear-gradient(0deg, #2c4f91, #eb1b24);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     font-weight: bold;
@@ -2789,7 +2789,7 @@ a {
 .icoCol,
 .dcWallet-topLeftMenu .topCol,
 .dcWallet-topRightMenu .topCol {
-    color: #9621FF;
+    color: #202656;
 }
 
 .iconBtn svg {
@@ -2799,7 +2799,7 @@ a {
 .dashboardActionIcon svg {
     height: 28px;
     width: 28px;
-    fill: #9621FF;
+    fill: #202656;
     margin-bottom: 8px;
     transition: all 0.25s ease;
 }
@@ -2807,7 +2807,7 @@ a {
 .dashboard-item:hover .dashboardActionIcon svg {
     height: 30px;
     width: 30px;
-    fill: #b342ff;
+    fill: #202656;
     transform: scale(1.05);
 }
 
@@ -2820,7 +2820,7 @@ a {
 
 .giftIconsClosed svg {
     height:16px;
-    fill:#9621FF;
+    fill:#202656;
     position:relative;
     top:-2px;
 }
@@ -2848,7 +2848,7 @@ input {
     border-radius: 24px;
     border-top-left-radius: 7px;
     border-bottom-right-radius: 7px;
-    background-image: linear-gradient(183deg, #7B1FD8, #6D1ED8);
+    background-image: linear-gradient(183deg, #202656, #202656);
     cursor: pointer;
 }
 
@@ -2861,7 +2861,7 @@ input {
     border-radius: 24px;
     border-top-right-radius: 7px;
     border-bottom-left-radius: 7px;
-    background-image: linear-gradient(183deg, #7B1FD8, #6D1ED8);
+    background-image: linear-gradient(183deg, #202656, #202656);
     cursor: pointer;
 }
 
@@ -2911,7 +2911,7 @@ input {
 .input-group-toggle {
     cursor: pointer;
     background-color: rgb(127, 32, 255);
-    border: 2px solid #AF9CC6;
+    border: 2px solid #a6abc0;
     color: rgb(233, 222, 255);
     padding: 10px 8px !important;
     display: inline-block;
@@ -2934,7 +2934,7 @@ input {
     padding: 9px 20px 9px;
     font-family: Montserrat;
     letter-spacing: .5px;
-    color: #E9DEFF;
+    color: #dedee0;
     background: rgba(100, 16, 199, .3);
     border: 0px;
     font-weight: 500;
@@ -2964,7 +2964,7 @@ input {
 }
 
 .badge-purple {
-    background-color: #6410C7 !important;
+    background-color: #202656 !important;
     padding: 4px 5px;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -3050,17 +3050,17 @@ input {
 }
 
 ::-webkit-scrollbar-track {
-    background: #1B102E;
+    background: #121437;
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #9221FF;
+    background: #202656;
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #8916f5;
+    background: #202656;
 }
 
 @media (min-width: 768px) {
@@ -3075,9 +3075,9 @@ input {
 }
 
 select.form-control {
-    color: #6410c7;
-    background-color: #e9deff;
-    border: 2px solid #AF9CC6;
+    color: #202656;
+    background-color: #dedee0;
+    border: 2px solid #a6abc0;
     font-weight: 500;
     border-radius: 8px;
     padding: 11px 11px;
@@ -3086,16 +3086,16 @@ select.form-control {
 }
 
 select.form-control:focus {
-    color: #6410c7;
-    background-color: #e9deff;
-    border: 2px solid #AF9CC6;
+    color: #202656;
+    background-color: #dedee0;
+    border: 2px solid #a6abc0;
     font-weight: 500;
     box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 22%);
 }
 
 select.form-control option {
-    background-color: #e9deff;
-    color:#9221FF;
+    background-color: #dedee0;
+    color:#202656;
 }
 
 .settingsMenu {
@@ -3119,7 +3119,7 @@ select.form-control option {
     padding-top: 9px;
     padding-bottom: 9px;
     height: 43px;
-    border:1px solid #41117B;
+    border:1px solid #1d265a;
     position: relative;
     top: 10px;
 
@@ -3136,11 +3136,11 @@ select.form-control option {
 
 .settingsMenu .active {
     background:none;
-    background-color: #281D3D;
+    background-color: #161a45;
     margin-bottom: -1px;
-    border:1px solid #41117B;
+    border:1px solid #1d265a;
     border-bottom:0px;
-    color:#9021FF;
+    color:#202656;
     top: 0px;
     
     height: auto!important;
@@ -3150,16 +3150,16 @@ select.form-control option {
 }
 
 .redeemMenu .active {
-    background-color: #25183D;
+    background-color: #161a45;
 }
 
 .settingsMenu .active:hover {
     background:none;
-    background-color: #281D3D;
+    background-color: #161a45;
     margin-bottom: -1px;
-    border:1px solid #41117B;
+    border:1px solid #1d265a;
     border-bottom:0px;
-    color:#9021FF!important;
+    color:#202656!important;
     top: 0px;
     
     height: auto!important;
@@ -3169,14 +3169,14 @@ select.form-control option {
 }
 
 .settingsContent {
-    background-color: #281D3D;
+    background-color: #161a45;
     border-radius: 9px;
     padding-top: 13px;
     padding-bottom: 20px;
     padding-left: 17px;
     padding-right: 17px;
     font-size: 15px;
-    border:1px solid #41117B;
+    border:1px solid #1d265a;
 }
 
 .settingsContent .header-title {
@@ -3187,7 +3187,7 @@ select.form-control option {
 }
 
 .settingsContent hr {
-    background-color: #640FC7;
+    background-color: #202656;
     margin-top: 11px;
 }
 
@@ -3222,16 +3222,16 @@ select.form-control option {
 
 .custom-control-input:checked~.custom-control-label::before {
     color: #fff;
-    border-color: #9169b5;
-    background-color: #9169b5;
+    border-color: #7f91d6;
+    background-color: #7f91d6;
 }
 
 .custom-control-input:focus:not(:checked)~.custom-control-label::before {
-    border-color: #9169b575;
+    border-color: #7f91d675;
 }
 
 .custom-control-input:focus~.custom-control-label::before {
-    box-shadow: 0 0 0 0.2rem #9169b575;
+    box-shadow: 0 0 0 0.2rem #7f91d675;
 }
 
 #foot {
@@ -3253,24 +3253,24 @@ select.form-control option {
 
 .flipdown.flipdown__theme-dark .rotor-group:nth-child(n+2):nth-child(-n+3):before,
 .flipdown.flipdown__theme-dark .rotor-group:nth-child(n+2):nth-child(-n+3):after {
-    background-color: #6410C7;
+    background-color: #202656;
 }
 
 .flipdown.flipdown__theme-dark .rotor,
 .flipdown.flipdown__theme-dark .rotor-top,
 .flipdown.flipdown__theme-dark .rotor-leaf-front {
     color: #FFFFFF;
-    background-color: #431180;
+    background-color: #1d265a;
 }
 
 .flipdown.flipdown__theme-dark .rotor-bottom,
 .flipdown.flipdown__theme-dark .rotor-leaf-rear {
     color: #EFEFEF;
-    background-color: #6410c7;
+    background-color: #202656;
 }
 
 .flipdown.flipdown__theme-dark .rotor:after {
-    border-top: solid 2px #1d142e;
+    border-top: solid 2px #121437;
 }
 
 .flipdown {
@@ -3498,7 +3498,7 @@ select.form-control option {
 }
 
 .governMarked {
-    color: #7C1DEA;
+    color: #2c4f91;
     font-weight: 700;
 }
 
@@ -3538,7 +3538,7 @@ select.form-control option {
 .governTable thead tr td {
     font-size: 13px;
     border-top: 0px;
-    background-color: #371665;
+    background-color: #161a45;
 }
 
 .governTable thead tr td {
@@ -3627,7 +3627,7 @@ select.form-control option {
     width: 11px;
     margin-right: 6px;
     margin-left: 17px;
-    background-color: #8d60e6;
+    background-color: #2c4f91;
 }
 
 .governHr {
@@ -3686,8 +3686,8 @@ select.form-control option {
 }
 
 .btn-notification-close {
-    color: #D5C9EC;
-    border: 2px solid #8529ED;
+    color: #b9bfd4;
+    border: 2px solid #2c4f91;
     border-radius: 0px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -3700,12 +3700,12 @@ select.form-control option {
 }
 
 .btn-notification-close:hover {
-    border: 2px solid #8529ED;
-    color: #c7bbdd;
+    border: 2px solid #2c4f91;
+    color: #a6abc0;
 }
 
 .btn-notification-action {
-    color: #D5C9EC;
+    color: #b9bfd4;
     border-radius: 0px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -3713,19 +3713,19 @@ select.form-control option {
     margin-bottom: -1px;
     margin-right: -1px;
     background: rgb(30,20,49);
-    background: linear-gradient(0deg, #741EEA 0%, #9231EE 100%);
+    background: linear-gradient(0deg, #202656 0%, #5f74b8 100%);
     font-weight: 500;
 }
 
 .btn-notification-action:hover {
-    color: #c7bbdd;
+    color: #a6abc0;
 }
 
 .notifyWrapper .notifyBadgeCount {
     position: absolute;
     right: 0px;
-    border: 2px solid #9A21FF;
-    background-color: #431180;
+    border: 2px solid #202656;
+    background-color: #1d265a;
     border-radius: 100px;
     width: 24px;
     height: 24px;
@@ -3739,11 +3739,11 @@ select.form-control option {
 .notifyWrapper {
     opacity: 1;
     z-index: 999999;
-    background-color: #260a47;
+    background-color: #161a45;
     border-radius: 11px;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
-    border: 1px solid #51199f;
+    border: 1px solid #1d265a;
     margin-bottom: 15px;
     opacity: 0;
     transition: all 0.250s ease-in-out;
@@ -3766,13 +3766,13 @@ select.form-control option {
 .notifyWrapper .notify-warning {
     background: rgb(138,0,29);
     background: linear-gradient(0deg, rgba(138,0,29,1) 0%, rgba(181,0,0,1) 100%);
-    border: 1px solid #FF1C50;
+    border: 1px solid #eb1b24;
 }
 
 .notifyWrapper .notify-info {
     background: rgb(47,18,83);
     background: linear-gradient(341deg, rgba(47,18,83,1) 0%, rgba(123,101,157,1) 100%);
-    border: 1px solid #906DB1;
+    border: 1px solid #7f91d6;
 }
 
 .notifyWrapper .notify-success {
@@ -3786,11 +3786,11 @@ select.form-control option {
     padding-right: 40px;
     padding-top: 19px;
     padding-bottom: 19px;
-    color: #8c7aa8;
+    color: #7f91d6;
 }
 
 .notifyWrapper .notifyText b {
-    color:#DCD1F3;
+    color:#b9bfd4;
 }
 
 .sliderStyle .arrow {
@@ -3829,7 +3829,7 @@ select.form-control option {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #b988e1;
+    background: #7f91d6;
     cursor: pointer;
 }
 
@@ -3837,7 +3837,7 @@ select.form-control option {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #b988e1;
+    background: #7f91d6;
     cursor: pointer;
 }
 
@@ -3884,7 +3884,7 @@ select.form-control option {
 .pIconBin svg {
     height:19px;
     width:19px;
-    fill:#9221FF;
+    fill:#202656;
 }
 
 .contactsList .addContact .contactName input,
@@ -3946,7 +3946,7 @@ select.form-control option {
 
 .progress .progress-bar {
     background-image: none;
-    background-color: #7000ab;
+    background-color: #202656;
     width: 50% !important;
 }
 
@@ -3962,7 +3962,7 @@ select.form-control option {
 }
 
 .modalMain {
-    background-color: #221239;
+    background-color: #161a45;
 }
 
 .modal-dialog {
@@ -3972,11 +3972,11 @@ select.form-control option {
 
 .modal-content {
     border-radius: 10px;
-    border: 1px solid #42117e;
+    border: 1px solid #1d265a;
 }
 
 .modal-title {
-    color: #d5adff  !important;
+    color: #7f91d6  !important;
     font-size: 25px;
     margin-top: 22px;
 }
@@ -3987,17 +3987,17 @@ select.form-control option {
 
 .modalContents .topText {
     padding: 0px 39px;
-    color: #AF9CC6;
+    color: #a6abc0;
     font-size: 16px;
     font-weight: 500;
     display: block;
 }
 
 .textGradientKeys {
-    background: -webkit-linear-gradient(left, #9B21FB , #FC1DA0);
-    background: -o-linear-gradient(right, #9B21FB, #FC1DA0);
-    background: -moz-linear-gradient(right, #9B21FB, #FC1DA0);
-    background: linear-gradient(to right, #9B21FB , #FC1DA0); 
+    background: -webkit-linear-gradient(left, #202656 , #eb1b24);
+    background: -o-linear-gradient(right, #202656, #eb1b24);
+    background: -moz-linear-gradient(right, #202656, #eb1b24);
+    background: linear-gradient(to right, #202656 , #eb1b24); 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
@@ -4007,7 +4007,7 @@ select.form-control option {
 }
 
 .rewardsBadge {
-    background-color: #5811AB;
+    background-color: #1d265a;
     border-radius: 8px;
     margin-left: 18px;
     padding: 4px 13px;
@@ -4030,7 +4030,7 @@ select.form-control option {
 }
 
 .gift-icon svg path {
-    fill:#AF9CC6;
+    fill:#a6abc0;
     margin-right: 4px;
 }
 
@@ -4060,7 +4060,7 @@ textarea:focus-visible {
 }
 
 textarea::placeholder {
-    color:#A97DE8;
+    color:#7f91d6;
 }
 
 .masternodeModalDialog2 .modal-footer {
@@ -4084,7 +4084,7 @@ textarea::placeholder {
 
 .transferBody {
     font: 14px 'Montserrat Regular';
-    color: #AF9CC6;
+    color: #a6abc0;
     font-weight: 500;
 }
 
@@ -4095,18 +4095,18 @@ textarea::placeholder {
 }
 
 .tranferModal .input-group-text {
-    background-color: #7f20ff;
-    color: #E9DEFF;
-    border: 2px solid #af9cc6;
+    background-color: #202656;
+    color: #dedee0;
+    border: 2px solid #a6abc0;
     border-left: 0px;
 }
 
 .tranferModal .input-group-text:nth-child(2) {
-    border: 2px solid #af9cc6;
+    border: 2px solid #a6abc0;
 }
 
 .masternodeBadges {
-    color: #f4f3f7;
+    color: #dedee0;
     font-weight: 600;
     padding: 5px 11px 5px 11px;
     border-radius: 6px;
@@ -4118,7 +4118,7 @@ textarea::placeholder {
 }
 
 .masternodeBadges.preEnabledBadge {
-    background-color:#878291;
+    background-color:#a6abc0;
 }
 
 .masternodeBadges.missingBadge {
@@ -4132,7 +4132,7 @@ textarea::placeholder {
 .cameraIcon svg {
     height:22px;
     width:22px;
-    fill:#e9deff;
+    fill:#dedee0;
 }
 
 .masternodeTable tbody tr td .wallet-code {
@@ -4141,18 +4141,18 @@ textarea::placeholder {
 }
 
 .masternodeTable tbody tr td .mnLastSeen {
-    color:#76678D;
+    color:#6d79ae;
     font-weight:500;
 }
 
 .pColor svg {
-    fill:#6410c7;
+    fill:#202656;
 }
 .wallet-code-new {
-    background-color: #e9deff;
-    color: #6410c7;
+    background-color: #dedee0;
+    color: #202656;
     border-radius: 7px;
-    border: 1px solid #af9cc6;
+    border: 1px solid #a6abc0;
     padding: 7px 10px;
     display: block;
     /* Allow addresses to nicely cut-off to encourage Clipboard usage */
@@ -4166,7 +4166,7 @@ textarea::placeholder {
     justify-content: center;
     margin-top: 33px;
     margin-bottom: 35px;
-    color:#E9DEFF;
+    color:#dedee0;
 }
 
 .modal {
@@ -4237,7 +4237,7 @@ textarea::placeholder {
 }
 
 .sendHeaderoText {
-    color:#d5adff!important;
+    color:#7f91d6!important;
 }
 
 @media (max-width: 992px) {
@@ -4285,7 +4285,7 @@ textarea::placeholder {
 .loadingDots span {
     height:16px;
     width:16px;
-    background-color:#9621FF;
+    background-color:#202656;
     border-radius:100px;
     animation: fade 1.5s infinite ease-in-out;
 }
@@ -4326,7 +4326,7 @@ textarea::placeholder {
 }
 
 .footer-icons i {
-    color: #9621FF;
+    color: #202656;
     font-size: 16px;
     transition: all 0.3s ease;
     padding: 7px;
@@ -4335,7 +4335,7 @@ textarea::placeholder {
 }
 
 .footer-icons i:hover {
-    color: #b342ff;
+    color: #202656;
     background: rgba(146, 33, 255, 0.2);
 }
 
@@ -4425,7 +4425,7 @@ textarea::placeholder {
 
 .multiWalletBtn {
     border-radius:100px;
-    background: linear-gradient(#32135C 0 0) padding-box, linear-gradient(to top, #771DF3, #9631F4) border-box;
+    background: linear-gradient(#161a45 0 0) padding-box, linear-gradient(to top, #202656, #5f74b8) border-box;
     border: 3px solid transparent;
     height:50px;
     cursor: pointer;
@@ -4478,8 +4478,8 @@ textarea::placeholder {
 
 .multiWalletBtn .walletsAmount,
 .multiWalletList .walletsItem .walletsAmount {
-    background-color: #220940;
-    color: #9221FF;
+    background-color: #161a45;
+    color: #202656;
     font-size: 15px;
     border-radius: 5px;
     padding: 2px 8px 3px 9px;
@@ -4489,7 +4489,7 @@ textarea::placeholder {
 .multiWalletBtn .walletsAmount .walletsTicker,
 .multiWalletList .walletsItem .walletsAmount .walletsTicker {
     font-size:13px;
-    color:#b27fe2;
+    color:#7f91d6;
     opacity: 70%;
 }
 
@@ -4498,8 +4498,8 @@ textarea::placeholder {
     top: 25px;
     z-index:9;
     width: 100%;
-    background-color:#221239;
-    border:1px solid #9421FF;
+    background-color:#161a45;
+    border:1px solid #202656;
     border-bottom-left-radius: 23px;
     border-bottom-right-radius: 23px;
     padding-left: 14px;
@@ -4530,9 +4530,9 @@ textarea::placeholder {
         position: absolute;
         right: 0px;
         top: 70px;
-        background-color: #221239;
+        background-color: #161a45;
         border-radius: 10px;
-        border: 1px solid #9421FF;
+        border: 1px solid #202656;
         padding: 11px 16px;
         text-align: center;
     }
@@ -4578,10 +4578,10 @@ textarea::placeholder {
 }
 
 .privateKeysBadgeWrapper .privateKeysBadge {
-    background-color:#431180;
-    border:1px solid #5d11b7;
+    background-color:#1d265a;
+    border:1px solid #1d265a;
     border-radius:5px;
-    color:#dec9f8;
+    color:#b9bfd4;
     padding:2px 11px 3px 11px;
 }
 
@@ -4592,4 +4592,1038 @@ textarea::placeholder {
 
 .filterBlur:hover {
     filter: blur(0px)!important;
+}
+
+/* 1776CASH palette override */
+:root {
+    --c1776-red: #EB1B24;
+    --c1776-navy: #121437;
+    --c1776-blue: #202656;
+    --c1776-ice: #DEDEE0;
+    --c1776-ink: #0f112f;
+    --c1776-muted: #a6abc0;
+    --c1776-outline: #3b4578;
+}
+
+body {
+    background: radial-gradient(1200px 800px at 70% -20%, #20265666, transparent 60%),
+        linear-gradient(150deg, var(--c1776-ink), var(--c1776-navy) 60%, #151b49);
+    color: var(--c1776-ice);
+}
+
+.background-public,
+.background-private {
+    background-image: linear-gradient(160deg, #121437e0, #202656c7), url('../public_background.jpg');
+}
+
+.background-private {
+    background-image: linear-gradient(160deg, #121437e0, #202656c7), url('../private_background.jpg');
+}
+
+.navbarSpecial,
+.modalMain,
+.modal-content,
+.exportKeysModalColor,
+.settingsContent,
+.newNavBar,
+.multiWalletList,
+.dcWallet-balances,
+.dcWallet-activity {
+    background-color: #161a45 !important;
+    border-color: var(--c1776-outline) !important;
+}
+
+textarea,
+input,
+select.form-control,
+select.form-control:focus,
+select.form-control option {
+    background-color: #dadde8 !important;
+    border-color: #8a92b0 !important;
+    color: #161a45 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #737c9f !important;
+}
+
+.pivx-button-small,
+.pivx-button-big,
+.pivx-button-medium,
+.input-group-toggle,
+.tranferModal .input-group-text {
+    background-image: linear-gradient(160deg, #20306f, #1a2559 55%, #18204f) !important;
+    border: 1px solid #55639b !important;
+    color: #f5f7ff !important;
+    box-shadow: 0 8px 24px #0b0f2d55 !important;
+}
+
+.pivx-button-big-no-gov {
+    background-image: linear-gradient(160deg, #bf2b32, #8f1f28) !important;
+    border-color: #842229 !important;
+}
+
+.pivx-button-big-yes-gov {
+    background-image: linear-gradient(160deg, #294f9a, #1f3c79) !important;
+    border-color: #18305f !important;
+}
+
+.pivx-button-big::before,
+.pivx-button-big:hover::before {
+    background-image: linear-gradient(160deg, #2a3d87, #23357a) !important;
+}
+
+.pivx-button-big-cancel,
+.pivx-button-small-cancel,
+.pivx-button-outline {
+    background: linear-gradient(#1a1f4f 0 0) padding-box,
+        linear-gradient(to top, #29356f, #5367a8) border-box !important;
+    border-color: transparent !important;
+    color: #f5f7ff !important;
+}
+
+.pivx-button-outline span {
+    background: #141943 !important;
+    color: #f5f7ff !important;
+}
+
+.pivx-button-outline span:hover {
+    background: #192152 !important;
+}
+
+.dashboard-item,
+.dcWallet-warningMessage,
+.small-dark-bg {
+    background: linear-gradient(150deg, #141943f0, #1b2457f0) !important;
+    border-color: var(--c1776-outline) !important;
+}
+
+.dashboard-item:hover {
+    border-color: #5a69a2 !important;
+    background: linear-gradient(150deg, #172055, #202b66) !important;
+}
+
+.coinstat-icon svg,
+.cameraIcon svg,
+.pColor svg,
+.plus-icon svg path,
+.change-pwd-icon svg path,
+.del-wallet-icon svg path {
+    fill: var(--c1776-ice) !important;
+}
+
+.modal-title,
+.exportKeysModalColor h3,
+.dcWallet-balances .dcWallet-pivxTicker,
+.dcWallet-balances .dcWallet-pivxBalance {
+    color: var(--c1776-ice) !important;
+}
+
+.rewardsBadge,
+.badge-purple,
+.progress .progress-bar {
+    background-color: #263375 !important;
+}
+
+.settingsMenu li {
+    border-color: #4b5d96 !important;
+    background: linear-gradient(180deg, #2a3879, #233167) !important;
+}
+
+.settingsMenu .active,
+.settingsMenu .active:hover {
+    background-color: #161b45 !important;
+    color: var(--c1776-ice) !important;
+    border-color: #4b5d96 !important;
+}
+
+.stakingTx thead tr th {
+    background: #27326f !important;
+    color: var(--c1776-ice) !important;
+}
+
+.stakingTx thead,
+.stakingTx tbody tr td {
+    border-color: #4b5d9650 !important;
+}
+
+.wallet-code,
+.wallet-code-new {
+    background-color: #11163b !important;
+    border-color: #4b5d96 !important;
+    color: var(--c1776-ice) !important;
+}
+
+.textGradientKeys {
+    background: linear-gradient(to right, #7f91d6, var(--c1776-red)) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+::-webkit-scrollbar-track {
+    background: #11153a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2e3c7c;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #41509a;
+}
+
+/* Layout + error dialog consistency */
+.containerMobileApp {
+    padding-top: 102px;
+}
+
+@media (max-width: 991.98px) {
+    .containerMobileApp {
+        padding-top: 92px;
+    }
+}
+
+.modal-mask {
+    background-color: #121437db !important;
+}
+
+.modal-title-new {
+    color: var(--c1776-red) !important;
+}
+
+.alert-danger {
+    background-color: #3a1738 !important;
+    border-color: var(--c1776-red) !important;
+    color: var(--c1776-ice) !important;
+}
+
+.notifyWrapper {
+    background: linear-gradient(165deg, #1a214f, #151a43) !important;
+    border-color: #3f4e89 !important;
+}
+
+.notifyWrapper .notifyText {
+    color: #b9bfd4 !important;
+}
+
+.notifyWrapper .notifyText b {
+    color: #f0f2f9 !important;
+}
+
+.notifyWrapper .notifyBadgeCount {
+    border-color: #5f6fa8 !important;
+    background-color: #25326d !important;
+    color: #f0f2f9 !important;
+}
+
+.notifyWrapper .notify-warning {
+    background: linear-gradient(175deg, #b0323a, #7e1f28) !important;
+    border-color: #d14a53 !important;
+}
+
+.notifyWrapper .notify-info {
+    background: linear-gradient(175deg, #2c4f91, #253e72) !important;
+    border-color: #4767a9 !important;
+}
+
+.notifyWrapper .notify-success {
+    background: linear-gradient(175deg, #1f6f57, #1a5443) !important;
+    border-color: #299171 !important;
+}
+
+.btn-notification-close {
+    color: #dde1f0 !important;
+    border: 2px solid #4d5f99 !important;
+    background: linear-gradient(180deg, #1d265a, #171f4c) !important;
+}
+
+.btn-notification-close:hover {
+    color: #f4f6ff !important;
+    border: 2px solid #667ab9 !important;
+}
+
+.btn-notification-action {
+    color: #ffffff !important;
+    border: 2px solid #2b5092 !important;
+    background: linear-gradient(180deg, #3159a3, #27467f) !important;
+}
+
+.btn-notification-action:hover {
+    color: #ffffff !important;
+    border: 2px solid #3f6cbc !important;
+}
+
+/* 1776CASH dual-theme regimes (light + dark) */
+:root {
+    --brand-red: #eb1b24;
+    --brand-navy: #121437;
+    --brand-blue: #202656;
+    --brand-ice: #dedee0;
+
+    --theme-bg: #f4f4f2;
+    --theme-bg-grad: radial-gradient(1200px 700px at 75% -25%, #d6dbeb 0%, transparent 56%),
+        linear-gradient(155deg, #f6f6f3, #eceef5 60%, #e6e8f0);
+    --theme-surface: #ffffff;
+    --theme-surface-2: #f0f2f7;
+    --theme-border: #bfc6db;
+    --theme-text: #1b2249;
+    --theme-text-muted: #5c648a;
+    --theme-accent: #2c4f91;
+    --theme-accent-2: #405ea6;
+    --theme-overlay: #f4f4f2e6;
+    --theme-button-bg: #2a3d87;
+    --theme-button-bg-2: #23357a;
+    --theme-button-border: #4b5d96;
+    --theme-button-text: #f5f7ff;
+    --theme-danger-bg: #fbe7e9;
+    --theme-danger-text: #7c1f28;
+    --theme-danger-border: #eb1b24;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --theme-bg: #0f112f;
+        --theme-bg-grad: radial-gradient(1200px 700px at 75% -25%, #202656aa 0%, transparent 56%),
+            linear-gradient(155deg, #0f112f, #121437 62%, #151b49);
+        --theme-surface: #161a45;
+        --theme-surface-2: #1d265a;
+        --theme-border: #3b4578;
+        --theme-text: #dedee0;
+        --theme-text-muted: #a6abc0;
+        --theme-accent: #7f91d6;
+        --theme-accent-2: #5f74b8;
+        --theme-overlay: #121437db;
+        --theme-button-bg: #20306f;
+        --theme-button-bg-2: #1a2559;
+        --theme-button-border: #55639b;
+        --theme-button-text: #f5f7ff;
+        --theme-danger-bg: #3a1738;
+        --theme-danger-text: #dedee0;
+        --theme-danger-border: #eb1b24;
+    }
+}
+
+body.theme-light {
+    --theme-bg: #f4f4f2;
+    --theme-bg-grad: radial-gradient(1200px 700px at 75% -25%, #d6dbeb 0%, transparent 56%),
+        linear-gradient(155deg, #f6f6f3, #eceef5 60%, #e6e8f0);
+    --theme-surface: #ffffff;
+    --theme-surface-2: #f0f2f7;
+    --theme-border: #bfc6db;
+    --theme-text: #1b2249;
+    --theme-text-muted: #5c648a;
+    --theme-accent: #2c4f91;
+    --theme-accent-2: #405ea6;
+    --theme-overlay: #f4f4f2e6;
+    --theme-button-bg: #2a3d87;
+    --theme-button-bg-2: #23357a;
+    --theme-button-border: #4b5d96;
+    --theme-button-text: #f5f7ff;
+    --theme-danger-bg: #fbe7e9;
+    --theme-danger-text: #7c1f28;
+    --theme-danger-border: #eb1b24;
+}
+
+body.theme-dark {
+    --theme-bg: #0f112f;
+    --theme-bg-grad: radial-gradient(1200px 700px at 75% -25%, #202656aa 0%, transparent 56%),
+        linear-gradient(155deg, #0f112f, #121437 62%, #151b49);
+    --theme-surface: #161a45;
+    --theme-surface-2: #1d265a;
+    --theme-border: #3b4578;
+    --theme-text: #dedee0;
+    --theme-text-muted: #a6abc0;
+    --theme-accent: #7f91d6;
+    --theme-accent-2: #5f74b8;
+    --theme-overlay: #121437db;
+    --theme-button-bg: #20306f;
+    --theme-button-bg-2: #1a2559;
+    --theme-button-border: #55639b;
+    --theme-button-text: #f5f7ff;
+    --theme-danger-bg: #3a1738;
+    --theme-danger-text: #dedee0;
+    --theme-danger-border: #eb1b24;
+}
+
+body,
+#page-container {
+    background: var(--theme-bg-grad), var(--theme-bg) !important;
+    color: var(--theme-text) !important;
+}
+
+#page-container-light,
+.home-hero,
+.home-hero-dark,
+.gradientBackground {
+    background: transparent !important;
+}
+
+.background-public,
+.background-private {
+    background-image: none !important;
+}
+
+.navbarSpecial,
+.modalMain,
+.modal-content,
+.exportKeysModalColor,
+.settingsContent,
+.newNavBar,
+.multiWalletList,
+.dcWallet-balances,
+.dcWallet-activity,
+.dashboard-item,
+.dcWallet-warningMessage,
+.small-dark-bg,
+.wallet-code,
+.wallet-code-new,
+.notifyWrapper {
+    background: linear-gradient(160deg, var(--theme-surface), var(--theme-surface-2)) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+.modal-mask,
+#confirmModal {
+    background-color: var(--theme-overlay) !important;
+}
+
+.modal-title-new,
+.modal-title,
+.pivx-bold-title,
+.pivx-bold-title-smaller,
+.active {
+    color: var(--theme-accent) !important;
+}
+
+.pivx-bold-title span,
+.pivx-bold-title div,
+.pivx-bold-title-smaller span {
+    color: var(--theme-text) !important;
+}
+
+label,
+p,
+span,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+code,
+.changelog p,
+.changelog b,
+.notifyWrapper .notifyText,
+.notifyWrapper .notifyText b {
+    color: var(--theme-text) !important;
+}
+
+.minor-notif-subtext,
+.changelog p,
+input::placeholder,
+textarea::placeholder,
+.notifyWrapper .notifyText {
+    color: var(--theme-text-muted) !important;
+}
+
+textarea,
+input,
+select.form-control,
+select.form-control:focus,
+select.form-control option,
+.wallet-code,
+.wallet-code-new,
+.seed-phrase,
+.inline-address {
+    background-color: var(--theme-surface-2) !important;
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+button,
+.pivx-button-small,
+.pivx-button-big,
+.pivx-button-medium,
+.input-group-toggle,
+.tranferModal .input-group-text,
+.btn-notification-action,
+.btn-notification-close {
+    background: linear-gradient(160deg, var(--theme-button-bg), var(--theme-button-bg-2)) !important;
+    border-color: var(--theme-button-border) !important;
+    color: var(--theme-button-text) !important;
+}
+
+.pivx-button-big::before,
+.pivx-button-big:hover::before {
+    background: linear-gradient(160deg, var(--theme-button-bg-2), var(--theme-button-bg)) !important;
+}
+
+.pivx-button-big-cancel,
+.pivx-button-small-cancel,
+.pivx-button-outline {
+    background: linear-gradient(var(--theme-surface-2) 0 0) padding-box,
+        linear-gradient(to top, var(--theme-accent), var(--theme-accent-2)) border-box !important;
+    border-color: transparent !important;
+    color: var(--theme-text) !important;
+}
+
+.pivx-button-outline span {
+    background: var(--theme-surface) !important;
+    color: var(--theme-text) !important;
+}
+
+.pivx-button-outline span:hover {
+    background: var(--theme-surface-2) !important;
+}
+
+.settingsMenu li,
+.settingsMenu .active,
+.settingsMenu .active:hover,
+.stakingTx thead tr th,
+.stakingTx tbody tr td,
+.stakingTx thead {
+    border-color: var(--theme-border) !important;
+    color: var(--theme-text) !important;
+}
+
+.settingsMenu li {
+    background: linear-gradient(180deg, var(--theme-surface), var(--theme-surface-2)) !important;
+}
+
+.alert-danger {
+    background-color: var(--theme-danger-bg) !important;
+    border-color: var(--theme-danger-border) !important;
+    color: var(--theme-danger-text) !important;
+}
+
+.textGradientKeys {
+    background: linear-gradient(to right, var(--theme-accent), var(--brand-red)) !important;
+}
+
+.coinstat-icon svg,
+.cameraIcon svg,
+.pColor svg,
+.plus-icon svg path,
+.change-pwd-icon svg path,
+.del-wallet-icon svg path {
+    fill: var(--theme-text) !important;
+}
+
+/* Strong icon contrast */
+.iconList svg,
+.publicSwitchIcon svg,
+.dcWallet-topLeftIcons svg,
+.shieldBalanceLogo svg,
+.dashboardActionIcon svg,
+.giftIcons svg,
+.giftIconsClosed svg,
+.goToWalletIco svg,
+.buttoni-arrow svg,
+.dcWallet-svgIconPurple svg {
+    fill: #ffffff !important;
+}
+
+.icoCol,
+.dcWallet-topLeftMenu .topCol,
+.dcWallet-topRightMenu .topCol,
+.footer-icons i {
+    color: #ffffff !important;
+}
+
+/* Light mode look: off-white canvas + blue top and bottom bars */
+body.theme-light .navbarSpecial,
+body.theme-light .newNavBar,
+body.theme-light #foot {
+    background: linear-gradient(165deg, #121437, #202656) !important;
+    border-color: #202656 !important;
+}
+
+body.theme-light .navbarSpecial .nav-link,
+body.theme-light #foot,
+body.theme-light #foot span,
+body.theme-light #foot a {
+    color: #dedee0 !important;
+}
+
+body.theme-light .small-dark-bg {
+    background: linear-gradient(160deg, #121437, #202656) !important;
+    border-color: #202656 !important;
+}
+
+body.theme-light .footer-icons i {
+    background: rgba(255, 255, 255, 0.14) !important;
+}
+
+body.theme-light .footer-icons i:hover {
+    background: rgba(255, 255, 255, 0.24) !important;
+}
+
+/* Final contrast hardening for legacy inline text colors */
+body.theme-light [style*="color: #DEDEE0"],
+body.theme-light [style*="color:#DEDEE0"],
+body.theme-light [style*="color: #dedee0"],
+body.theme-light [style*="color:#dedee0"],
+body.theme-light [style*="color: #B9BFD4"],
+body.theme-light [style*="color:#B9BFD4"],
+body.theme-light [style*="color: #b9bfd4"],
+body.theme-light [style*="color:#b9bfd4"],
+body.theme-light [style*="color: #A6ABC0"],
+body.theme-light [style*="color:#A6ABC0"],
+body.theme-light [style*="color: #a6abc0"],
+body.theme-light [style*="color:#a6abc0"],
+body.theme-light [style*="color: #9AA2C8"],
+body.theme-light [style*="color:#9AA2C8"],
+body.theme-light [style*="color: #9aa2c8"],
+body.theme-light [style*="color:#9aa2c8"],
+body.theme-light [style*="color: #7F91D6"],
+body.theme-light [style*="color:#7F91D6"],
+body.theme-light [style*="color: #7f91d6"],
+body.theme-light [style*="color:#7f91d6"],
+body.theme-light [style*="color: #FFFFFF"],
+body.theme-light [style*="color:#FFFFFF"],
+body.theme-light [style*="color: #ffffff"],
+body.theme-light [style*="color:#ffffff"],
+body.theme-light [style*="color: #D7D7D7"],
+body.theme-light [style*="color:#D7D7D7"],
+body.theme-light [style*="color: #d7d7d7"],
+body.theme-light [style*="color:#d7d7d7"] {
+    color: var(--theme-text) !important;
+}
+
+body.theme-light .minor-notif-subtext,
+body.theme-light .changelog p,
+body.theme-light .notifyWrapper .notifyText,
+body.theme-light .transferBody,
+body.theme-light .immatureBalanceSpan,
+body.theme-light .mnLastSeen {
+    color: var(--theme-text-muted) !important;
+}
+
+body.theme-dark [style*="color: #202656"],
+body.theme-dark [style*="color:#202656"],
+body.theme-dark [style*="color: #161A45"],
+body.theme-dark [style*="color:#161A45"],
+body.theme-dark [style*="color: #161a45"],
+body.theme-dark [style*="color:#161a45"],
+body.theme-dark [style*="color: #1D265A"],
+body.theme-dark [style*="color:#1D265A"],
+body.theme-dark [style*="color: #1d265a"],
+body.theme-dark [style*="color:#1d265a"],
+body.theme-dark [style*="color: #334758"],
+body.theme-dark [style*="color:#334758"],
+body.theme-dark [style*="color: #3F4E89"],
+body.theme-dark [style*="color:#3F4E89"],
+body.theme-dark [style*="color: #3f4e89"] {
+    color: var(--theme-text) !important;
+}
+
+body.theme-dark .minor-notif-subtext,
+body.theme-dark .changelog p,
+body.theme-dark .notifyWrapper .notifyText,
+body.theme-dark .transferBody,
+body.theme-dark .immatureBalanceSpan,
+body.theme-dark .mnLastSeen {
+    color: var(--theme-text-muted) !important;
+}
+
+/* Keep dark text only where backgrounds are intentionally light */
+body.theme-light .wallet-code-new,
+body.theme-light .wallet-code,
+body.theme-light input,
+body.theme-light textarea,
+body.theme-light select.form-control {
+    color: #1b2249 !important;
+}
+
+/* Nav + footer should remain high-contrast on blue bars */
+body.theme-light .navbarSpecial *,
+body.theme-light #foot *,
+body.theme-dark .navbarSpecial *,
+body.theme-dark #foot * {
+    color: #dedee0 !important;
+}
+
+/* Component readability fixes: Dashboard / Stake / Masternode / Governance */
+.dashboard-item,
+.dashboard-item a,
+.dashboard-item span,
+.dashboard-item .dashboard-title h3,
+.dashboard-item .dashboard-title p {
+    color: var(--theme-text) !important;
+}
+
+.dashboard-item {
+    border-radius: 16px !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease,
+        background 0.25s ease !important;
+}
+
+.dashboard-item .pivx-bold-title div,
+.dashboard-item .pivx-bold-title-smaller div {
+    color: var(--theme-text) !important;
+}
+
+.dashboard-item .dashboardActionIcon svg {
+    fill: var(--theme-accent) !important;
+}
+
+.dashboard-item:hover {
+    background: linear-gradient(160deg, var(--theme-accent), var(--theme-accent-2)) !important;
+    border-color: var(--theme-accent-2) !important;
+    box-shadow: 0 16px 36px rgba(8, 11, 34, 0.28) !important;
+    transform: translateY(-4px) !important;
+}
+
+.dashboard-item:hover,
+.dashboard-item:hover a,
+.dashboard-item:hover span,
+.dashboard-item:hover .dashboard-title h3,
+.dashboard-item:hover .dashboard-title p,
+.dashboard-item:hover [style*='color:'] {
+    color: #f5f7ff !important;
+}
+
+.dashboard-item:hover .dashboard-title div,
+.dashboard-item:hover .pivx-bold-title div,
+.dashboard-item:hover .pivx-bold-title-smaller div {
+    color: #f5f7ff !important;
+}
+
+.dashboard-item:hover .dashboardActionIcon svg {
+    fill: #f5f7ff !important;
+}
+
+.rewardsBadge {
+    color: var(--theme-button-text) !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.rewardsBadge span,
+.rewardsBadge * {
+    color: var(--theme-button-text) !important;
+}
+
+.governBudgetBox {
+    /* Keep these cards high-contrast in both light and dark themes */
+    background-color: var(--brand-blue) !important;
+    border: 1px solid rgba(245, 247, 255, 0.14) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.governBudgetBox:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+}
+
+.governBudgetPrimary {
+    color: #f5f7ff !important;
+}
+
+.governBudgetPrimary span,
+.governBudgetPrimary * {
+    color: inherit !important;
+}
+
+.governBudgetSecondary {
+    color: rgba(245, 247, 255, 0.72) !important;
+}
+
+.governBudgetSecondary span,
+.governBudgetSecondary * {
+    color: inherit !important;
+}
+
+.governBudgetAccent {
+    color: #f5f7ff !important;
+    opacity: 0.92;
+}
+
+.governBudgetDivider {
+    border: none !important;
+    border-top: 2px solid rgba(0, 0, 0, 0.28) !important;
+    background-color: transparent !important;
+}
+
+.stakingTx,
+.stakingTx * ,
+.governTable,
+.governTable * ,
+.masternodeTable,
+.masternodeTable * {
+    color: var(--theme-text) !important;
+}
+
+.stakingTx thead tr th,
+.governTable thead tr td {
+    background: var(--theme-surface-2) !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
+}
+
+.stakingTx tbody tr td,
+.governTable tbody tr td,
+.masternodeTable tbody tr td {
+    background: var(--theme-surface) !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
+}
+
+.stakingTx tbody tr:hover td,
+.governTable tbody tr:hover td,
+.masternodeTable tbody tr:hover td {
+    background: var(--theme-surface-2) !important;
+    color: var(--theme-text) !important;
+}
+
+.stakingTx .wallet-code,
+.governTable .wallet-code,
+.masternodeTable .wallet-code,
+.wallet-code-new {
+    background: var(--theme-surface-2) !important;
+    color: var(--theme-text) !important;
+    border-color: var(--theme-border) !important;
+}
+
+.governValues,
+.governInstallments,
+.governPayoutTime,
+.governLink,
+.governLink:hover,
+.governMarked,
+.governFiatSize,
+.governLinkIco {
+    color: var(--theme-text) !important;
+}
+
+.governLinkIco i,
+.governArrow i {
+    color: var(--theme-accent) !important;
+}
+
+.stake-box .pivx-button-small,
+.stake-box .pivx-button-small-cancel,
+.stake-box .pivx-button-big,
+.stake-box .pivx-button-big-cancel,
+.governTable .pivx-button-small,
+.governTable .pivx-button-small-cancel,
+.governTable .pivx-button-outline,
+.masternodeTable .pivx-button-small,
+.masternodeTable .pivx-button-small-cancel {
+    color: var(--theme-button-text) !important;
+}
+
+.stake-box .pivx-button-small:hover,
+.stake-box .pivx-button-small-cancel:hover,
+.stake-box .pivx-button-big:hover,
+.stake-box .pivx-button-big-cancel:hover,
+.governTable .pivx-button-small:hover,
+.governTable .pivx-button-small-cancel:hover,
+.governTable .pivx-button-outline:hover,
+.masternodeTable .pivx-button-small:hover,
+.masternodeTable .pivx-button-small-cancel:hover {
+    filter: brightness(1.1);
+    color: #f5f7ff !important;
+}
+
+/* keep nav/footer icon override, but not dashboard action cards */
+.dashboardActionIcon svg {
+    fill: var(--theme-accent) !important;
+}
+
+/* Ensure text/icons inside buttons stay readable */
+.pivx-button-small,
+.pivx-button-big,
+.pivx-button-medium,
+.pivx-button-big-no-gov,
+.pivx-button-big-yes-gov,
+.btn-notification-action {
+    color: var(--theme-button-text) !important;
+}
+
+.pivx-button-small *,
+.pivx-button-big *,
+.pivx-button-medium *,
+.pivx-button-big-no-gov *,
+.pivx-button-big-yes-gov *,
+.btn-notification-action * {
+    color: inherit !important;
+}
+
+.pivx-button-small svg,
+.pivx-button-small svg path,
+.pivx-button-big svg,
+.pivx-button-big svg path,
+.pivx-button-medium svg,
+.pivx-button-medium svg path,
+.btn-notification-action svg,
+.btn-notification-action svg path {
+    fill: currentColor !important;
+}
+
+.pivx-button-small-cancel,
+.pivx-button-big-cancel,
+.pivx-button-outline,
+.btn-notification-close {
+    color: var(--theme-text) !important;
+}
+
+.pivx-button-small-cancel *,
+.pivx-button-big-cancel *,
+.pivx-button-outline *,
+.btn-notification-close * {
+    color: inherit !important;
+}
+
+/* Stake/MN/Governance link and table readability */
+.stakingTx a,
+.stakingTx code,
+.governTable a,
+.governTable code,
+.masternodeTable a,
+.masternodeTable code {
+    color: var(--theme-text) !important;
+}
+
+.stakingTx .active,
+.governTable .active,
+.masternodeTable .active {
+    color: var(--theme-text) !important;
+}
+
+.stakingTx .mnLastSeen,
+.governTable .governInstallments,
+.governTable .governValues,
+.governTable .governFiatSize,
+.masternodeTable .mnLastSeen {
+    color: var(--theme-text-muted) !important;
+}
+
+/* Small dashboard action row buttons (wallet actions) */
+.cur-pointer {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    border-radius: 10px;
+}
+
+.cur-pointer:hover {
+    background: var(--theme-surface-2);
+}
+
+.cur-pointer:hover .dashboardActionIcon svg {
+    fill: var(--theme-accent) !important;
+}
+
+.cur-pointer:hover span {
+    color: var(--theme-text) !important;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--theme-surface) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--theme-border) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-accent) !important;
+}
+
+/* Top nav refresh: tighter bar + modern tab pills */
+.navbarSpecial {
+    min-height: 62px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+}
+
+.navbarSpecial .container {
+    min-height: 50px;
+}
+
+.navbarSpecial .nav-logo {
+    width: 132px;
+}
+
+.navbarSpecial .newNavBar .navbar-nav {
+    align-items: center;
+    gap: 6px;
+}
+
+.navbarSpecial .navbar-nav .nav-item .nav-link.tablinks {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 8px 16px !important;
+    margin: 0 !important;
+    border-radius: 999px;
+    border: 1px solid rgba(222, 222, 224, 0.16);
+    background: linear-gradient(
+        165deg,
+        rgba(255, 255, 255, 0.08),
+        rgba(255, 255, 255, 0.03)
+    );
+    color: #f5f7ff !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+    text-transform: none !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+    transition: transform 0.18s ease, box-shadow 0.18s ease,
+        background 0.18s ease, border-color 0.18s ease;
+}
+
+.navbarSpecial .navbar-nav .nav-item .nav-link.tablinks:hover {
+    transform: translateY(-1px);
+    border-color: rgba(245, 247, 255, 0.32);
+    background: linear-gradient(
+        165deg,
+        rgba(255, 255, 255, 0.14),
+        rgba(255, 255, 255, 0.07)
+    );
+}
+
+.navbarSpecial .navbar-nav .nav-item .nav-link.tablinks.active {
+    border-color: rgba(245, 247, 255, 0.44);
+    background: linear-gradient(155deg, #405ea6, #2c4f91);
+    color: #f5f7ff !important;
+    box-shadow: 0 10px 22px rgba(17, 27, 67, 0.34);
+}
+
+@media (max-width: 992px) {
+    .navbarSpecial {
+        min-height: 58px !important;
+    }
+
+    .navbarSpecial .nav-logo {
+        width: 120px;
+    }
+
+    .newNavBar {
+        top: 60px !important;
+        padding: 12px !important;
+        border-radius: 14px !important;
+    }
+
+    .navbarSpecial .newNavBar .navbar-nav {
+        width: 100%;
+        gap: 8px;
+    }
+
+    .navbarSpecial .navbar-nav .nav-item,
+    .navbarSpecial .navbar-nav .nav-item .nav-link.tablinks {
+        width: 100%;
+    }
+
+    .navbarSpecial .navbar-nav .nav-item .nav-link.tablinks {
+        min-height: 42px;
+        font-size: 15px !important;
+    }
 }

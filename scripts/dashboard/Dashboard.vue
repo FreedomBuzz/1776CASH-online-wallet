@@ -634,7 +634,7 @@ defineExpose({
                     </center>
                 </div>
 
-                <!-- Redeem Code (PIVX Promos) -->
+                <!-- Redeem Code (1776CASH Promos) -->
                 <div
                     class="modal"
                     id="redeemCodeModal"
@@ -687,7 +687,7 @@ defineExpose({
                                     style="
                                         text-align: center;
                                         width: 100%;
-                                        color: #8e21ff;
+                                        color: #EB1B24;
                                         margin-top: 0px;
                                     "
                                 >
@@ -701,13 +701,13 @@ defineExpose({
                                 <center>
                                     <p
                                         style="
-                                            color: #af9cc6;
+                                            color: #b9bfd4;
                                             font-size: 15px;
                                             width: 250px;
                                             font-family: Montserrat !important;
                                         "
                                     >
-                                        PIVX Promos
+                                        1776CASH Promos
                                         {{ translation.pivxPromos }}
                                     </p>
                                     <div id="redeemCodeUse">
@@ -735,7 +735,7 @@ defineExpose({
                                                     onclick="MPW.sweepPromoCode();"
                                                     class="fa-solid fa-gift fa-2xl"
                                                     style="
-                                                        color: #813d9c;
+                                                        color: #9aa2c8;
                                                         font-size: 4em;
                                                     "
                                                 ></i>
@@ -879,7 +879,7 @@ defineExpose({
                                                                 border-top: 0px;
                                                                 border-bottom: 1px
                                                                     solid
-                                                                    #534270;
+                                                                    #3f4e89;
                                                             "
                                                             class="text-center"
                                                         >
@@ -891,7 +891,7 @@ defineExpose({
                                                                 border-top: 0px;
                                                                 border-bottom: 1px
                                                                     solid
-                                                                    #534270;
+                                                                    #3f4e89;
                                                             "
                                                             class="text-center"
                                                         >
@@ -908,7 +908,7 @@ defineExpose({
                                                                 border-top: 0px;
                                                                 border-bottom: 1px
                                                                     solid
-                                                                    #534270;
+                                                                    #3f4e89;
                                                             "
                                                             class="text-center"
                                                         >
@@ -978,7 +978,7 @@ defineExpose({
                         </div>
                     </div>
                 </div>
-                <!-- // Redeem Code (PIVX Promos) -->
+                <!-- // Redeem Code (1776CASH Promos) -->
 
                 <!-- Contacts Modal -->
                 <div
@@ -1002,7 +1002,7 @@ defineExpose({
                                     style="
                                         text-align: center;
                                         width: 100%;
-                                        color: #d5adff;
+                                        color: #7f91d6;
                                     "
                                 >
                                     {{ translation.contacts }}
@@ -1053,7 +1053,7 @@ defineExpose({
                         :isEncrypt="activeVault?.isEncrypted ?? false"
                     />
                     <div class="row p-0">
-                        <!-- Balance in PIVX & USD-->
+                        <!-- Balance in 1776CASH & USD-->
                         <WalletBalance
                             :balance="balance"
                             :shieldBalance="shieldBalance"

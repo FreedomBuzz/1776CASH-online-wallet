@@ -42,6 +42,14 @@ export default merge(common, {
             'Cross-Origin-Embedder-Policy': 'require-corp',
             'Cross-Origin-Opener-Policy': 'same-origin',
         },
+        proxy: [
+            {
+                context: ['/oracle'],
+                target: 'https://1776cash.com',
+                changeOrigin: true,
+                secure: true,
+            },
+        ],
     },
     plugins: [
         new webpack.DefinePlugin({

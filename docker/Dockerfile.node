@@ -1,0 +1,50 @@
+FROM ubuntu:24.04 AS builder
+
+ARG DEBIAN_FRONTEND=noninteractive
+WORKDIR /src
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    automake \
+    autotools-dev \
+    build-essential \
+    ca-certificates \
+    curl \
+    git \
+    libboost-chrono-dev \
+    libboost-filesystem-dev \
+    libboost-program-options-dev \
+    libboost-system-dev \
+    libboost-test-dev \
+    libboost-thread-dev \
+    libevent-dev \
+    libgmp-dev \
+    libminiupnpc-dev \
+    libnatpmp-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libtool \
+    libzmq3-dev \
+    pkg-config \
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY . .
+
+RUN ./autogen.sh && \
+    ./configure --without-gui --disable-tests --disable-bench --with-incompatible-bdb && \
+    make -j"$(nproc)" && \
+    strip src/pivxd src/pivx-cli
+
+FROM ubuntu:24.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    tini \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /src/src/pivxd /usr/local/bin/pivxd
+COPY --from=builder /src/src/pivx-cli /usr/local/bin/pivx-cli
+
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/pivxd"]

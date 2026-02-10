@@ -47,7 +47,7 @@ function close() {
             <template #header>
                 <h3
                     class="modal-title"
-                    style="text-align: center; width: 100%; color: #8e21ff"
+                    style="text-align: center; width: 100%; color: #EB1B24"
                 >
                     {{ translation.walletUnlock }}
                 </h3>

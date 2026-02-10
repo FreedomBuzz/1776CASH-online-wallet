@@ -102,13 +102,32 @@ class NetworkManager {
      * @param  {...any} args - The arguments to pass to the function
      */
     async #retryWrapper(funcName, isRPC, retryTimeout = 0, ...args) {
-        let nMaxTries = this.#networks.length;
-        let attemptNet = isRPC ? this.#currentNode : this.#currentExplorer;
+        const candidateNetworks = this.#networks.filter(
+            (network) => network.isRpc === isRPC
+        );
+        if (candidateNetworks.length === 0) {
+            throw new Error(
+                `No ${isRPC ? 'RPC' : 'Explorer'} networks configured`
+            );
+        }
 
-        let i = this.#networks.findIndex((net) => attemptNet === net);
+        const preferredNetwork = isRPC
+            ? this.#currentNode
+            : this.#currentExplorer;
+        let attemptNet =
+            preferredNetwork?.isRpc === isRPC
+                ? preferredNetwork
+                : candidateNetworks[0];
+
+        const nMaxTries = candidateNetworks.length;
+        let i = candidateNetworks.findIndex((net) => attemptNet === net);
         if (i === -1) {
-            debugWarn(DebugTopics.NET, 'Cannot find index in networks array');
+            debugWarn(
+                DebugTopics.NET,
+                `Cannot find index in ${isRPC ? 'RPC' : 'Explorer'} networks array`
+            );
             i = 0;
+            attemptNet = candidateNetworks[i];
         }
 
         // Run the call until successful, or all attempts exhausted
@@ -134,7 +153,7 @@ class NetworkManager {
                     throw error;
                 }
                 await sleep(retryTimeout);
-                attemptNet = this.#networks[(i + attempts) % nMaxTries];
+                attemptNet = candidateNetworks[(i + attempts) % nMaxTries];
             }
         }
     }

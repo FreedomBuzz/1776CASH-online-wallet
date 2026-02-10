@@ -31,10 +31,10 @@ const network = useNetwork();
             target="_blank"
             style="
                 border-radius: 8px;
-                background-color: #1a122d;
+                background-color: #161a45;
                 padding: 6px 9px;
                 font-size: 14px;
-                color: #861ff7;
+                color: #EB1B24;
             "
             data-testid="proposalLink"
             ><i class="fa-solid fa-user-large" style="margin-right: 5px"></i

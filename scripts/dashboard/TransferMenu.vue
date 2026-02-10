@@ -9,6 +9,7 @@ import qrIcon from '../../assets/icons/icon-qr-code.svg';
 import addressbookIcon from '../../assets/icons/icon-address-book.svg';
 import { computed } from 'vue';
 import { createAlert } from '../alerts/alert.js';
+import { cChainParams } from '../chain_params.js';
 
 const emit = defineEmits([
     'send',
@@ -18,7 +19,7 @@ const emit = defineEmits([
     'update:amount',
     'update:address',
 ]);
-// Amount of PIVs to send in the selected currency (e.g. USD)
+// Amount of coins to send in the selected currency (e.g. USD)
 const amountCurrency = ref('');
 const color = ref('');
 
@@ -36,6 +37,7 @@ const address = defineModel('address');
 const memo = ref('');
 
 const isSendingToShield = computed(() => isShieldAddress(address.value));
+const ticker = computed(() => cChainParams.current.TICKER);
 
 watch(address, (value) =>
     getAddressColor(value).then((c) => (color.value = `${c} !important`))
@@ -171,21 +173,21 @@ async function selectContact() {
                             <span
                                 class="input-group-text"
                                 style="
-                                    background-color: #e9deff;
-                                    color: #af9cc6;
-                                    border: 2px solid #af9cc6;
+                                    background-color: #DEDEE0;
+                                    color: #b9bfd4;
+                                    border: 2px solid #b9bfd4;
                                     border-left: 0px;
                                 "
                             >
-                                PIVX
+                                {{ ticker }}
                             </span>
                             <span
                                 class="input-group-text p-0"
                                 style="
                                     cursor: pointer;
-                                    background-color: #7f20ff;
-                                    border: 2px solid #af9cc6;
-                                    color: #e9deff;
+                                    background-color: #202656;
+                                    border: 2px solid #b9bfd4;
+                                    color: #DEDEE0;
                                     font-weight: 700;
                                     padding: 0px 10px 0px 10px !important;
                                 "
@@ -216,9 +218,9 @@ async function selectContact() {
                             <span
                                 class="input-group-text pl-0"
                                 style="
-                                    background-color: #e9deff;
-                                    color: #af9cc6;
-                                    border: 2px solid #af9cc6;
+                                    background-color: #DEDEE0;
+                                    color: #b9bfd4;
+                                    border: 2px solid #b9bfd4;
                                     border-left: 0px;
                                 "
                                 >{{ currency }}</span
@@ -371,6 +373,6 @@ async function selectContact() {
 }
 
 .transferMenu .transferBody .pasteAddress i:hover {
-    color: #9621ff9c;
+    color: #2026569c;
 }
 </style>
