@@ -9,17 +9,57 @@ import { getEventEmitter } from '../event_bus';
 import { getNetwork } from '../network/network_manager';
 import StakeBalance from './StakeBalance.vue';
 import StakeInput from './StakeInput.vue';
-import { onMounted, ref, watch, nextTick } from 'vue';
-import { ParsedSecret } from '../parsed_secret.js';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { ALERTS, tr } from '../i18n';
 import { useAlerts } from '../composables/use_alerts.js';
 import { validateAmount } from '../legacy.js';
-import { valuesToComputed } from '../utils.js';
 const { createAlert } = useAlerts();
-const { activeWallet: wallet, activeVault } = storeToRefs(useWallets());
-const { balance, coldBalance, price, currency, isViewOnly } =
-    valuesToComputed(wallet);
+const walletsStore = useWallets();
+const { activeWallet: wallet, activeVault } = storeToRefs(walletsStore);
+const selectedWallet = ref(wallet.value ?? null);
+const stakeViewRefreshNonce = ref(0);
+
+const refreshSelectedWallet = () => {
+    selectedWallet.value = walletsStore.activeWallet ?? wallet.value ?? null;
+    stakeViewRefreshNonce.value += 1;
+};
+
+watch(wallet, refreshSelectedWallet, { immediate: true });
+watch(() => walletsStore.activeWallet, refreshSelectedWallet);
+
+const removeWalletSelectedListener = getEventEmitter().on(
+    'wallet-selected',
+    refreshSelectedWallet
+);
+onUnmounted(() => {
+    if (removeWalletSelectedListener) removeWalletSelectedListener();
+});
+
+const balance = computed(
+    () => selectedWallet.value?.balance ?? 0
+);
+const coldBalance = computed(
+    () => selectedWallet.value?.coldBalance ?? 0
+);
+const price = computed(
+    () => selectedWallet.value?.price ?? wallet.value?.price ?? 0
+);
+const currency = computed(
+    () => selectedWallet.value?.currency ?? wallet.value?.currency ?? 'USD'
+);
+const isViewOnly = computed(
+    () => selectedWallet.value?.isViewOnly ?? true
+);
+const activeWalletKey = computed(
+    () =>
+        selectedWallet.value?.getKeyToExport?.() ??
+        wallet.value?.getKeyToExport?.() ??
+        'active-wallet'
+);
+const stakeViewKey = computed(
+    () => `${activeWalletKey.value}-${stakeViewRefreshNonce.value}`
+);
 const { advancedMode, displayDecimals } = storeToRefs(useSettings());
 const showUnstake = ref(false);
 const showStake = ref(false);
@@ -147,21 +187,20 @@ async function restoreWallet(strReason) {
 <template>
     <div class="row p-0">
         <div class="col-12 p-0 mb-5">
-            <center>
-                <StakeBalance
-                    v-model:coldStakingAddress="coldStakingAddress"
-                    :coldBalance="coldBalance"
-                    :price="price"
-                    :currency="currency"
-                    :displayDecimals="displayDecimals"
-                    @showUnstake="showUnstake = true"
-                    @showStake="showStake = true"
-                />
-            </center>
+            <StakeBalance
+                :key="stakeViewKey"
+                v-model:coldStakingAddress="coldStakingAddress"
+                :coldBalance="coldBalance"
+                :price="price"
+                :currency="currency"
+                :displayDecimals="displayDecimals"
+                @showUnstake="showUnstake = true"
+                @showStake="showStake = true"
+            />
         </div>
 
         <div class="col-12 mb-5">
-            <Activity title="Reward History" :rewards="true" />
+            <Activity :key="stakeViewKey" title="Reward History" :rewards="true" />
         </div>
     </div>
     <StakeInput

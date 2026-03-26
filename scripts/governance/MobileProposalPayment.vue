@@ -10,10 +10,25 @@ const props = defineProps({
     strCurrency: String,
 });
 const { proposal, price, strCurrency } = toRefs(props);
+const nMonthlyPaymentDisplay = computed(() =>
+    Number(proposal.value.MonthlyPayment).toLocaleString('en-gb', ',', '.')
+);
 const nProposalValue = computed(
     () =>
         optimiseCurrencyLocale(proposal.value.MonthlyPayment * price.value)
             .nValue
+);
+const nProposalValueDisplay = computed(() =>
+    nProposalValue.value.toLocaleString('en-gb')
+);
+const tickerWithSpace = computed(() => ` ${cChainParams.current.TICKER}`);
+const totalPaymentWithTicker = computed(
+    () =>
+        `${parseInt(proposal.value.TotalPayment).toLocaleString(
+            'en-gb',
+            ',',
+            '.'
+        )} ${cChainParams.current.TICKER}`
 );
 </script>
 
@@ -25,15 +40,15 @@ const nProposalValue = computed(
         <div class="col-7">
             <span class="governValues"
                 ><b data-testid="proposalMonthlyPayment">{{
-                    proposal.MonthlyPayment.toLocaleString('en-gb', ',', '.')
+                    nMonthlyPaymentDisplay
                 }}</b>
-                <span class="governMarked">{{ cChainParams.current.TICKER }}</span>
+                <span class="governMarked">{{ tickerWithSpace }}</span>
                 <span
                     style="margin-left: 10px; margin-right: 2px"
                     class="governMarked governFiatSize"
                     data-testid="proposalFiat"
-                    >{{ nProposalValue.toLocaleString('en-gb') }}
-                    <span style="color: #EB1B24">{{
+                    >{{ nProposalValueDisplay }}
+                    <span class="governCurrencyCode">{{
                         strCurrency.toUpperCase()
                     }}</span>
                 </span>
@@ -42,17 +57,7 @@ const nProposalValue = computed(
             <span class="governInstallments" data-testid="governInstallments">
                 {{ proposal.RemainingPaymentCount }} {{ ' ' }}
                 <span v-html="translation.proposalPaymentsRemaining"></span>
-                <span style="font-weight: 500"
-                    >{{
-                        parseInt(proposal.TotalPayment).toLocaleString(
-                            'en-gb',
-                            ',',
-                            '.'
-                        )
-                    }}
-
-                    {{ cChainParams.current.TICKER }}</span
-                >
+                <span style="font-weight: 500">{{ totalPaymentWithTicker }}</span>
                 {{ translation.proposalPaymentTotal }}</span
             >
         </div>

@@ -28,7 +28,33 @@ for (const { Component, name } of [
         it('renders correctly', () => {
             expect(
                 wrapper.find('[data-testid="proposalVotes"]').text()
-            ).toMatch(/37.2%\s*32 \/ 54/);
+            ).toContain('Support: 37.2%');
+            expect(
+                wrapper.find('[data-testid="proposalVotes"]').text()
+            ).toContain('MN: 32 yes / 54 no');
+        });
+
+        it('renders hybrid vote totals and combined score when present', async () => {
+            await wrapper.setProps({
+                proposal: {
+                    Yeas: 0,
+                    Nays: 0,
+                    CoinYes: 450,
+                    CoinNo: 0,
+                    CombinedScore: 4.5,
+                    Ratio: 0,
+                },
+            });
+
+            expect(
+                wrapper.find('[data-testid="proposalVotes"]').text()
+            ).toContain('Score: 4.5');
+            expect(
+                wrapper.find('[data-testid="proposalVotes"]').text()
+            ).toContain('MN: 0 yes / 0 no');
+            expect(
+                wrapper.find('[data-testid="proposalVotes"]').text()
+            ).toContain('Coin: 450 yes / 0 no');
         });
     });
 }

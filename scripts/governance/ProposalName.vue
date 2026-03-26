@@ -12,7 +12,6 @@ const network = useNetwork();
     <div style="vertical-align: middle">
         <a
             class="governLink"
-            style="color: white"
             :href="proposal.URL"
             target="_blank"
             rel="noopener noreferrer"
@@ -24,18 +23,11 @@ const network = useNetwork();
                     ></i></span></b></a
         ><br />
         <a
-            class="governLink"
+            class="governLink governAddressChip"
             :href="
                 getBlockbookUrl(network.explorerUrl, proposal.PaymentAddress)
             "
             target="_blank"
-            style="
-                border-radius: 8px;
-                background-color: #161a45;
-                padding: 6px 9px;
-                font-size: 14px;
-                color: #EB1B24;
-            "
             data-testid="proposalLink"
             ><i class="fa-solid fa-user-large" style="margin-right: 5px"></i
             ><b>{{ proposal.PaymentAddress.slice(0, 10) }}...</b>

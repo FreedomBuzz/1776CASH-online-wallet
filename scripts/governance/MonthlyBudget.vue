@@ -11,26 +11,12 @@ const { currency, price } = toRefs(props);
 
 <template>
     <div class="col-6 col-lg-3 text-center governBudgetCard">
-        <span
-            data-i18n="govMonthlyBudget"
-            style="font-weight: 400; color: #DEDEE0; font-size: 18px"
+        <span data-i18n="govMonthlyBudget" class="governBudgetTitle"
             >Monthly Budget</span
         >
 
-        <div
-            class="governBudgetBox"
-            style="
-                width: 180px;
-                background-color: #202656;
-                margin-top: 11px;
-                border-radius: 9px;
-                padding-left: 13px;
-                padding-right: 13px;
-                padding-bottom: 6px;
-                padding-top: 4px;
-            "
-        >
-            <span class="governBudgetPrimary" style="font-size: 19px; color: #DEDEE0"
+        <div class="governBudgetBox governBudgetBoxSized">
+            <span class="governBudgetPrimary governBudgetPrimaryValue"
                 ><span>
                     {{
                         (cChainParams.current.maxPayment / COIN).toLocaleString(
@@ -42,28 +28,12 @@ const { currency, price } = toRefs(props);
                     {{ ' ' }}
                 </span>
                 <span
-                    class="governBudgetAccent"
-                    style="
-                        color: #EB1B24;
-                        font-size: 16px;
-                        position: relative;
-                        top: 1px;
-                    "
+                    class="governBudgetAccent governBudgetTicker"
                     >{{ cChainParams.current.TICKER }}</span
                 ></span
             >
-            <hr
-                class="governBudgetDivider"
-                style="
-                    border-top-width: 2px;
-                    background-color: #121437;
-                    margin-top: 5px;
-                    margin-bottom: -2px;
-                    margin-left: -13px;
-                    margin-right: -13px;
-                "
-            />
-            <span class="governBudgetSecondary" style="font-size: 12px; color: #b9bfd4"
+            <hr class="governBudgetDivider governBudgetDividerSized" />
+            <span class="governBudgetSecondary governBudgetSecondaryValue"
                 ><span data-testid="monthlyBudgetValue">
                     {{
                         numberToCurrency(
@@ -73,7 +43,9 @@ const { currency, price } = toRefs(props);
                     }}
                     {{ ' ' }}
                 </span>
-                <span class="governBudgetAccent" style="color: #EB1B24" data-testid="monthlyBudgetCurrency"
+                <span
+                    class="governBudgetAccent"
+                    data-testid="monthlyBudgetCurrency"
                     >{{ currency.toUpperCase() }}
                 </span>
             </span>

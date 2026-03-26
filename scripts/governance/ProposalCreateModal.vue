@@ -329,7 +329,7 @@ function isValidStr(str) {
 <style>
 .proposalConfirmLabel {
     margin-bottom: 0px;
-    color: #a6abc0;
+    color: var(--theme-text-muted);
     font-size: 1rem;
     font-weight: 500;
 }
@@ -337,22 +337,31 @@ function isValidStr(str) {
     margin-bottom: 10px;
 }
 
-.proposalConfirmText {
-    background-color: #0000003d;
+.proposalConfirmText,
+.proposalConfirmText.link {
+    background-color: var(--theme-surface-2);
+    border: 1px solid var(--theme-border);
     padding: 1px 5px 2px 5px;
     border-radius: 5px;
+    color: var(--theme-text);
+}
+
+.proposalConfirmText {
+    display: inline-block;
+}
+
+.proposalConfirmText *,
+.proposalConfirmText.link * {
+    color: var(--theme-text);
 }
 
 .proposalConfirmText.link {
-    background-color: #0000003d;
-    padding: 1px 5px 2px 5px;
-    border-radius: 5px;
     width: fit-content;
     word-break: break-all;
 }
 
 .proposalConfirmText.link a {
-    color: #202656;
+    color: var(--theme-accent);
     font-size: 87.5%;
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
         'Courier New', monospace !important;
@@ -360,9 +369,5 @@ function isValidStr(str) {
 
 .proposalConfirmText.link a:hover {
     text-decoration: underline !important;
-}
-
-code {
-    color: #dedee0;
 }
 </style>

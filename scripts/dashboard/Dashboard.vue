@@ -45,6 +45,7 @@ import { useAlerts } from '../composables/use_alerts.js';
 import { Vault } from '../vault';
 import { valuesToComputed } from '../utils.js';
 import { PIVXShield } from 'pivx-shield';
+import { isShieldFeatureActive } from '../shield_activation.js';
 const { createAlert } = useAlerts();
 
 const wallets = useWallets();
@@ -85,6 +86,37 @@ const transferAmount = ref('');
 const showRestoreWallet = ref(false);
 const restoreWalletReason = ref('');
 const importLock = ref(false);
+const shieldActivationHeight = computed(
+    () => cChainParams.current.defaultStartingShieldBlock
+);
+const currentChainHeight = computed(() => activeWallet.value?.blockCount ?? 0);
+const shieldModeAvailable = computed(() =>
+    isShieldFeatureActive(currentChainHeight.value, shieldActivationHeight.value)
+);
+
+function togglePrivacyMode() {
+    if (!shieldModeAvailable.value) {
+        activeWallet.value.publicMode = true;
+        return;
+    }
+
+    activeWallet.value.publicMode = !activeWallet.value.publicMode;
+}
+
+function getReadableError(error, fallback = ALERTS.INTERNAL_ERROR) {
+    if (typeof error === 'string' && error.trim().length > 0) return error;
+    if (error instanceof Error && error.message?.trim()) return error.message;
+    if (
+        error &&
+        typeof error === 'object' &&
+        typeof error.message === 'string' &&
+        error.message.trim().length > 0
+    ) {
+        return error.message;
+    }
+    return fallback;
+}
+
 watch(showExportModal, async (showExportModal) => {
     if (showExportModal) {
         keyToBackup.value = await activeWallet.value.getKeyToBackup();
@@ -153,7 +185,7 @@ async function importWallet({
                     advancedMode.value
                 );
             } catch (e) {
-                createAlert('warning', e.message, 8000);
+                createAlert('warning', getReadableError(e), 8000);
             }
         }
         if (parsedSecret) {
@@ -399,7 +431,7 @@ async function send(address, amount, useShieldInputs, memo) {
         );
     } catch (e) {
         console.error(e);
-        createAlert('warning', e);
+        createAlert('warning', getReadableError(e), 8000);
     } finally {
         if (autoLockWallet.value) {
             if (activeVault.value.isEncrypted) {
@@ -503,6 +535,7 @@ const {
     price,
     isViewOnly,
     hasShield,
+    publicMode,
 } = valuesToComputed(activeWallet);
 
 function changePassword() {
@@ -587,13 +620,13 @@ defineExpose({
                             :class="{
                                 'dcWallet-warningMessage-dark':
                                     activeWallet.publicMode,
+                                'dcWallet-warningMessage-disabled':
+                                    !shieldModeAvailable,
                             }"
                             class="dcWallet-warningMessage"
                             id="warningMessage"
-                            @click="
-                                activeWallet.publicMode =
-                                    !activeWallet.publicMode
-                            "
+                            data-testid="shieldModeToggle"
+                            @click="togglePrivacyMode"
                         >
                             <div class="messLogo">
                                 <span
@@ -620,13 +653,39 @@ defineExpose({
                                 </span>
                                 <span class="messBot">
                                     {{
-                                        tr(translation.switchTo, [
-                                            {
-                                                mode: activeWallet.publicMode
-                                                    ? translation.privateMode
-                                                    : translation.publicMode,
-                                            },
-                                        ])
+                                        shieldModeAvailable
+                                            ? tr(translation.switchTo, [
+                                                  {
+                                                      mode: activeWallet
+                                                          .publicMode
+                                                          ? translation.privateMode
+                                                          : translation.publicMode,
+                                                  },
+                                              ])
+                                            : tr(
+                                                  translation.shieldModeUnlocksAt,
+                                                  [
+                                                      {
+                                                          height: shieldActivationHeight,
+                                                      },
+                                                  ]
+                                              )
+                                    }}
+                                </span>
+                                <span
+                                    class="messFoot"
+                                    v-if="!shieldModeAvailable"
+                                    data-testid="shieldActivationNotice"
+                                >
+                                    {{
+                                        tr(
+                                            translation.shieldModeCurrentHeight,
+                                            [
+                                                {
+                                                    current: currentChainHeight,
+                                                },
+                                            ]
+                                        )
                                     }}
                                 </span>
                             </div>
@@ -1074,7 +1133,7 @@ defineExpose({
                             :shieldEnabled="hasShield"
                             @send="showTransferMenu = true"
                             @exportPrivKeyOpen="showExportModal = true"
-                            :publicMode="activeWallet.publicMode"
+                            :publicMode="publicMode"
                             class="col-12 p-0 mb-2"
                         />
                         <WalletButtons class="col-12 p-0 md-5" />
@@ -1084,7 +1143,7 @@ defineExpose({
             </div>
             <TransferMenu
                 :show="showTransferMenu"
-                :publicMode="activeWallet.publicMode"
+                :publicMode="publicMode"
                 :price="price"
                 :currency="currency"
                 v-model:amount="transferAmount"

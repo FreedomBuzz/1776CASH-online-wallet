@@ -54,7 +54,8 @@
         "maxPayment": 43200000000000,
         "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
         "stakeSplitTarget": 50000000000,
-        "defaultStartingShieldBlock": 0,
+        "defaultStartingShieldBlock": 10081,
+        "minFeePerByte": 1000,
         "mnReward": 600000000
     },
     "testnet": {
@@ -104,7 +105,8 @@
         "maxPayment": 144000000000,
         "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
         "stakeSplitTarget": 50000000000,
-        "defaultStartingShieldBlock": 0,
+        "defaultStartingShieldBlock": 33400,
+        "minFeePerByte": 1000,
         "mnReward": 600000000
     }
 }

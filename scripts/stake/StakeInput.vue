@@ -66,9 +66,10 @@ async function selectContact() {
     <BottomPopup
         :title="unstake ? translation.stakeUnstake : translation.stake"
         :show="show"
+        panelClass="stake-wallet-dialog"
         @close="emit('close')"
     >
-        <div class="transferBody">
+        <div class="transferBody stake-dialog-body">
             <label><span data-i18n="amount">Amount</span></label
             ><br />
 
@@ -76,8 +77,7 @@ async function selectContact() {
                 <div class="col-12 pr-2">
                     <div class="input-group mb-3">
                         <input
-                            class="btn-group-input balanceInput"
-                            style="padding-right: 0px; border-right: 0px"
+                            class="btn-group-input balanceInput stake-dialog-input"
                             inputmode="decimal"
                             onkeypress="return event.charCode >= 46 && event.charCode <= 57"
                             placeholder="0.00"
@@ -89,27 +89,13 @@ async function selectContact() {
                         />
                         <div class="input-group-append">
                             <span
-                                class="input-group-text"
-                                style="
-                                    background-color: #DEDEE0;
-                                    color: #b9bfd4;
-                                    border: 2px solid #b9bfd4;
-                                    border-left: 0px;
-                                "
+                                class="input-group-text stake-dialog-addonTicker"
                             >
                                 {{ ticker }}
                             </span>
                             <span
-                                class="input-group-text p-0"
+                                class="input-group-text p-0 stake-dialog-addonMax"
                                 data-i18n="sendAmountCoinsMax"
-                                style="
-                                    cursor: pointer;
-                                    background-color: #202656;
-                                    border: 2px solid #b9bfd4;
-                                    color: #DEDEE0;
-                                    font-weight: 700;
-                                    padding: 0px 10px 0px 10px !important;
-                                "
                                 @click="maxBalance()"
                             >
                                 {{ translation.sendAmountCoinsMax }}
@@ -121,7 +107,7 @@ async function selectContact() {
                 <div class="col-12 pr-2">
                     <div class="input-group mb-3">
                         <input
-                            class="btn-group-input balanceInput"
+                            class="btn-group-input balanceInput stake-dialog-input"
                             inputmode="decimal"
                             onkeypress="return event.charCode >= 46 && event.charCode <= 57"
                             placeholder="0.00"
@@ -130,17 +116,10 @@ async function selectContact() {
                             data-testid="amountCurrency"
                             @input="syncAmount"
                             v-model="amountCurrency"
-                            style="border-right: 0px"
                         />
                         <div class="input-group-append">
                             <span
-                                class="input-group-text pl-0"
-                                style="
-                                    background-color: #DEDEE0;
-                                    color: #b9bfd4;
-                                    border: 2px solid #b9bfd4;
-                                    border-left: 0px;
-                                "
+                                class="input-group-text pl-0 stake-dialog-addonCurrency"
                                 >{{ currency }}</span
                             >
                         </div>
@@ -178,8 +157,7 @@ async function selectContact() {
                 <div class="row">
                     <div class="col-6 col-md-6">
                         <button
-                            class="pivx-button-small-cancel"
-                            style="height: 42px; width: 97px"
+                            class="pivx-button-small-cancel stake-dialog-btn stake-dialog-btn--cancel"
                             @click="$emit('close')"
                             data-testid="closeButton"
                         >
@@ -191,8 +169,7 @@ async function selectContact() {
 
                     <div class="col-6 col-md-6 text-right">
                         <button
-                            class="pivx-button-small"
-                            style="height: 42px; width: 106px"
+                            class="pivx-button-small stake-dialog-btn stake-dialog-btn--submit"
                             @click="submit()"
                             data-testid="sendButton"
                         >

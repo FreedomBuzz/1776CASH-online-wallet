@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer';
 import { sha256 } from '@noble/hashes/sha256';
-import { computed } from 'vue';
+import { computed, unref } from 'vue';
 
 export const pubKeyHashNetworkLen = 21;
 export const pubChksum = 4;
@@ -10,7 +10,7 @@ export function valuesToComputed(ref) {
     return Object.fromEntries(
         Object.keys(ref.value).map((key) => [
             key,
-            computed(() => ref.value?.[key]),
+            computed(() => unref(ref.value?.[key])),
         ])
     );
 }

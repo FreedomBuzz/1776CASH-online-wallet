@@ -1,6 +1,16 @@
 import { isStandardAddress, isXPub } from '../misc.js';
 import { Transaction } from '../transaction.js';
 
+function buildEndpointUrl(baseUrl, api) {
+    const normalizedApi = api.startsWith('/') ? api : `/${api}`;
+    if (!baseUrl || baseUrl === '/') return normalizedApi;
+
+    const normalizedBase = baseUrl.endsWith('/')
+        ? baseUrl.slice(0, -1)
+        : baseUrl;
+    return `${normalizedBase}${normalizedApi}`;
+}
+
 /**
  * @typedef {Object} XPUBAddress
  * @property {string} type - Type of address (always 'XPUBAddress' for XPUBInfo classes)
@@ -89,6 +99,10 @@ export class Network {
         throw new Error('getMasternodeInfo must be implemented');
     }
 
+    async getMasternodes() {
+        throw new Error('getMasternodes must be implemented');
+    }
+
     async getMasternodeCount() {
         throw new Error('getMasternodeCount must be implemented');
     }
@@ -103,6 +117,22 @@ export class Network {
 
     async getProposals() {
         throw new Error('getProposals must be implemented');
+    }
+
+    async getProposalHybridStatus(_proposalHash) {
+        throw new Error('getProposalHybridStatus must be implemented');
+    }
+
+    async listGovernanceVoteLocks(_proposalHash = null) {
+        throw new Error('listGovernanceVoteLocks must be implemented');
+    }
+
+    async createGovernanceVoteLock(_proposalHash, _amount, _unlockHeight) {
+        throw new Error('createGovernanceVoteLock must be implemented');
+    }
+
+    async castGovernanceVote(_proposalHash, _voteCode, _lockRefs) {
+        throw new Error('castGovernanceVote must be implemented');
     }
 
     async getShieldData(_initialBlock = 0) {
@@ -169,12 +199,15 @@ export class RPCNodeNetwork extends Network {
      * @returns {Promise<Response>} - The unresolved Fetch promise
      */
     #fetchNode(api, options) {
-        return fetch(this.strUrl + api, options);
+        return fetch(buildEndpointUrl(this.strUrl, api), options);
     }
 
     async #callRPC(api, isText = false) {
         const cRes = await this.#fetchNode(api);
-        if (!cRes.ok) throw new Error('Failed to call rpc');
+        if (!cRes.ok) {
+            const errText = await cRes.text();
+            throw new Error(errText || 'Failed to call rpc');
+        }
         const cResTxt = await cRes.text();
         if (isText) return cResTxt;
         // RPC calls with filters might return empty string instead of empty JSON,
@@ -247,6 +280,10 @@ export class RPCNodeNetwork extends Network {
         ).filter((m) => m.outidx === outidx);
     }
 
+    async getMasternodes() {
+        return await this.#callRPC('/listmasternodes');
+    }
+
     async getMasternodeCount() {
         return await this.#callRPC('/getmasternodecount');
     }
@@ -271,6 +308,36 @@ export class RPCNodeNetwork extends Network {
     async getProposals() {
         return (await this.#callRPC(`/getbudgetinfo`)).filter(
             (a) => a.RemainingPaymentCount > 0
+        );
+    }
+
+    async getProposalHybridStatus(proposalHash) {
+        return await this.#callRPC(
+            `/getgovvotestatus?params=${encodeURIComponent(proposalHash)}`
+        );
+    }
+
+    async listGovernanceVoteLocks(proposalHash = null) {
+        const params = proposalHash
+            ? `?params=${encodeURIComponent(proposalHash)}`
+            : '';
+        return await this.#callRPC(`/listgovlocks${params}`);
+    }
+
+    async createGovernanceVoteLock(proposalHash, amount, unlockHeight) {
+        return await this.#callRPC(
+            `/creategovvotelock?params=${encodeURIComponent(
+                `${proposalHash},${amount},${unlockHeight},true`
+            )}`
+        );
+    }
+
+    async castGovernanceVote(proposalHash, voteCode, lockRefs) {
+        const voteDirection = Number(voteCode) === 1 ? 'yes' : 'no';
+        return await this.#callRPC(
+            `/castgovvote?params=${encodeURIComponent(
+                JSON.stringify([proposalHash, voteDirection, lockRefs])
+            )}`
         );
     }
 
@@ -353,7 +420,19 @@ export class RPCNodeNetwork extends Network {
         const res = await this.#fetchNode(
             `/getshielddatalength?startBlock=${startBlock}&endBlock=${endBlock}`
         );
-        if (!res.ok) throw new Error('Invalid response');
+        if (!res.ok) {
+            const errorText = await res.text();
+            if (
+                res.status === 422 &&
+                [
+                    'startBlock is not a valid starting block',
+                    'startBlock must be less or equal than endBlock',
+                ].includes(errorText)
+            ) {
+                return 0;
+            }
+            throw new Error(errorText || 'Invalid response');
+        }
         return Number.parseInt(await res.text());
     }
 
@@ -525,7 +604,27 @@ export class ExplorerNetwork extends Network {
             method: 'post',
             body: hex,
         });
-        if (!req.ok) throw new Error(await req.json());
+        if (!req.ok) {
+            let message = 'Broadcast failed';
+            try {
+                const payload = await req.json();
+                if (typeof payload === 'string') {
+                    message = payload;
+                } else if (typeof payload?.error === 'string') {
+                    message = payload.error;
+                } else if (payload) {
+                    message = JSON.stringify(payload);
+                }
+            } catch {
+                try {
+                    const text = await req.text();
+                    if (text) message = text;
+                } catch {
+                    // Keep the default broadcast failure message.
+                }
+            }
+            throw new Error(message);
+        }
         return await req.json();
     }
 
@@ -541,6 +640,6 @@ export class ExplorerNetwork extends Network {
      * @returns {Promise<Response>} - The unresolved Fetch promise
      */
     #fetchBlockbook(api, options) {
-        return fetch(this.strUrl + api, options);
+        return fetch(buildEndpointUrl(this.strUrl, api), options);
     }
 }

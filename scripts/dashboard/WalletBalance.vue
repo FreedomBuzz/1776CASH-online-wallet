@@ -4,19 +4,17 @@ import { translation, tr } from '../i18n';
 import { ref, computed, toRefs, watch } from 'vue';
 import { beautifyNumber } from '../misc';
 import { useWallets } from '../composables/use_wallet';
+import { getEffectivePublicMode } from './wallet_balance_display.js';
 import { optimiseCurrencyLocale } from '../global';
-import { renderWalletBreakdown } from '../charting.js';
 import { guiRenderCurrentReceiveModal } from '../contacts-book';
 import { getNewAddress } from '../wallet.js';
 import LoadingBar from '../Loadingbar.vue';
 import Tip from '../Tip.vue';
 import { sleep } from '../utils.js';
+import { isShieldFeatureActive } from '../shield_activation.js';
 
 import iShieldLock from '../../assets/icons/icon_shield_lock_locked.svg';
-import iShieldLogo from '../../assets/icons/icon_shield_pivx.svg';
 import iHourglass from '../../assets/icons/icon-hourglass.svg';
-import pLogo from '../../assets/p_logo.svg';
-import logo from '../../assets/pivx.png';
 
 import pLocked from '../../assets/icons/icon-lock-locked.svg';
 import pUnlocked from '../../assets/icons/icon-lock-unlocked.svg';
@@ -63,6 +61,31 @@ const {
 
 const wallets = useWallets();
 
+const liveBalance = computed(
+    () => wallets.activeWallet?.balance ?? balance.value ?? 0
+);
+const liveShieldBalance = computed(
+    () => wallets.activeWallet?.shieldBalance ?? shieldBalance.value ?? 0
+);
+const livePendingShieldBalance = computed(
+    () =>
+        wallets.activeWallet?.pendingShieldBalance ??
+        pendingShieldBalance.value ??
+        0
+);
+const liveImmatureBalance = computed(
+    () => wallets.activeWallet?.immatureBalance ?? immatureBalance.value ?? 0
+);
+const liveImmatureColdBalance = computed(
+    () =>
+        wallets.activeWallet?.immatureColdBalance ??
+        immatureColdBalance.value ??
+        0
+);
+const livePublicMode = computed(
+    () => wallets.activeWallet?.publicMode ?? publicMode.value
+);
+
 // Transparent sync status
 const transparentSyncing = ref(false);
 const percentage = ref(0.0);
@@ -99,51 +122,107 @@ watch([() => wallets.activeVault, () => wallets.activeWallet], () => {
 
 const primaryBalanceStr = computed(() => {
     // Get the primary balance, depending on the user's mode
-    const nCoins = (publicMode.value ? balance : shieldBalance).value / COIN;
+    const nCoins =
+        (effectivePublicMode.value
+            ? liveBalance.value
+            : liveShieldBalance.value) / COIN;
     const strBal = nCoins.toFixed(displayDecimals.value);
     return beautifyNumber(strBal, strBal.length >= 10 ? '17px' : '25px');
 });
 
 const secondaryBalanceStr = computed(() => {
     // Get the secondary balance
-    const nCoins = (publicMode.value ? shieldBalance : balance).value / COIN;
+    const nCoins =
+        (effectivePublicMode.value
+            ? liveShieldBalance.value
+            : liveBalance.value) / COIN;
     return nCoins.toFixed(displayDecimals.value);
 });
 
 const secondaryImmatureBalanceStr = computed(() => {
     // Get the secondary immature balance
     const nCoins =
-        (publicMode.value ? pendingShieldBalance : immatureBalance).value /
-        COIN;
+        (effectivePublicMode.value
+            ? livePendingShieldBalance.value
+            : liveImmatureBalance.value) / COIN;
     return nCoins.toFixed(displayDecimals.value);
 });
 
 const primaryImmatureBalanceStr = computed(() => {
     // Get the primary immature balance
     const nCoins =
-        (publicMode.value ? immatureBalance : pendingShieldBalance).value /
-        COIN;
-    const strPrefix = publicMode.value ? ' ' : ' S-';
+        (effectivePublicMode.value
+            ? liveImmatureBalance.value
+            : livePendingShieldBalance.value) / COIN;
+    const strPrefix = effectivePublicMode.value ? ' ' : ' S-';
 
     return nCoins.toFixed(displayDecimals.value) + strPrefix + ticker.value;
 });
 
 const showImmatureBalanceIcon = computed(
-    () => immatureColdBalance.value > 0 && publicMode.value
+    () => liveImmatureColdBalance.value > 0 && effectivePublicMode.value
 );
 
 const showImmatureBalanceTip = ref(false);
 
+const effectivePublicMode = computed(() =>
+    getEffectivePublicMode({
+        shieldEnabled: shieldEnabled.value,
+        publicMode: livePublicMode.value,
+        balance: liveBalance.value,
+        shieldBalance: liveShieldBalance.value,
+    })
+);
+
 const balanceValue = computed(() => {
     // Convert our primary balance to the user's currency
-    const nCoins = (publicMode.value ? balance : shieldBalance).value / COIN;
+    const nCoins =
+        (effectivePublicMode.value
+            ? liveBalance.value
+            : liveShieldBalance.value) / COIN;
     const { nValue, cLocale } = optimiseCurrencyLocale(nCoins * price.value);
 
     return `${beautifyNumber(nValue, '13px', cLocale)}`;
 });
 
 const ticker = computed(() => cChainParams.current.TICKER);
+const activeVaultWallets = computed(() => wallets.activeVault?.wallets ?? []);
+const shieldFeatureActive = computed(() =>
+    isShieldFeatureActive(
+        wallets.activeWallet?.blockCount ?? 0,
+        cChainParams.current.defaultStartingShieldBlock
+    )
+);
+const showSyncBanner = computed(
+    () => transparentSyncing.value || (shieldSyncing.value && shieldFeatureActive.value)
+);
+const selectedWalletIndex = computed(() => {
+    const currentWallet = wallets.activeWallet;
+    if (!currentWallet) return 0;
 
+    const directIndex = activeVaultWallets.value.findIndex(
+        (wallet) => wallet === currentWallet
+    );
+    if (directIndex !== -1) return directIndex;
+
+    if (typeof currentWallet.getKeyToExport !== 'function') return 0;
+
+    return Math.max(
+        0,
+        activeVaultWallets.value.findIndex(
+            (wallet) =>
+                typeof wallet.getKeyToExport === 'function' &&
+                wallet.getKeyToExport() === currentWallet.getKeyToExport()
+        )
+    );
+});
+const selectedWalletNumber = computed(() => selectedWalletIndex.value + 1);
+const selectedWalletCount = computed(
+    () => activeVaultWallets.value.length || 1
+);
+const selectedWalletLabel = computed(
+    () => `Wallet ${selectedWalletNumber.value} of ${selectedWalletCount.value}`
+);
 const emit = defineEmits([
     'send',
     'exportPrivKeyOpen',
@@ -223,42 +302,54 @@ function displayLockWalletModal() {
 function restoreWallet() {
     emit('restoreWallet');
 }
+
+function switchSelectedWallet(direction) {
+    if (selectedWalletCount.value <= 1 || !wallets.selectWallet) return;
+
+    const nextIndex =
+        (selectedWalletIndex.value + direction + selectedWalletCount.value) %
+        selectedWalletCount.value;
+    const nextWallet = activeVaultWallets.value[nextIndex];
+    if (!nextWallet) return;
+    wallets.selectWallet(nextWallet);
+}
 </script>
 
 <template>
     <center>
-        <div class="dcWallet-balances mb-4">
+        <div class="dcWallet-balances wallet-balance-stage mb-4">
             <div class="row lessBot p-0">
                 <div
                     class="col-6 d-flex dcWallet-topLeftMenu"
                     style="justify-content: flex-start"
                 >
-                    <h3
+                    <div
                         class="noselect balance-title"
                         v-if="wallets.activeVault?.isEncrypted"
                     >
                         <span
-                            class="reload"
+                            class="reload wallet-balance-lock"
+                            data-testid="walletBalanceLock"
                             v-if="wallets.activeVault?.isViewOnly"
                             @click="restoreWallet()"
                         >
                             <span
-                                class="dcWallet-topLeftIcons buttoni-icon topCol"
+                                class="dcWallet-topLeftIcons buttoni-icon topCol wallet-balance-lockIcon"
                                 v-html="pLocked"
                             ></span>
                         </span>
                         <span
-                            class="reload"
+                            class="reload wallet-balance-lock"
+                            data-testid="walletBalanceLock"
                             v-else
                             @click="displayLockWalletModal()"
                         >
                             <span
-                                class="dcWallet-topLeftIcons buttoni-icon topCol"
+                                class="dcWallet-topLeftIcons buttoni-icon topCol wallet-balance-lockIcon"
                                 v-html="pUnlocked"
                             ></span>
                         </span>
-                    </h3>
-                    <h3 class="noselect balance-title"></h3>
+                    </div>
                 </div>
 
                 <div
@@ -352,50 +443,45 @@ function restoreWallet() {
                 </div>
             </div>
 
-            <div
-                style="
-                    margin-top: 22px;
-                    padding-left: 15px;
-                    padding-right: 15px;
-                    margin-bottom: 35px;
-                "
-            >
+            <div class="wallet-panel-shell wallet-panel-host">
                 <div
-                    style="
-                        background-color: #1d265a61;
-                        border: 2px solid #1d265a;
-                        border-top-left-radius: 10px;
-                        border-top-right-radius: 10px;
-                    "
+                    class="wallet-panel"
+                    :class="{ 'wallet-panel--shielded': !effectivePublicMode }"
                 >
                     <div
-                        class="immatureBalanceSpan"
+                        class="wallet-panel__watermark wallet-panel__watermark--topRight"
+                        data-testid="walletPanelWatermark"
+                        aria-hidden="true"
+                    >
+                        1776CASH
+                    </div>
+                    <div
+                        class="wallet-panel__immature"
                         v-if="
-                            (publicMode && immatureBalance != 0) ||
-                            (!publicMode && pendingShieldBalance != 0)
+                            (effectivePublicMode &&
+                                liveImmatureBalance != 0) ||
+                            (!effectivePublicMode &&
+                                livePendingShieldBalance != 0)
                         "
                     >
-                        <span
-                            v-html="iHourglass"
-                            class="hourglassImmatureIcon"
-                        ></span>
-                        <span
-                            style="
-                                position: relative;
-                                left: 4px;
-                                font-size: 14px;
-                            "
-                            >{{ primaryImmatureBalanceStr }}</span
-                        >
-                        <div
-                            v-if="showImmatureBalanceIcon"
-                            class="immatureTooltip ptr"
-                        >
-                            <i
-                                class="fa-solid fa-circle-info"
-                                @click="showImmatureBalanceTip = true"
+                        <div class="wallet-panel__immatureRow">
+                            <span
+                                v-html="iHourglass"
+                                class="hourglassImmatureIcon"
+                            ></span>
+                            <span class="wallet-panel__immatureText">{{
+                                primaryImmatureBalanceStr
+                            }}</span>
+                            <div
+                                v-if="showImmatureBalanceIcon"
+                                class="immatureTooltip ptr"
                             >
-                            </i>
+                                <i
+                                    class="fa-solid fa-circle-info"
+                                    @click="showImmatureBalanceTip = true"
+                                >
+                                </i>
+                            </div>
                         </div>
                         <Tip
                             :body="translation.immatureRewards"
@@ -403,147 +489,144 @@ function restoreWallet() {
                             @close="showImmatureBalanceTip = false"
                         />
                     </div>
-                </div>
-                <div
-                    style="
-                        background-color: #1d265a61;
-                        border: 2px solid #1d265a;
-                        border-bottom: none;
-                        border-top: none;
-                    "
-                >
-                    <div>
-                        <img
-                            :src="logo"
-                            style="height: 60px; margin-top: 14px"
-                        />
+
+                    <div class="wallet-panel__section wallet-panel__header">
+                        <div class="wallet-panel__eyebrow">Selected Wallet</div>
                     </div>
-                    <span
-                        class="ptr"
-                        data-toggle="modal"
-                        data-target="#walletBreakdownModal"
-                        @click="renderWalletBreakdown()"
-                    >
-                        <span
-                            class="logo-pivBal"
-                            v-html="publicMode ? pLogo : iShieldLogo"
-                        ></span>
-                        <span
-                            class="dcWallet-pivxBalance"
-                            data-testid="primaryBalance"
-                            v-html="primaryBalanceStr"
-                        >
-                        </span>
-                        <span
-                            class="dcWallet-pivxTicker"
-                            style="position: relative; left: 4px"
-                            >&nbsp;<span
-                                data-testid="shieldModePrefix"
-                                v-if="!publicMode"
-                                >S-</span
-                            >{{ ticker }}&nbsp;</span
-                        >
-                    </span>
 
                     <div
-                        class="dcWallet-usdBalance"
-                        style="padding-bottom: 12px; padding-top: 3px"
+                        class="wallet-panel__section wallet-panel__switcher"
+                        data-testid="walletPanelSwitcher"
                     >
-                        <span
-                            class="dcWallet-usdValue"
-                            style="color: #d7d7d7; font-weight: 500"
-                            v-html="balanceValue"
-                        ></span>
-                        <span class="dcWallet-usdValue" style="opacity: 0.55"
-                            >&nbsp;{{ currency }}</span
+                        <button
+                            type="button"
+                            class="wallet-panel__switcherBtn"
+                            :disabled="selectedWalletCount <= 1"
+                            @click="switchSelectedWallet(-1)"
                         >
+                            <span class="wallet-panel__switcherGlyph">‹</span>
+                        </button>
+                        <span class="wallet-panel__switcherLabel">{{
+                            selectedWalletLabel
+                        }}</span>
+                        <button
+                            type="button"
+                            class="wallet-panel__switcherBtn"
+                            :disabled="selectedWalletCount <= 1"
+                            @click="switchSelectedWallet(1)"
+                        >
+                            <span class="wallet-panel__switcherGlyph">›</span>
+                        </button>
                     </div>
-                </div>
-                <div
-                    style="
-                        background-color: #1d265a61;
-                        border: 2px solid #1d265a;
-                        border-bottom-left-radius: 10px;
-                        border-bottom-right-radius: 10px;
-                    "
-                >
-                    <div class="dcWallet-usdBalance" v-if="shieldEnabled">
-                        <span
-                            class="dcWallet-usdValue"
-                            style="
-                                display: flex;
-                                justify-content: center;
-                                color: #202656;
-                                font-weight: 500;
-                                padding-top: 21px;
-                                padding-bottom: 11px;
-                                font-size: 16px;
-                            "
-                        >
+
+                    <div class="wallet-panel__section wallet-panel__primary">
+                        <div class="wallet-panel__labelRow">
+                            <span class="wallet-panel__label"
+                                >Public Balance</span
+                            >
+                            <span class="wallet-panel__kicker"
+                                >Spendable now</span
+                            >
+                        </div>
+                        <div class="wallet-panel__amountRow">
+                            <span
+                                class="dcWallet-pivxBalance"
+                                data-testid="primaryBalance"
+                                v-html="primaryBalanceStr"
+                            >
+                            </span>
+                            <span class="dcWallet-pivxTicker">
+                                &nbsp;<span
+                                    data-testid="shieldModePrefix"
+                                    v-if="!effectivePublicMode"
+                                    >S-</span
+                                >{{ ticker }}&nbsp;
+                            </span>
+                        </div>
+
+                        <div class="wallet-panel__fiat">
+                            <span
+                                class="dcWallet-usdValue"
+                                v-html="balanceValue"
+                            ></span>
+                            <span class="wallet-panel__fiatCurrency"
+                                >&nbsp;{{ currency }}</span
+                            >
+                        </div>
+                    </div>
+
+                    <div
+                        class="wallet-panel__section wallet-panel__secondary"
+                        v-if="shieldEnabled"
+                    >
+                        <div class="wallet-panel__label">Shield Balance</div>
+                        <div class="wallet-panel__secondaryValue">
                             <span
                                 class="shieldBalanceLogo"
                                 v-if="shieldEnabled"
-                            ></span
-                            >&nbsp;{{ secondaryBalanceStr }}
-                            <span v-if="publicMode">&nbsp;S-</span>{{ ticker }}
-                            <span
-                                style="opacity: 0.75"
-                                v-if="
-                                    (!publicMode && immatureBalance != 0) ||
-                                    (publicMode && pendingShieldBalance != 0)
-                                "
-                                >&nbsp;({{
-                                    secondaryImmatureBalanceStr
-                                }}
-                                Pending)</span
+                            ></span>
+                            <span class="wallet-panel__secondaryAmount"
+                                >&nbsp;{{ secondaryBalanceStr }}</span
                             >
-                        </span>
+                            <span
+                                class="wallet-panel__secondaryTicker"
+                                v-if="effectivePublicMode"
+                                >&nbsp;S-</span
+                            >
+                            <span class="wallet-panel__secondaryTicker">{{
+                                ticker
+                            }}</span>
+                        </div>
+                        <div
+                            class="wallet-panel__pending"
+                            v-if="
+                                (!effectivePublicMode &&
+                                    liveImmatureBalance != 0) ||
+                                (effectivePublicMode &&
+                                    livePendingShieldBalance != 0)
+                            "
+                        >
+                            {{ secondaryImmatureBalanceStr }} Pending
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div
-                class="row lessTop p-0"
-                style="
-                    margin-left: 15px;
-                    margin-right: 15px;
-                    margin-bottom: 19px;
-                    margin-top: -16px;
-                "
-            >
-                <div
-                    class="col-6 d-flex p-0"
-                    style="justify-content: flex-start"
-                >
-                    <button
-                        class="pivx-button-small"
-                        style="height: 42px; width: 97px"
-                        @click="$emit('send')"
+                    <div
+                        class="wallet-panel__section wallet-panel__actions"
+                        data-testid="walletPanelActions"
                     >
-                        <span class="buttoni-text">
-                            {{ translation.send }}
-                        </span>
-                    </button>
-                </div>
-
-                <div class="col-6 d-flex p-0" style="justify-content: flex-end">
-                    <button
-                        class="pivx-button-small"
-                        style="height: 42px; width: 97px"
-                        @click="guiRenderCurrentReceiveModal()"
-                        data-toggle="modal"
-                        data-target="#qrModal"
-                    >
-                        <span class="buttoni-text">
-                            {{ translation.receive }}
-                        </span>
-                    </button>
+                        <button
+                            class="pivx-button-small wallet-panel__actionBtn"
+                            @click="$emit('send')"
+                        >
+                            <i
+                                class="fa-solid fa-paper-plane wallet-panel__actionIcon"
+                                aria-hidden="true"
+                            ></i>
+                            <span class="buttoni-text">
+                                {{ translation.send }}
+                            </span>
+                        </button>
+                        <button
+                            class="pivx-button-small wallet-panel__actionBtn"
+                            @click="guiRenderCurrentReceiveModal()"
+                            data-toggle="modal"
+                            data-target="#qrModal"
+                        >
+                            <i
+                                class="fa-solid fa-qrcode wallet-panel__actionIcon"
+                                aria-hidden="true"
+                            ></i>
+                            <span class="buttoni-text">
+                                {{ translation.receive }}
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
         <center>
             <div
-                v-if="transparentSyncing || shieldSyncing"
+                v-if="showSyncBanner"
                 style="
                     display: flex;
                     font-size: 15px;

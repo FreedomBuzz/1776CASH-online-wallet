@@ -38,43 +38,68 @@ describe('ProposalStatus component tests', () => {
         proposalValidator.reason = reasons.NOT_FUNDED;
         mount();
         const status = wrapper.find('[data-testid="proposalStatus"]');
-        expect(status.text()).toBe('proposalFailing');
+        expect(status.text()).toBe('Not Passing');
         expect(status.classes()).toContain('votesNo');
         const funding = wrapper.find('[data-testid="proposalFunding"]');
-        expect(funding.text()).toBe('(proposalNotFunded)');
+        expect(funding.text()).toBe('Needs more support');
     });
     it('renders over budget proposals correctly', () => {
         proposalValidator.reason = reasons.OVER_BUDGET;
         mount();
         const status = wrapper.find('[data-testid="proposalStatus"]');
-        expect(status.text()).toBe('proposalFailing');
+        expect(status.text()).toBe('Passing');
         expect(status.classes()).toContain('votesOverAllocated');
         const funding = wrapper.find('[data-testid="proposalFunding"]');
-        expect(funding.text()).toBe('(proposalOverBudget)');
+        expect(funding.text()).toBe('Waiting for budget');
     });
     it('renders young proposals correctly', () => {
         proposalValidator.reason = reasons.TOO_YOUNG;
         mount();
         const status = wrapper.find('[data-testid="proposalStatus"]');
-        expect(status.text()).toBe('proposalFailing');
+        expect(status.text()).toBe('Not Passing');
         expect(status.classes()).toContain('votesNo');
         const funding = wrapper.find('[data-testid="proposalFunding"]');
-        expect(funding.text()).toBe('(proposalTooYoung)');
+        expect(funding.text()).toBe('Too new to qualify');
     });
 
     it('renders passing proposals correctly', () => {
         mount();
         const status = wrapper.find('[data-testid="proposalStatus"]');
-        expect(status.text()).toBe('proposalPassing');
+        expect(status.text()).toBe('Passing');
         expect(status.classes()).toContain('votesYes');
         const funding = wrapper.find('[data-testid="proposalFunding"]');
-        expect(funding.text()).toBe('(proposalFunded)');
+        expect(funding.text()).toBe('Queued for payout');
     });
     it('renders percentages correctly', () => {
         mount();
         // It should be (90 - 30) / 132 = 45.5% approx.
-        expect(wrapper.find('[data-testid="proposalPercentage"]').text()).toBe(
-            '45.5% proposalNetYes'
+        expect(
+            wrapper.find('[data-testid="proposalPercentage"]').text()
+        ).toMatch(
+            /45.5%\s*Support vs threshold/
+        );
+    });
+
+    it('renders hybrid score percentage when coin voting is present', () => {
+        wrapper = vueMount(ProposalStatus, {
+            props: {
+                proposal: {
+                    URL: 'https://proposal.com/',
+                    Name: 'ProposalName',
+                    PaymentAddress: 'Dlabsaddress',
+                    Yeas: 0,
+                    Nays: 0,
+                    CombinedScore: 4.5,
+                },
+                proposalValidator,
+                nMasternodes: 10,
+            },
+        });
+
+        expect(
+            wrapper.find('[data-testid="proposalPercentage"]').text()
+        ).toMatch(
+            /45.0%\s*Support vs threshold/
         );
     });
 });

@@ -1,5 +1,40 @@
 import { cChainParams, COIN } from '../chain_params.js';
 
+function toNumber(value, fallback = 0) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+export function getProposalVoteSnapshot(proposal = {}) {
+    const mnYes = toNumber(proposal.MnYes ?? proposal.mn_yes ?? proposal.Yeas);
+    const mnNo = toNumber(proposal.MnNo ?? proposal.mn_no ?? proposal.Nays);
+    const coinYes = toNumber(
+        proposal.CoinYes ?? proposal.coin_yes ?? proposal.CoinYeas
+    );
+    const coinNo = toNumber(
+        proposal.CoinNo ?? proposal.coin_no ?? proposal.CoinNays
+    );
+    const combinedScoreRaw =
+        proposal.CombinedScore ?? proposal.combined_score ?? null;
+    const hasHybridScore =
+        combinedScoreRaw !== null &&
+        combinedScoreRaw !== undefined &&
+        combinedScoreRaw !== '';
+
+    const combinedScore = hasHybridScore
+        ? toNumber(combinedScoreRaw)
+        : mnYes - mnNo;
+
+    return {
+        mnYes,
+        mnNo,
+        coinYes,
+        coinNo,
+        combinedScore,
+        hasHybridScore,
+    };
+}
+
 /**
  * @enum {number}
  */
@@ -26,11 +61,10 @@ export class ProposalValidator {
      * @returns {{passing: boolean, reason?: reasons}}
      */
     validate(proposal) {
-        const { Yeas, Nays } = proposal;
-        const netYes = Yeas - Nays;
+        const { combinedScore } = getProposalVoteSnapshot(proposal);
 
         const requiredVotes = this.#nMasternodes / 10;
-        if (netYes < requiredVotes) {
+        if (combinedScore < requiredVotes) {
             return { passing: false, reason: reasons.NOT_FUNDED };
         } else if (!proposal.IsEstablished) {
             return { passing: false, reason: reasons.TOO_YOUNG };

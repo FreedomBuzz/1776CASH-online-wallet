@@ -99,6 +99,7 @@ export default {
             template: './index.template.html',
             filename: 'index.html',
             favicon: './assets/favicon.ico',
+            hash: true,
             meta: {
                 viewport:
                     'width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no',

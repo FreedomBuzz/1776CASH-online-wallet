@@ -8,3 +8,4 @@ chain_params.json
 cypress/snapshots/*/__diff_output__/
 cypress/screenshots/*/*(failed)*
 cypress/fixtures/e2e
+.idea/

@@ -1,7 +1,6 @@
 <script setup>
-import { translation } from '../i18n';
 import { computed, toRefs } from 'vue';
-import { ProposalValidator, reasons } from './status';
+import { ProposalValidator, reasons, getProposalVoteSnapshot } from './status';
 const props = defineProps({
     proposal: Object,
     nMasternodes: Number,
@@ -9,35 +8,36 @@ const props = defineProps({
 });
 const { proposal, nMasternodes, proposalValidator } = toRefs(props);
 const proposalStatus = computed(() => {
-    const { Yeas, Nays } = proposal.value;
-    const netYes = Yeas - Nays;
+    const voteSnapshot = getProposalVoteSnapshot(proposal.value);
 
     let statusClass = '';
-    let funding = '';
+    let status = 'Not Passing';
+    let funding = 'Needs more support';
     const { passing, reason } = proposalValidator.value.validate(
         proposal.value
     );
-    const status = passing
-        ? translation.proposalPassing
-        : translation.proposalFailing;
 
     if (passing) {
-        funding = translation.proposalFunded;
+        status = 'Passing';
+        funding = 'Queued for payout';
         statusClass = 'votesYes';
     } else {
         switch (reason) {
             case reasons.NOT_FUNDED: {
-                funding = translation.proposalNotFunded;
+                status = 'Not Passing';
+                funding = 'Needs more support';
                 statusClass = 'votesNo';
                 break;
             }
             case reasons.OVER_BUDGET: {
-                funding = translation.proposalOverBudget;
+                status = 'Passing';
+                funding = 'Waiting for budget';
                 statusClass = 'votesOverAllocated';
                 break;
             }
             case reasons.TOO_YOUNG: {
-                funding = translation.proposalTooYoung;
+                status = 'Not Passing';
+                funding = 'Too new to qualify';
                 statusClass = 'votesNo';
                 break;
             }
@@ -48,46 +48,70 @@ const proposalStatus = computed(() => {
         status,
         statusClass,
         funding,
-        netYesPercent: (netYes / nMasternodes.value) * 100,
+        netYesPercent:
+            nMasternodes.value > 0
+                ? (voteSnapshot.combinedScore / nMasternodes.value) * 100
+                : 0,
     };
 });
 </script>
 
 <template>
-    <span
-        style="
-            text-transform: uppercase;
-            font-size: 12px;
-            line-height: 15px;
-            display: block;
-            margin-bottom: 15px;
-        "
-    >
+    <div class="proposalStatusSummary">
         <span
-            style="font-weight: 700"
+            class="proposalStatusTitle"
             data-testid="proposalStatus"
             :class="proposalStatus.statusClass"
             >{{ proposalStatus.status }}</span
-        ><br />
-        <span style="color: #9aa2c8" data-testid="proposalFunding"
-            >({{ proposalStatus.funding }})</span
-        ><br />
-    </span>
-    <span
-        style="
-            font-size: 12px;
-            line-height: 15px;
-            display: block;
-            color: #9aa2c8;
-        "
-        data-testid="proposalPercentage"
-    >
-        <b style="color: #dedee0"
-            >{{ proposalStatus.netYesPercent.toFixed(1) }}%</b
-        ><br />
-        {{ translation.proposalNetYes }}
-    </span>
+        >
+        <span class="proposalStatusFunding" data-testid="proposalFunding">
+            {{ proposalStatus.funding }}
+        </span>
+        <span class="proposalStatusSupport" data-testid="proposalPercentage">
+            <b class="proposalStatusSupportValue"
+                >{{ proposalStatus.netYesPercent.toFixed(1) }}%</b
+            >
+            <span class="proposalStatusSupportLabel">Support vs threshold</span>
+        </span>
+    </div>
     <span class="governArrow for-mobile ptr">
         <i class="fa-solid fa-angle-down"></i>
     </span>
 </template>
+<style scoped>
+.proposalStatusSummary {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-transform: uppercase;
+}
+
+.proposalStatusTitle {
+    font-size: 12px;
+    line-height: 15px;
+    font-weight: 700;
+}
+
+.proposalStatusFunding {
+    font-size: 11px;
+    line-height: 14px;
+    color: #9aa2c8;
+}
+
+.proposalStatusSupport {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 11px;
+    line-height: 14px;
+    color: #9aa2c8;
+}
+
+.proposalStatusSupportValue {
+    color: #dedee0;
+}
+
+.proposalStatusSupportLabel {
+    text-transform: none;
+}
+</style>

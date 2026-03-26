@@ -50,6 +50,27 @@ import { SaplingParams } from './sapling_params.js';
 import { HdMasterKey } from './masterkey.js';
 import { BinaryShieldSyncer } from './shield_syncer.js';
 import { useWallets } from './composables/use_wallet.js';
+import { isShieldFeatureActive } from './shield_activation.js';
+
+export function normalizeShieldCheckpoint(
+    lastSyncedBlock,
+    chainTip,
+    defaultStartingShieldBlock
+) {
+    if (!Number.isFinite(defaultStartingShieldBlock)) {
+        return lastSyncedBlock;
+    }
+    if (!Number.isFinite(lastSyncedBlock)) {
+        return defaultStartingShieldBlock;
+    }
+    if (lastSyncedBlock < defaultStartingShieldBlock) {
+        return defaultStartingShieldBlock;
+    }
+    if (Number.isFinite(chainTip) && lastSyncedBlock > chainTip) {
+        return defaultStartingShieldBlock;
+    }
+    return lastSyncedBlock;
+}
 
 /**
  * Class Wallet, at the moment it is just a "realization" of Masterkey with a given nAccount
@@ -868,7 +889,8 @@ export class Wallet {
         if (!this.isLoaded() || this.#isSynced) return;
         const cNet = getNetwork();
         const addr = this.getKeyToExport();
-        let nStartHeight = Math.max(
+        const nStartHeight = Math.max(
+            0,
             ...this.#mempool.getTransactions().map((tx) => tx.blockHeight)
         );
         // Compute the total pages and iterate through them until we've synced everything
@@ -901,11 +923,50 @@ export class Wallet {
             return;
         }
 
+        let shouldCheckSaplingRoot = false;
         try {
             const network = getNetwork();
+            const database = await Database.getInstance();
+            const chainTip = await network.getBlockCount();
+            if (
+                !isShieldFeatureActive(
+                    chainTip,
+                    cChainParams.current.defaultStartingShieldBlock
+                )
+            ) {
+                this.#eventEmitter.emit(
+                    'shield-sync-status-update',
+                    0,
+                    0,
+                    true
+                );
+                return;
+            }
+            const currentShieldCheckpoint = this.#shield.getLastSyncedBlock();
+            const normalizedShieldCheckpoint = normalizeShieldCheckpoint(
+                currentShieldCheckpoint,
+                chainTip,
+                cChainParams.current.defaultStartingShieldBlock
+            );
+
+            if (normalizedShieldCheckpoint !== currentShieldCheckpoint) {
+                debugLog(
+                    DebugTopics.WALLET,
+                    `Resetting shield checkpoint from ${currentShieldCheckpoint} to ${normalizedShieldCheckpoint}`
+                );
+                await database.setShieldSyncData({
+                    shieldData: null,
+                    lastSyncedBlock: null,
+                });
+                await this.#shield.reloadFromCheckpoint(
+                    normalizedShieldCheckpoint
+                );
+                await this.#saveShieldOnDisk();
+            }
+
             const shieldSyncer = await BinaryShieldSyncer.create(
                 network,
-                await Database.getInstance(),
+                database,
                 this.#shield.getLastSyncedBlock()
             );
 
@@ -967,16 +1028,22 @@ export class Wallet {
             );
             // At this point it should be safe to assume that shield is ready to use
             await this.#saveShieldOnDisk();
+            shouldCheckSaplingRoot = true;
         } catch (e) {
             debugError(DebugTopics.WALLET, e);
         }
 
-        const networkSaplingRoot = (
-            await getNetwork().getBlock(this.#shield.getLastSyncedBlock())
-        ).finalsaplingroot;
-        if (networkSaplingRoot)
-            await this.#checkShieldSaplingRoot(networkSaplingRoot);
-        this.#isSynced = true;
+        if (shouldCheckSaplingRoot) {
+            try {
+                const networkSaplingRoot = (
+                    await getNetwork().getBlock(this.#shield.getLastSyncedBlock())
+                ).finalsaplingroot;
+                if (networkSaplingRoot)
+                    await this.#checkShieldSaplingRoot(networkSaplingRoot);
+            } catch (e) {
+                debugError(DebugTopics.WALLET, e);
+            }
+        }
 
         this.#eventEmitter.emit('shield-sync-status-update', 0, 0, true);
     }
@@ -1141,8 +1208,14 @@ export class Wallet {
     }
 
     async #resetShield() {
-        // TODO: take the wallet creation height in input from users
-        await this.#shield.reloadFromCheckpoint(4_200_000);
+        const database = await Database.getInstance();
+        await database.setShieldSyncData({
+            shieldData: null,
+            lastSyncedBlock: null,
+        });
+        await this.#shield.reloadFromCheckpoint(
+            cChainParams.current.defaultStartingShieldBlock
+        );
         await this.#saveShieldOnDisk();
     }
 

@@ -1,13 +1,10 @@
-import { mount, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import { beforeEach, expect } from 'vitest';
 import Login from '../../scripts/dashboard/Login.vue';
 import CreateWallet from '../../scripts/dashboard/CreateWallet.vue';
 import VanityGen from '../../scripts/dashboard/VanityGen.vue';
 import AccessWallet from '../../scripts/dashboard/AccessWallet.vue';
 import { vi, describe } from 'vitest';
-import Modal from '../../scripts/Modal.vue';
-import ImportLedgerModal from '../../scripts/dashboard/import_modals/ImportLedgerModal.vue';
-import { nextTick } from 'vue';
 
 describe('Login tests', () => {
     beforeEach(() => {
@@ -174,38 +171,15 @@ describe('Login tests', () => {
             ],
         ]);
     });
-    test('HardwareWallet login', async () => {
-        const wrapper = mount(Login, {
+    test('does not render the ledger dashboard card', () => {
+        const wrapper = shallowMount(Login, {
             props: {
                 advancedMode: false,
             },
             attachTo: document.getElementById('app'),
         });
-        const hardwareWalletBtn = wrapper.find(
-            '[data-testid=hardwareWalletBtn]'
+        expect(wrapper.find('[data-testid=hardwareWalletBtn]').exists()).toBe(
+            false
         );
-        // Make sure it's visible and click it
-        expect(hardwareWalletBtn.isVisible()).toBeTruthy();
-        await hardwareWalletBtn.trigger('click');
-
-        const labelInput = wrapper
-            .findComponent(ImportLedgerModal)
-            .findComponent(Modal)
-            .find('[data-testid="label"]');
-        const submitButton = wrapper
-            .findComponent(ImportLedgerModal)
-            .findComponent(Modal)
-            .find('[data-testid="accessHardwareWallet"]');
-
-        labelInput.element.value = 'mywallet';
-        await labelInput.trigger('input');
-        await submitButton.trigger('click');
-        await nextTick();
-
-        // Make sure the Login component relays the right event
-        expect(wrapper.emitted('import-wallet')).toHaveLength(1);
-        expect(wrapper.emitted('import-wallet')).toStrictEqual([
-            [{ type: 'hardware', label: 'mywallet' }],
-        ]);
     });
 });

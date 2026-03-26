@@ -6,7 +6,7 @@ import ProposalPayment from './ProposalPayment.vue';
 import ProposalVotes from './ProposalVotes.vue';
 import Modal from '../Modal.vue';
 import { translation } from '../i18n.js';
-import { toRefs, ref } from 'vue';
+import { toRefs, ref, computed } from 'vue';
 import { ProposalValidator } from './status';
 const props = defineProps({
     proposal: Object,
@@ -36,8 +36,17 @@ const emit = defineEmits([
 ]);
 const showConfirmVoteModal = ref(false);
 const selectedVoteCode = ref(0);
+const selectedVoteMode = ref('mn');
+const coinVoteAmount = ref('');
+const canConfirmVote = computed(
+    () =>
+        selectedVoteMode.value !== 'coin' ||
+        (Number.parseFloat(coinVoteAmount.value) || 0) > 0
+);
 function vote(voteCode) {
     selectedVoteCode.value = voteCode;
+    selectedVoteMode.value = 'mn';
+    coinVoteAmount.value = '';
     showConfirmVoteModal.value = true;
 }
 </script>
@@ -104,6 +113,46 @@ function vote(voteCode) {
                 <span
                     v-html="translation.ALERTS.CONFIRM_POPUP_VOTE_HTML"
                 ></span>
+                <div class="govVoteModeToggle">
+                    <button
+                        type="button"
+                        data-testid="voteModeMasternode"
+                        class="pivx-button-outline pivx-button-outline-small"
+                        :class="{ govVoteModeActive: selectedVoteMode === 'mn' }"
+                        @click="selectedVoteMode = 'mn'"
+                    >
+                        Masternode
+                    </button>
+                    <button
+                        type="button"
+                        data-testid="voteModeCoin"
+                        class="pivx-button-outline pivx-button-outline-small"
+                        :class="{ govVoteModeActive: selectedVoteMode === 'coin' }"
+                        @click="selectedVoteMode = 'coin'"
+                    >
+                        Coin
+                    </button>
+                </div>
+                <div v-if="selectedVoteMode === 'coin'" class="govCoinVoteBox">
+                    <label class="govCoinVoteLabel" for="coinVoteAmountInput">
+                        Lock Amount
+                    </label>
+                    <input
+                        id="coinVoteAmountInput"
+                        v-model="coinVoteAmount"
+                        data-testid="coinVoteAmount"
+                        class="form-control"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        inputmode="decimal"
+                        placeholder="0.00"
+                    />
+                    <small class="govCoinVoteHint">
+                        Unlock height:
+                        {{ proposal.CutoffHeight ?? proposal.BlockEnd ?? 'n/a' }}
+                    </small>
+                </div>
             </template>
             <template #footer>
                 <button
@@ -115,12 +164,24 @@ function vote(voteCode) {
                 </button>
                 <button
                     @click="
-                        emit('vote', selectedVoteCode);
+                        emit(
+                            'vote',
+                            selectedVoteMode === 'coin'
+                                ? {
+                                      mode: 'coin',
+                                      voteCode: selectedVoteCode,
+                                      amount: Number.parseFloat(
+                                          coinVoteAmount
+                                      ),
+                                  }
+                                : selectedVoteCode
+                        );
                         showConfirmVoteModal = false;
                     "
                     data-testid="confirmVote"
                     class="pivx-button-small"
                     style="height: 42px; width: 228px"
+                    :disabled="!canConfirmVote"
                 >
                     {{ translation.popupConfirm }}
                 </button>
@@ -128,3 +189,33 @@ function vote(voteCode) {
         </Modal>
     </Teleport>
 </template>
+<style scoped>
+.govVoteModeToggle {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.govVoteModeActive {
+    border-color: #3fb68b;
+    box-shadow: inset 0 0 0 1px rgba(63, 182, 139, 0.4);
+}
+
+.govCoinVoteBox {
+    margin-top: 16px;
+    text-align: left;
+}
+
+.govCoinVoteLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.govCoinVoteHint {
+    display: block;
+    margin-top: 8px;
+    opacity: 0.72;
+}
+</style>

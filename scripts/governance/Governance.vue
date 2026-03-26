@@ -1,6 +1,6 @@
 <script setup>
 import { COIN, cChainParams } from '../chain_params';
-import { watch, ref, computed, onMounted } from 'vue';
+import { watch, ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { ProposalValidator } from './status';
 import { useWallets } from '../composables/use_wallet';
 import Masternode from '../masternode.js';
@@ -36,6 +36,7 @@ const proposals = ref([]);
 const contestedProposals = ref([]);
 const nextSuperBlock = ref(0);
 const masternodeCount = ref(1);
+const hasOpenedGovernance = ref(false);
 const allocatedBudget = computed(() => {
     const proposalValidator = new ProposalValidator(masternodeCount.value);
 
@@ -107,10 +108,35 @@ async function fetchProposals() {
         masternodeCount.value =
             (await getNetwork().getMasternodeCount())?.total;
 
-        proposals.value = arrProposals.filter(
+        const proposalsWithHybridVotes = await Promise.all(
+            arrProposals.map(async (proposal) => {
+                try {
+                    const hybridStatus = await getNetwork().getProposalHybridStatus(
+                        proposal.Hash
+                    );
+                    return {
+                        ...proposal,
+                        MnYes: hybridStatus.mn_yes,
+                        MnNo: hybridStatus.mn_no,
+                        CoinYes: hybridStatus.coin_yes,
+                        CoinNo: hybridStatus.coin_no,
+                        CombinedScore: hybridStatus.combined_score,
+                        CoinWeight: hybridStatus.k,
+                        CutoffHeight:
+                            hybridStatus.cutoff_height > 0
+                                ? hybridStatus.cutoff_height
+                                : proposal.BlockEnd,
+                    };
+                } catch (_) {
+                    return proposal;
+                }
+            })
+        );
+
+        proposals.value = proposalsWithHybridVotes.filter(
             (a) => a.Yeas + a.Nays < 100 || a.Ratio > 0.25
         );
-        contestedProposals.value = arrProposals.filter(
+        contestedProposals.value = proposalsWithHybridVotes.filter(
             (a) => a.Yeas + a.Nays >= 100 && a.Ratio <= 0.25
         );
     } catch (e) {
@@ -118,12 +144,27 @@ async function fetchProposals() {
     }
 }
 
-watch(cChainParams, () => fetchProposals());
+watch(cChainParams, () => {
+    if (hasOpenedGovernance.value) {
+        fetchProposals();
+    }
+});
+
+function openGovernanceTab() {
+    hasOpenedGovernance.value = true;
+    fetchProposals();
+}
+
 onMounted(() => {
     document
         .getElementById('governanceTab')
-        .addEventListener('click', fetchProposals);
-    fetchProposals();
+        .addEventListener('click', openGovernanceTab);
+});
+
+onBeforeUnmount(() => {
+    document
+        .getElementById('governanceTab')
+        ?.removeEventListener('click', openGovernanceTab);
 });
 
 async function openCreateProposal() {
@@ -212,7 +253,76 @@ function deleteProposal(proposal) {
     );
 }
 
-async function vote(proposal, voteCode) {
+function normalizeVoteCode(voteCode) {
+    return Number(voteCode) === 1 || voteCode === true ? 1 : 2;
+}
+
+async function voteWithCoins(proposal, voteCode, amount) {
+    const coinAmount = Number.parseFloat(amount);
+    if (!Number.isFinite(coinAmount) || coinAmount <= 0) {
+        createAlert(
+            'warning',
+            `Enter a valid ${cChainParams.current.TICKER} amount for coin voting.`,
+            6500
+        );
+        return;
+    }
+
+    const unlockHeight = Number.parseInt(
+        proposal.CutoffHeight ?? proposal.BlockEnd,
+        10
+    );
+    if (!Number.isFinite(unlockHeight) || unlockHeight <= 0) {
+        createAlert('warning', 'Coin voting is unavailable for this proposal.', 6500);
+        return;
+    }
+
+    try {
+        const lockResult = await getNetwork().createGovernanceVoteLock(
+            proposal.Hash,
+            coinAmount,
+            unlockHeight
+        );
+        const lockRef =
+            lockResult?.outpoint ??
+            (lockResult?.txid !== undefined && lockResult?.vout !== undefined
+                ? `${lockResult.txid}:${lockResult.vout}`
+                : null);
+
+        if (!lockRef) {
+            throw new Error('Could not create a governance vote lock.');
+        }
+
+        await getNetwork().castGovernanceVote(proposal.Hash, voteCode, [
+            lockRef,
+        ]);
+        createAlert(
+            'success',
+            `Coin vote submitted with ${coinAmount} ${cChainParams.current.TICKER}.`,
+            6500
+        );
+        await fetchProposals();
+    } catch (e) {
+        console.error(e);
+        createAlert(
+            'warning',
+            sanitizeHTML(e?.message || ALERTS.INTERNAL_ERROR),
+            7500
+        );
+    }
+}
+
+async function vote(proposal, voteRequest) {
+    if (voteRequest && typeof voteRequest === 'object' && voteRequest.mode) {
+        const voteCode = normalizeVoteCode(voteRequest.voteCode);
+        if (voteRequest.mode === 'coin') {
+            await voteWithCoins(proposal, voteCode, voteRequest.amount);
+            return;
+        }
+        voteRequest = voteCode;
+    }
+
+    const voteCode = normalizeVoteCode(voteRequest);
     let successfulVotes = 0;
     if (!masternodes.value.length) {
         createAlert(ALERTS.MN_ACCESS_BEFORE_VOTE, 6000);
@@ -257,23 +367,15 @@ async function vote(proposal, voteCode) {
         @close="showCreateProposalModal = false"
         @create="createProposal"
     />
-    <div>
-        <div class="col-md-12 title-section rm-pd">
-            <span
-                style="
-                    font: 23px 'Montserrat Regular';
-                    text-align: center;
-                    display: block;
-                    font-weight: 300;
-                "
-                >Vote on Governance</span
-            >
+        <div class="governanceRoot">
+            <div class="col-md-12 title-section rm-pd">
+                <span class="governanceHeaderSubtitle">Vote on Governance</span>
             <h3 data-i18n="navGovernance" class="pivx-bold-title center-text">
                 Proposals
             </h3>
             <p data-i18n="govSubtext" class="center-text">
-                From this tab you can check the proposals and, if you have a
-                masternode, be a part of the <b>DAO</b> and vote!
+                Browse proposals, track their status, and vote in the <b>DAO</b>
+                with either a masternode or locked coins.
             </p>
         </div>
 
@@ -291,7 +393,7 @@ async function vote(proposal, voteCode) {
             >
                 <span
                     data-i18n="govNextPayout"
-                    style="font-weight: 400; color: #dedee0; font-size: 20px"
+                    class="governanceNextPayoutTitle"
                     >Next Treasury Payout</span
                 >
                 <Flipdown :timeStamp="flipdownTimeStamp" />

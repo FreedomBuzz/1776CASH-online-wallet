@@ -2,8 +2,12 @@ import { TransactionBuilder } from './transaction_builder.js';
 import { ALERTS, start as i18nStart, translation } from './i18n.js';
 import { activeWallet, hasEncryptedWallet, Wallet } from './wallet.js';
 import { getNetwork } from './network/network_manager.js';
-import { start as settingsStart, strCurrency } from './settings.js';
-import { createAlert } from './alerts/alert.js';
+import {
+    initializeThemeMode,
+    start as settingsStart,
+    strCurrency,
+} from './settings.js';
+import { createAlert, tryGetSafeAlertText } from './alerts/alert.js';
 import { sanitizeHTML } from './misc.js';
 import { registerWorker } from './native.js';
 import { getEventEmitter } from './event_bus.js';
@@ -153,17 +157,7 @@ export async function start() {
         domPageContainer: document.getElementById('page-container'),
     };
 
-    // Apply light/dark regime from local override, defaulting to light.
-    const applyThemeClass = (theme) => {
-        document.body.classList.toggle('theme-dark', theme === 'dark');
-        document.body.classList.toggle('theme-light', theme !== 'dark');
-    };
-    const savedTheme = localStorage.getItem('walletTheme');
-    const initialTheme =
-        savedTheme === 'dark' || savedTheme === 'light'
-            ? savedTheme
-            : 'light';
-    applyThemeClass(initialTheme);
+    initializeThemeMode();
 
     // Set Copyright year on footer
     document.getElementById('copyrightYear').innerHTML =
@@ -605,11 +599,16 @@ export async function resync() {
 }
 
 function errorHandler(e) {
-    const message = `<b>${translation.unhandledException}</b><br>${sanitizeHTML(
-        e.message || e.reason
-    )}`;
     // Don't display extension errors
     if (e?.filename?.includes('extension')) return;
+    const detail = tryGetSafeAlertText(e?.message, e?.reason);
+    if (!detail) {
+        console.error(e);
+        return;
+    }
+    const message = `<b>${translation.unhandledException}</b><br>${sanitizeHTML(
+        detail
+    )}`;
     try {
         createAlert('warning', message);
     } catch (_) {

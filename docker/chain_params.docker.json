@@ -27,13 +27,13 @@
         "SHIELD_PREFIX": "c7",
         "Explorers": [
             {
-                "name": "Local Explorer",
+                "name": "1776CASH Explorer",
                 "url": "http://localhost:8081"
             }
         ],
         "Nodes": [
             {
-                "name": "Local RPC Bridge",
+                "name": "1776CASH RPC Bridge",
                 "url": "http://localhost:8082/mainnet"
             }
         ],
@@ -47,7 +47,7 @@
         "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
         "stakeSplitTarget": 50000000000,
         "mnReward": 600000000,
-        "defaultStartingShieldBlock": 0
+        "defaultStartingShieldBlock": 10081
     },
     "testnet": {
         "name": "testnet",
@@ -77,13 +77,13 @@
         "SHIELD_PREFIX": "tc7",
         "Explorers": [
             {
-                "name": "Local Explorer",
+                "name": "1776CASH Explorer",
                 "url": "http://localhost:8081"
             }
         ],
         "Nodes": [
             {
-                "name": "Local RPC Bridge",
+                "name": "1776CASH RPC Bridge",
                 "url": "http://localhost:8082/testnet"
             }
         ],
@@ -97,6 +97,6 @@
         "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
         "stakeSplitTarget": 50000000000,
         "mnReward": 600000000,
-        "defaultStartingShieldBlock": 0
+        "defaultStartingShieldBlock": 33400
     }
 }

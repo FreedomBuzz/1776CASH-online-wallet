@@ -22,6 +22,28 @@ import { Database } from '../database.js';
 import { decrypt, encrypt, buff_to_base64, base64_to_buf } from '../aes-gcm.js';
 import { usePrivacy } from './use_privacy.js';
 import { ParsedSecret } from '../parsed_secret.js';
+import { resolveShieldModeSelection } from '../shield_activation.js';
+import { cChainParams } from '../chain_params.js';
+
+export async function readWalletBalanceSnapshot(wallet) {
+    return {
+        balance: wallet.balance,
+        immatureBalance: wallet.immatureBalance,
+        immatureColdBalance: wallet.immatureColdBalance,
+        shieldBalance: await wallet.getShieldBalance(),
+        pendingShieldBalance: await wallet.getPendingShieldBalance(),
+        coldBalance: wallet.coldBalance,
+    };
+}
+
+export function shouldAutoSwitchToPublicMode({
+    hasShield,
+    publicMode,
+    balance,
+    shieldBalance,
+}) {
+    return hasShield && !publicMode && balance > 0 && shieldBalance === 0;
+}
 
 function addWallet(wallet) {
     const privacy = usePrivacy();
@@ -32,7 +54,7 @@ function addWallet(wallet) {
     const getKeyToExport = () => wallet.getKeyToExport();
     const hasShield = ref(wallet.hasShield());
     const getNewAddress = (nReceiving) => wallet.getNewAddress(nReceiving);
-    const blockCount = ref(0);
+    const blockCount = ref(rawBlockCount);
 
     const updateWallet = async () => {
         isImported.value = wallet.isLoaded();
@@ -65,11 +87,28 @@ function addWallet(wallet) {
     const immatureColdBalance = ref(0);
     const currency = ref('USD');
     const price = ref(0.0);
+    const refreshBalances = async () => {
+        const snapshot = await readWalletBalanceSnapshot(wallet);
+        balance.value = snapshot.balance;
+        immatureBalance.value = snapshot.immatureBalance;
+        immatureColdBalance.value = snapshot.immatureColdBalance;
+        shieldBalance.value = snapshot.shieldBalance;
+        pendingShieldBalance.value = snapshot.pendingShieldBalance;
+        coldBalance.value = snapshot.coldBalance;
+        if (
+            shouldAutoSwitchToPublicMode({
+                hasShield: hasShield.value,
+                publicMode: publicMode.value,
+                balance: snapshot.balance,
+                shieldBalance: snapshot.shieldBalance,
+            })
+        ) {
+            publicMode.value = true;
+        }
+    };
     const sync = async () => {
         await wallet.sync();
-        balance.value = wallet.balance;
-        shieldBalance.value = await wallet.getShieldBalance();
-        pendingShieldBalance.value = await wallet.getPendingShieldBalance();
+        await refreshBalances();
         isSynced.value = wallet.isSynced;
     };
     wallet.onShieldLoadedFromDisk(() => {
@@ -111,11 +150,19 @@ function addWallet(wallet) {
         get() {
             // If the wallet is not shield capable, always return true
             if (!hasShield.value) return true;
-            return privacy.publicMode;
+            return resolveShieldModeSelection(
+                privacy.publicMode,
+                blockCount.value,
+                cChainParams.current.defaultStartingShieldBlock
+            );
         },
 
         set(newValue) {
-            privacy.publicMode = newValue;
+            privacy.publicMode = resolveShieldModeSelection(
+                newValue,
+                blockCount.value,
+                cChainParams.current.defaultStartingShieldBlock
+            );
             const p = publicMode.value;
             // Depending on our Receive type, flip to the opposite type.
             // i.e: from `address` to `shield`, `shield contact` to `address`, etc
@@ -154,25 +201,25 @@ function addWallet(wallet) {
     });
 
     getEventEmitter().on('wallet-import', async () => {
-        publicMode.value = fPublicMode;
+        publicMode.value = resolveShieldModeSelection(
+            fPublicMode,
+            blockCount.value,
+            cChainParams.current.defaultStartingShieldBlock
+        );
         historicalTxs.value = [];
     });
 
     wallet.onBalanceUpdate(async () => {
-        balance.value = wallet.balance;
-        immatureBalance.value = wallet.immatureBalance;
-        immatureColdBalance.value = wallet.immatureColdBalance;
-        shieldBalance.value = await wallet.getShieldBalance();
-        pendingShieldBalance.value = await wallet.getPendingShieldBalance();
-        coldBalance.value = wallet.coldBalance;
+        await refreshBalances();
     });
     getEventEmitter().on('price-update', async () => {
         currency.value = strCurrency.toUpperCase();
         price.value = cOracle.getCachedPrice(strCurrency);
     });
 
-    getEventEmitter().on('new-block', () => {
+    getEventEmitter().on('new-block', async () => {
         blockCount.value = rawBlockCount;
+        await refreshBalances();
     });
 
     const onNewTx = (fun) => {
@@ -405,6 +452,7 @@ export const useWallets = defineStore('wallets', () => {
     const activeVault = ref(null);
 
     const selectWallet = async (w) => {
+        const previousKey = activeWallet.value?.getKeyToExport?.() ?? null;
         let i;
         let j = -1;
         for (i = 0; i < vaults.value.length; i++) {
@@ -425,6 +473,10 @@ export const useWallets = defineStore('wallets', () => {
         setWallet(await rawVaults[i].getWallet(j));
         activeWallet.value = vaults.value[i].wallets[j];
         activeVault.value = vaults.value[i];
+        const selectedKey = activeWallet.value?.getKeyToExport?.() ?? null;
+        if (selectedKey !== previousKey) {
+            getEventEmitter().emit('wallet-selected', selectedKey);
+        }
     };
 
     return {

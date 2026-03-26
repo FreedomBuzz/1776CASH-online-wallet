@@ -63,137 +63,78 @@ function submit() {
 </script>
 
 <template>
-    <center>
-        <div class="dcWallet-balances mb-4">
-            <div class="row lessBot p-0">
-                <div
-                    class="col-6 d-flex dcWallet-topLeftMenu"
-                    style="justify-content: flex-start"
+    <div class="wallet-panel-shell wallet-panel-host stake-page-shell">
+        <div class="wallet-panel stake-wallet-panel">
+            <div class="stake-wallet-panel__toolbar">
+                <button
+                    type="button"
+                    class="stake-wallet-panel__snowBtn"
+                    data-testid="setColdStakeButton"
+                    @click="showColdStakingAddressModal = true"
                 >
-                    <h3 class="noselect balance-title"></h3>
-                </div>
-
-                <div
-                    class="col-6 d-flex dcWallet-topRightMenu"
-                    style="justify-content: flex-end"
-                >
-                    <div class="btn-group dropleft">
-                        <i
-                            class="fa-solid fa-gear topCol"
-                            style="
-                                width: 20px;
-                                position: relative;
-                                top: 3px;
-                                right: 8px;
-                            "
-                            data-testid="setColdStakeButton"
-                            @click="showColdStakingAddressModal = true"
-                        ></i>
-                    </div>
-                </div>
+                    <i class="fa-solid fa-snowflake stake-wallet-panel__snowIcon"></i>
+                </button>
             </div>
 
-            <div
-                style="
-                    margin-top: 22px;
-                    padding-left: 15px;
-                    padding-right: 15px;
-                    margin-bottom: 35px;
-                "
-            >
-                <div
-                    style="
-                        background-color: #1d265a61;
-                        border: 2px solid #1d265a;
-                        border-radius: 5px;
-                    "
+            <section class="wallet-panel__primary stake-wallet-panel__primary">
+                <div>
+                    <img :src="logo" class="stake-wallet-panel__logo" />
+                </div>
+                <span
+                    class="ptr wallet-panel__amountRow stake-wallet-panel__amountHitbox"
+                    data-toggle="modal"
+                    data-target="#walletBreakdownModal"
+                    @click="renderWalletBreakdown()"
                 >
-                    <div>
-                        <img
-                            :src="logo"
-                            style="height: 60px; margin-top: 14px"
-                        />
-                    </div>
+                    <span class="logo-pivBal stake-wallet-panel__statusIcon" v-html="pLogo"></span>
                     <span
-                        class="ptr"
-                        data-toggle="modal"
-                        data-target="#walletBreakdownModal"
-                        @click="renderWalletBreakdown()"
+                        class="dcWallet-pivxBalance stake-wallet-panel__amount"
+                        v-html="coldBalanceStr"
+                        data-testid="coldBalance"
                     >
-                        <span class="logo-pivBal" v-html="pLogo"></span>
-                        <span
-                            class="dcWallet-pivxBalance"
-                            v-html="coldBalanceStr"
-                            data-testid="coldBalance"
-                        >
-                        </span>
-                        <span
-                            class="dcWallet-pivxTicker"
-                            style="position: relative; left: 4px"
-                            >&nbsp;{{ ticker }}&nbsp;</span
-                        >
                     </span>
-
-                    <div
-                        class="dcWallet-usdBalance"
-                        style="padding-bottom: 12px; padding-top: 3px"
+                    <span class="dcWallet-pivxTicker stake-wallet-panel__ticker"
+                        >&nbsp;{{ ticker }}&nbsp;</span
                     >
-                        <span
-                            class="dcWallet-usdValue"
-                            style="color: #d7d7d7; font-weight: 500"
-                            v-html="coldBalanceValue"
-                            data-testid="coldBalanceValue"
-                        ></span>
-                        <span
-                            class="dcWallet-usdValue"
-                            style="opacity: 0.55"
-                            data-testid="coldBalanceCurrency"
-                            >&nbsp;{{ currency }}</span
-                        >
-                    </div>
-                </div>
-            </div>
+                </span>
 
-            <div
-                class="row lessTop p-0"
-                style="
-                    margin-left: 15px;
-                    margin-right: 15px;
-                    margin-bottom: 19px;
-                    margin-top: -16px;
-                "
-            >
-                <div
-                    class="col-6 d-flex p-0"
-                    style="justify-content: flex-start"
+                <div class="dcWallet-usdBalance wallet-panel__fiat stake-wallet-panel__fiat">
+                    <span
+                        class="dcWallet-usdValue stake-wallet-panel__fiatValue"
+                        v-html="coldBalanceValue"
+                        data-testid="coldBalanceValue"
+                    ></span>
+                    <span
+                        class="dcWallet-usdValue wallet-panel__fiatCurrency"
+                        data-testid="coldBalanceCurrency"
+                        >&nbsp;{{ currency }}</span
+                    >
+                </div>
+            </section>
+
+            <section class="wallet-panel__actions stake-wallet-panel__actions">
+                <button
+                    class="pivx-button-small wallet-panel__actionBtn stake-wallet-panel__actionBtn"
+                    @click="emit('showStake')"
+                    data-testid="showStakeButton"
                 >
-                    <button
-                        class="pivx-button-small"
-                        style="height: 42px; width: 97px"
-                        @click="emit('showStake')"
-                        data-testid="showStakeButton"
-                    >
-                        <span class="buttoni-text">
-                            {{ translation.stake }}
-                        </span>
-                    </button>
-                </div>
+                    <span class="buttoni-text">
+                        {{ translation.stake }}
+                    </span>
+                </button>
 
-                <div class="col-6 d-flex p-0" style="justify-content: flex-end">
-                    <button
-                        class="pivx-button-small"
-                        style="height: 42px; width: 106px"
-                        @click="emit('showUnstake')"
-                        data-testid="showUnstakeButton"
-                    >
-                        <span class="buttoni-text">
-                            {{ translation.stakeUnstake }}
-                        </span>
-                    </button>
-                </div>
-            </div>
+                <button
+                    class="pivx-button-small wallet-panel__actionBtn stake-wallet-panel__actionBtn"
+                    @click="emit('showUnstake')"
+                    data-testid="showUnstakeButton"
+                >
+                    <span class="buttoni-text">
+                        {{ translation.stakeUnstake }}
+                    </span>
+                </button>
+            </section>
         </div>
-    </center>
+    </div>
 
     <Teleport to="body">
         <Modal :show="showColdStakingAddressModal">

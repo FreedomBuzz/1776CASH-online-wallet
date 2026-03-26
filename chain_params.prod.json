@@ -55,7 +55,8 @@
         "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
         "stakeSplitTarget": 50000000000,
         "mnReward": 600000000,
-        "defaultStartingShieldBlock": 0
+        "defaultStartingShieldBlock": 10081,
+        "minFeePerByte": 1000
     },
     "testnet": {
         "name": "testnet",
@@ -105,6 +106,7 @@
         "defaultColdStakingAddress": "PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f",
         "stakeSplitTarget": 50000000000,
         "mnReward": 600000000,
-        "defaultStartingShieldBlock": 0
+        "defaultStartingShieldBlock": 33400,
+        "minFeePerByte": 1000
     }
 }

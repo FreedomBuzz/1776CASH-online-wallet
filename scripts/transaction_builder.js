@@ -3,7 +3,7 @@ import bs58 from 'bs58';
 import { OP } from './script.js';
 import { hexToBytes, bytesToHex, dSHA256 } from './utils.js';
 import { isShieldAddress, isExchangeAddress } from './misc.js';
-import { SAPLING_TX_VERSION } from './chain_params.js';
+import { SAPLING_TX_VERSION, cChainParams } from './chain_params.js';
 /**
  * @class Builds a non-signed transaction
  */
@@ -14,7 +14,9 @@ export class TransactionBuilder {
 
     // Part of the tx fee that has been already handled
     #handledFee = 0;
-    MIN_FEE_PER_BYTE = 10;
+    get MIN_FEE_PER_BYTE() {
+        return cChainParams.current.minFeePerByte || 1000;
+    }
     // This number is larger or equal than the max size of the script sig for a P2CS and P2PKH transaction
     SCRIPT_SIG_MAX_SIZE = 108;
 

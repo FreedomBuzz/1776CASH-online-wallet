@@ -101,8 +101,13 @@ async function selectContact() {
 </script>
 
 <template>
-    <BottomPopup :title="translation.send" :show="show" @close="$emit('close')">
-        <div class="transferBody">
+    <BottomPopup
+        :title="translation.send"
+        :show="show"
+        panelClass="transfer-wallet-dialog"
+        @close="$emit('close')"
+    >
+        <div class="transferBody transfer-dialog-body">
             <label>{{ translation.address }}</label
             ><br />
 
@@ -171,26 +176,12 @@ async function selectContact() {
                         />
                         <div class="input-group-append">
                             <span
-                                class="input-group-text"
-                                style="
-                                    background-color: #DEDEE0;
-                                    color: #b9bfd4;
-                                    border: 2px solid #b9bfd4;
-                                    border-left: 0px;
-                                "
+                                class="input-group-text transferAddon transferAddonPassive"
                             >
                                 {{ ticker }}
                             </span>
                             <span
-                                class="input-group-text p-0"
-                                style="
-                                    cursor: pointer;
-                                    background-color: #202656;
-                                    border: 2px solid #b9bfd4;
-                                    color: #DEDEE0;
-                                    font-weight: 700;
-                                    padding: 0px 10px 0px 10px !important;
-                                "
+                                class="input-group-text p-0 transferAddon transferAddonAction"
                                 @click="$emit('max-balance', !publicMode)"
                             >
                                 {{ translation.sendAmountCoinsMax }}
@@ -216,13 +207,7 @@ async function selectContact() {
                         />
                         <div class="input-group-append">
                             <span
-                                class="input-group-text pl-0"
-                                style="
-                                    background-color: #DEDEE0;
-                                    color: #b9bfd4;
-                                    border: 2px solid #b9bfd4;
-                                    border-left: 0px;
-                                "
+                                class="input-group-text pl-0 transferAddon transferAddonPassive"
                                 >{{ currency }}</span
                             >
                         </div>
@@ -345,34 +330,58 @@ async function selectContact() {
 
 .transferItem .transferText span {
     font-size: 11px;
-    color: #dbdbdb;
+    color: var(--theme-text-muted);
 }
 
-.transferMenu .transferBody {
+.transfer-dialog-body {
     padding: 9px 12px;
     font-size: 15px;
 }
 
-.transferMenu .transferBody .feeButton {
-    background-color: #ffffff00;
-    border: 1px solid #ffffff1f;
+.transfer-dialog-body .transferAddon {
+    border: 2px solid var(--theme-border);
+    border-left: 0;
+}
+
+.transfer-dialog-body .transferAddonPassive {
+    background-color: var(--theme-surface-2);
+    color: var(--theme-text-muted);
+}
+
+.transfer-dialog-body .transferAddonAction {
+    cursor: pointer;
+    background: linear-gradient(
+        160deg,
+        var(--theme-accent),
+        var(--theme-accent-2)
+    );
+    border-color: var(--theme-accent-2);
+    color: #f5f7ff;
+    font-weight: 700;
+    padding: 0px 10px 0px 10px !important;
+}
+
+.transfer-dialog-body .feeButton {
+    background-color: transparent;
+    border: 1px solid var(--theme-border);
     border-radius: 8px;
     padding: 5px 0px;
     font-size: 13px;
     cursor: pointer;
     transition: all 0.125s ease-in-out;
+    color: var(--theme-text);
 }
 
-.transferMenu .transferBody .feeButtonSelected {
-    background-color: #ffffff0f;
+.transfer-dialog-body .feeButtonSelected {
+    background-color: var(--theme-surface-2);
 }
 
-.transferMenu .transferBody .pasteAddress i {
+.transfer-dialog-body .pasteAddress i {
     transition: all 0.125s ease-in-out;
     cursor: pointer;
 }
 
-.transferMenu .transferBody .pasteAddress i:hover {
-    color: #2026569c;
+.transfer-dialog-body .pasteAddress i:hover {
+    color: var(--theme-accent);
 }
 </style>

@@ -15,6 +15,9 @@ import { COIN } from '../../../scripts/chain_params.js';
 import { flushPromises } from '@vue/test-utils';
 import { HistoricalTxType } from '../../../scripts/historical_tx.js';
 import { Database } from '../../../scripts/database.js';
+import { Wallet } from '../../../scripts/wallet.js';
+import { Mempool } from '../../../scripts/mempool.js';
+import { LegacyMasterKey } from '../../../scripts/masterkey.js';
 
 vi.mock('../../../scripts/network/network_manager.js');
 
@@ -54,6 +57,31 @@ async function mineBlocks(nBlocks) {
      */
     for (let i = 0; i < 10; i++) await flushPromises();
 }
+
+describe('Fresh wallet sync guards', () => {
+    it('starts historical sync from block 0 for a fresh wallet', async () => {
+        resetNetwork();
+        const instance = await Database.getInstance();
+        instance.close();
+        vi.stubGlobal('indexedDB', new IDBFactory());
+
+        await refreshChainData();
+
+        const wallet = new Wallet({
+            nAccount: 0,
+            mempool: new Mempool(),
+            masterKey: new LegacyMasterKey({
+                address: 'DLabsktzGMnsK5K9uRTMCF6NoYNY6ET4Bb',
+            }),
+        });
+
+        getNetwork().getNumPages.mockClear();
+        await wallet.sync();
+
+        expect(getNetwork().getNumPages).toHaveBeenCalled();
+        expect(getNetwork().getNumPages.mock.calls.at(-1)[0]).toBe(0);
+    });
+});
 
 describe('Wallet sync tests', () => {
     let walletHD;

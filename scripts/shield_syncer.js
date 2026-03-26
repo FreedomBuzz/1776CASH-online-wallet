@@ -90,22 +90,33 @@ export class BinaryShieldSyncer extends ShieldSyncer {
     static async create(network, database, startFrom) {
         const { lastSyncedBlock, shieldData } =
             await database.getShieldSyncData();
-        const req = await network.getShieldData(lastSyncedBlock + 1);
-        const skipBytes = await network.getShieldDataLength(
-            cChainParams.current.defaultStartingShieldBlock + 1,
-            startFrom + 1
+        const effectiveLastSyncedBlock = normalizeShieldSyncStart(
+            startFrom,
+            cChainParams.current.defaultStartingShieldBlock
         );
+        const shouldReuseShieldData = lastSyncedBlock === effectiveLastSyncedBlock;
+        const bufferedShieldData = shouldReuseShieldData
+            ? shieldData
+            : new Uint8Array([]);
+        const req = await network.getShieldData(effectiveLastSyncedBlock + 1);
+        const skipBytes =
+            effectiveLastSyncedBlock < cChainParams.current.defaultStartingShieldBlock
+                ? 0
+                : await network.getShieldDataLength(
+                      cChainParams.current.defaultStartingShieldBlock + 1,
+                      effectiveLastSyncedBlock + 1
+                  );
 
         if (!req.ok) throw new Error("Couldn't sync shield");
         const instance = new BinaryShieldSyncer();
-        instance.#lastSyncedBlock = lastSyncedBlock;
+        instance.#lastSyncedBlock = effectiveLastSyncedBlock;
         instance.#database = database;
-        instance.#reader = new Reader(req, shieldData);
+        instance.#reader = new Reader(req, bufferedShieldData);
         // skip the inital bytes
         instance.#reader.discard(skipBytes).then(() => {});
         // If we haven't downloaded the shield data don't treat it as skipped
         // Otherwise we may get a stuck loading bar
-        instance.#skippedBytes = Math.min(skipBytes, shieldData.length);
+        instance.#skippedBytes = Math.min(skipBytes, bufferedShieldData.length);
 
         return instance;
     }
@@ -117,4 +128,19 @@ export class BinaryShieldSyncer extends ShieldSyncer {
     getReadBytes() {
         return this.#reader.readBytes - this.#skippedBytes;
     }
+}
+
+export function normalizeShieldSyncStart(
+    lastSyncedBlock,
+    defaultStartingShieldBlock
+) {
+    if (!Number.isFinite(defaultStartingShieldBlock)) {
+        return Number.isFinite(lastSyncedBlock) ? lastSyncedBlock : 0;
+    }
+
+    if (!Number.isFinite(lastSyncedBlock)) {
+        return defaultStartingShieldBlock;
+    }
+
+    return Math.max(lastSyncedBlock, defaultStartingShieldBlock);
 }

@@ -24,6 +24,6 @@ export const BIP21_PREFIX = '1776cash';
 
 /* chainparams */
 export const cChainParams = reactive({
-    current: chainParams.testnet,
+    current: chainParams.main,
     ...chainParams,
 });

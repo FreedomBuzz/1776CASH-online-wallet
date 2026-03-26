@@ -211,11 +211,27 @@ class NetworkManager {
     }
 
     async getBlockCount() {
-        return await this.#retryWrapper('getBlockCount', true, 0);
+        try {
+            return await this.#retryWrapper('getBlockCount', true, 0);
+        } catch (rpcError) {
+            debugWarn(
+                DebugTopics.NET,
+                `RPC getBlockCount failed, falling back to explorer: ${rpcError}`
+            );
+            return await this.#retryWrapper('getBlockCount', false, 0);
+        }
     }
 
     async getBestBlockHash() {
-        return await this.#retryWrapper('getBestBlockHash', true, 0);
+        try {
+            return await this.#retryWrapper('getBestBlockHash', true, 0);
+        } catch (rpcError) {
+            debugWarn(
+                DebugTopics.NET,
+                `RPC getBestBlockHash failed, falling back to explorer: ${rpcError}`
+            );
+            return await this.#retryWrapper('getBestBlockHash', false, 0);
+        }
     }
 
     async sendTransaction(hex) {
@@ -257,6 +273,10 @@ class NetworkManager {
         );
     }
 
+    async getMasternodes() {
+        return await this.#retryWrapper('getMasternodes', true, 0);
+    }
+
     async getMasternodeCount() {
         return await this.#retryWrapper('getMasternodeCount', true, 0);
     }
@@ -276,6 +296,46 @@ class NetworkManager {
 
     async getProposals() {
         return await this.#retryWrapper('getProposals', true, 0);
+    }
+
+    async getProposalHybridStatus(proposalHash) {
+        return await this.#retryWrapper(
+            'getProposalHybridStatus',
+            true,
+            0,
+            proposalHash
+        );
+    }
+
+    async listGovernanceVoteLocks(proposalHash = null) {
+        return await this.#retryWrapper(
+            'listGovernanceVoteLocks',
+            true,
+            0,
+            proposalHash
+        );
+    }
+
+    async createGovernanceVoteLock(proposalHash, amount, unlockHeight) {
+        return await this.#retryWrapper(
+            'createGovernanceVoteLock',
+            true,
+            0,
+            proposalHash,
+            amount,
+            unlockHeight
+        );
+    }
+
+    async castGovernanceVote(proposalHash, voteCode, lockRefs) {
+        return await this.#retryWrapper(
+            'castGovernanceVote',
+            true,
+            0,
+            proposalHash,
+            voteCode,
+            lockRefs
+        );
     }
 
     /**

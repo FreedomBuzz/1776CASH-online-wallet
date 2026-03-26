@@ -235,13 +235,6 @@
 
                       <br>
 
-                      <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="testnetToggler" onclick="MPW.toggleTestnet()">
-                        <label data-i18n="settingsToggleTestnet" class="custom-control-label" for="testnetToggler">Testnet Mode</label>
-                      </div>
-
-                      <br>
-
                         <div class="custom-control custom-switch">
                           <input type="checkbox" class="custom-control-input" id="autoLockModeToggler" onclick="MPW.toggleAutoLockWallet()">
                           <label data-i18n="settingsToggleAutoLockWallet" class="custom-control-label" for="autoLockModeToggler">Auto Lock the Wallet</label>
@@ -295,6 +288,7 @@
                       <label for="themeMode">Theme:</label>
                       <br />
                       <select id="themeMode" class="form-control" name="themeMode">
+                        <option value="system">System</option>
                         <option value="light">Light</option>
                         <option value="dark">Dark</option>
                       </select>

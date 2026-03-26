@@ -12,59 +12,27 @@ const ticker = computed(() => cChainParams.current.TICKER);
 </script>
 
 <template>
-    <span
-        data-i18n="govAllocBudget"
-        style="font-weight: 400; color: #DEDEE0; font-size: 18px"
+    <span data-i18n="govAllocBudget" class="governBudgetTitle"
         >Budget Allocated</span
     >
 
-    <div
-        class="governBudgetBox"
-        style="
-            width: 180px;
-            background-color: #202656;
-            margin-top: 11px;
-            border-radius: 9px;
-            padding-left: 13px;
-            padding-right: 13px;
-            padding-bottom: 6px;
-            padding-top: 4px;
-        "
-    >
-        <span class="governBudgetPrimary" style="font-size: 19px; color: #DEDEE0"
+    <div class="governBudgetBox governBudgetBoxSized">
+        <span class="governBudgetPrimary governBudgetPrimaryValue"
             ><span data-testid="allocatedGovernanceBudget">{{
                 allocatedBudget.toLocaleString('en-gb', ',', '.') + ' '
             }}</span>
-            <span
-                class="governBudgetAccent"
-                style="
-                    color: #EB1B24;
-                    font-size: 16px;
-                    position: relative;
-                    top: 1px;
-                "
-                >{{ ticker }}</span
-            ></span
+            <span class="governBudgetAccent governBudgetTicker">{{
+                ticker
+            }}</span></span
         >
-        <hr
-            class="governBudgetDivider"
-            style="
-                border-top-width: 2px;
-                background-color: #121437;
-                margin-top: 5px;
-                margin-bottom: -2px;
-                margin-left: -13px;
-                margin-right: -13px;
-            "
-        />
-        <span class="governBudgetSecondary" style="font-size: 12px; color: #b9bfd4"
+        <hr class="governBudgetDivider governBudgetDividerSized" />
+        <span class="governBudgetSecondary governBudgetSecondaryValue"
             ><span data-testid="allocatedGovernanceBudgetValue">{{
                 numberToCurrency(allocatedBudget, price)
             }}</span>
             {{ ' ' }}
             <span
                 class="governBudgetAccent"
-                style="color: #EB1B24"
                 data-testid="allocatedGovernanceBudgetCurrency"
                 >{{ currency.toUpperCase() }}
             </span>

@@ -92,10 +92,11 @@ describe('Wallet transaction tests', () => {
                 scriptSig: '76a914f49b25384b79685227be5418f779b98a6be4c73888ac', // Script sig must be the UTXO script since it's not signed
             })
         );
+        const fees = await checkFees(wallet, tx, MIN_FEE_PER_BYTE);
         expect(tx.vout[1]).toStrictEqual(
             new CTxOut({
                 script: '76a914f49b25384b79685227be5418f779b98a6be4c73888ac',
-                value: 4997730,
+                value: legacyMainnetInitialBalance() - 5000000 - fees,
             })
         );
         expect(tx.vout[0]).toStrictEqual(
@@ -104,7 +105,6 @@ describe('Wallet transaction tests', () => {
                 value: 5000000,
             })
         );
-        await checkFees(wallet, tx, MIN_FEE_PER_BYTE);
     });
 
     it('Creates a tx with change address', async () => {
@@ -123,10 +123,11 @@ describe('Wallet transaction tests', () => {
                 scriptSig: '76a914f49b25384b79685227be5418f779b98a6be4c73888ac', // Script sig must be the UTXO script since it's not signed
             })
         );
+        const fees = await checkFees(wallet, tx, MIN_FEE_PER_BYTE);
         expect(tx.vout[1]).toStrictEqual(
             new CTxOut({
                 script: '76a91421ff8214d09d60713b89809bb413a0651ee6931488ac',
-                value: 4997720,
+                value: legacyMainnetInitialBalance() - 5000000 - fees,
             })
         );
         expect(tx.vout[0]).toStrictEqual(
@@ -135,7 +136,6 @@ describe('Wallet transaction tests', () => {
                 value: 5000000,
             })
         );
-        await checkFees(wallet, tx, MIN_FEE_PER_BYTE);
     });
 
     it('Creates a proposal tx correctly', async () => {
@@ -154,10 +154,11 @@ describe('Wallet transaction tests', () => {
                 scriptSig: '76a914f49b25384b79685227be5418f779b98a6be4c73888ac', // Script sig must be the UTXO script since it's not signed
             })
         );
+        const fees = await checkFees(wallet, tx, MIN_FEE_PER_BYTE);
         expect(tx.vout[1]).toStrictEqual(
             new CTxOut({
                 script: '76a914f49b25384b79685227be5418f779b98a6be4c73888ac',
-                value: 4997640,
+                value: legacyMainnetInitialBalance() - 5000000 - fees,
             })
         );
         expect(tx.vout[0]).toStrictEqual(
@@ -166,7 +167,6 @@ describe('Wallet transaction tests', () => {
                 value: 5000000,
             })
         );
-        await checkFees(wallet, tx, MIN_FEE_PER_BYTE);
     });
 
     it('Creates a cold stake tx correctly', async () => {
@@ -265,9 +265,16 @@ describe('Wallet transaction tests', () => {
     });
 
     it('it does not insert dust change', async () => {
-        // The tipical output has 34 bytes, so a 200 satoshi change is surely going to be dust
-        // a P2PKH with 2 inputs and 1 output will have more or less 346 bytes in size and 3460 satoshi of fees
-        const value = legacyMainnetInitialBalance() - 3460 - 200;
+        const baselineTx = wallet.createTransaction(
+            'DLabsktzGMnsK5K9uRTMCF6NoYNY6ET4Bb',
+            legacyMainnetInitialBalance()
+        );
+        const baselineFees = await checkFees(
+            wallet,
+            baselineTx,
+            MIN_FEE_PER_BYTE
+        );
+        const value = legacyMainnetInitialBalance() - baselineFees - 200;
         const tx = wallet.createTransaction(
             'DLabsktzGMnsK5K9uRTMCF6NoYNY6ET4Bb',
             value,

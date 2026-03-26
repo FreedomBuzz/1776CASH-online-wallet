@@ -7,6 +7,7 @@ import * as alert from '../../scripts/alerts/alert.js';
 import { Settings } from '../../scripts/settings';
 import Masternode from '../../scripts/masternode';
 import { Transaction } from '../../scripts/transaction';
+import { cChainParams } from '../../scripts/chain_params';
 describe('database tests', () => {
     beforeAll(() => {
         // Mock createAlert
@@ -195,6 +196,15 @@ describe('database tests', () => {
                 node: 'pivx.org',
             })
         );
+    });
+
+    it('uses the active network shield start as the default shield checkpoint', async () => {
+        const db = await Database.create('test');
+
+        expect(await db.getShieldSyncData()).toMatchObject({
+            lastSyncedBlock: cChainParams.current.defaultStartingShieldBlock,
+            shieldData: new Uint8Array([]),
+        });
     });
 
     it('throws when calling addAccount twice', async () => {

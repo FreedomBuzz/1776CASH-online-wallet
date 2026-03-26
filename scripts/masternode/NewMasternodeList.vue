@@ -10,6 +10,10 @@ import MasternodeReward from './MasternodeReward.vue';
 // Currently unused. It will be implemented in a subsequent PR
 const props = defineProps({
     masternodes: Array,
+    networkMasternodes: {
+        type: Array,
+        default: () => [],
+    },
     possibleUTXOs: Array,
     balance: Number,
     synced: Boolean,
@@ -43,6 +47,22 @@ function openCreateMasternodeModal() {
  * @type {{masternodes: import('vue').Ref<import('../masternode.js').default[]>}}
  */
 const { masternodes } = toRefs(props);
+
+function getStatusBadgeClass(status) {
+    switch (status) {
+        case 'ENABLED':
+            return 'enabledBadge';
+        case 'PRE_ENABLED':
+            return 'preEnabledBadge';
+        default:
+            return 'missingBadge';
+    }
+}
+
+function formatLastSeen(ts) {
+    if (!ts) return 'Unknown';
+    return new Date(ts).toLocaleString();
+}
 </script>
 
 <template>
@@ -136,4 +156,61 @@ const { masternodes } = toRefs(props);
     />
 
     <MasternodeReward />
+
+    <div
+        v-if="props.networkMasternodes.length"
+        class="dcWallet-activity"
+        style="margin-top: 20px"
+    >
+        <h4 class="mnTopConfigured">
+            Network Running Masternodes ({{ props.networkMasternodes.length }})
+        </h4>
+        <div class="scrollTable">
+            <div>
+                <table
+                    class="table table-responsive table-sm stakingTx masternodeTable table-mobile-scroll"
+                >
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 400px">
+                                {{ translation.govTableStatus }}
+                            </th>
+                            <th scope="col" style="width: 400px">
+                                {{ translation.ipAddress }}
+                            </th>
+                            <th scope="col" style="width: 400px">
+                                {{ translation.lastSeen }}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="networkMn in props.networkMasternodes"
+                            :key="networkMn.id"
+                        >
+                            <td>
+                                <span
+                                    class="masternodeBadges"
+                                    :class="getStatusBadgeClass(networkMn.status)"
+                                    >{{ networkMn.status }}</span
+                                >
+                            </td>
+                            <td>
+                                <code
+                                    class="wallet-code text-center active ptr"
+                                    style="padding: 4px 9px"
+                                    >{{ networkMn.addr }}</code
+                                >
+                            </td>
+                            <td>
+                                <span class="mnLastSeen">{{
+                                    formatLastSeen(networkMn.lastSeen)
+                                }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </template>

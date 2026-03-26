@@ -78,8 +78,15 @@ export class AlertController {
      * @param {function?} actionFunc - The function to execute if the Action button is used
      */
     createAlert(level, message, timeout = 10000, actionName, actionFunc) {
+        const normalizedMessage = normalizeAlertMessage(message);
         this.addAlert(
-            new Alert({ level, message, timeout, actionName, actionFunc })
+            new Alert({
+                level,
+                message: normalizedMessage,
+                timeout,
+                actionName,
+                actionFunc,
+            })
         );
     }
 
@@ -107,6 +114,46 @@ export class AlertController {
     static getInstance() {
         return this.#instance;
     }
+}
+
+export function getSafeAlertText(...candidates) {
+    return tryGetSafeAlertText(...candidates) ?? 'Unexpected error';
+}
+
+export function tryGetSafeAlertText(...candidates) {
+    for (const candidate of candidates) {
+        if (typeof candidate === 'string' && candidate.trim().length > 0) {
+            return candidate;
+        }
+        if (candidate instanceof Error && candidate.message?.trim()) {
+            return candidate.message;
+        }
+        if (candidate && typeof candidate === 'object') {
+            if (
+                typeof candidate.message === 'string' &&
+                candidate.message.trim().length > 0
+            ) {
+                return candidate.message;
+            }
+            if (
+                typeof candidate.reason === 'string' &&
+                candidate.reason.trim().length > 0
+            ) {
+                return candidate.reason;
+            }
+        }
+        if (
+            typeof candidate === 'number' ||
+            typeof candidate === 'boolean'
+        ) {
+            return String(candidate);
+        }
+    }
+    return null;
+}
+
+function normalizeAlertMessage(message) {
+    return getSafeAlertText(message);
 }
 
 /**

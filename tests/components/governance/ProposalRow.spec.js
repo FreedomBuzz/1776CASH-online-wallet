@@ -93,4 +93,19 @@ describe('ProposalRow component tests', () => {
             .trigger('click');
         expect(wrapper.emitted().vote[0]).toEqual([1]);
     });
+
+    it('emits coin vote payload when coin mode is selected', async () => {
+        await wrapper.find('.govYesBtnMob').trigger('click');
+        const modal = wrapper.getComponent(Modal);
+        await modal.find('[data-testid="voteModeCoin"]').trigger('click');
+        await modal.find('[data-testid="coinVoteAmount"]').setValue('250');
+        await wrapper
+            .getComponent(Modal)
+            .find('[data-testid="confirmVote"]')
+            .trigger('click');
+
+        expect(wrapper.emitted().vote[0]).toEqual([
+            { mode: 'coin', voteCode: 1, amount: 250 },
+        ]);
+    });
 });

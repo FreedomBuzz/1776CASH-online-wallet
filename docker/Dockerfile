@@ -2,7 +2,7 @@ FROM nginx:alpine
 RUN apk add --update nodejs npm
 WORKDIR /mpw
 COPY . .
-ARG CHAIN_PARAMS_FILE=chain_params.test.json
+ARG CHAIN_PARAMS_FILE=chain_params.prod.json
 RUN cp "${CHAIN_PARAMS_FILE}" chain_params.json
 RUN npm ci
 RUN npm run build

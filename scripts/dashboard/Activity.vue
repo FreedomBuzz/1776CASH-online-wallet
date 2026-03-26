@@ -119,6 +119,12 @@ function updateReward() {
     rewardAmount.value = res;
 }
 
+async function refreshActivity() {
+    txCount = 0;
+    await update();
+    updateReward();
+}
+
 async function update(txToAdd = 0) {
     if (!activeWallet.value) return;
     // Prevent the user from spamming refreshes
@@ -153,10 +159,7 @@ async function update(txToAdd = 0) {
     updating.value = false;
 }
 
-watch(translation, async () => {
-    await update();
-    updateReward();
-});
+watch(translation, refreshActivity);
 
 /**
  * Parse tx to list syntax
@@ -271,11 +274,9 @@ const rewardsText = computed(() => {
 });
 
 watch(
-    () => activeWallet.value.historicalTxs,
-    async () => {
-        await update();
-        updateReward();
-    }
+    () => activeWallet.value?.historicalTxs,
+    refreshActivity,
+    { immediate: true }
 );
 </script>
 

@@ -29,6 +29,7 @@ Chart.register(
  * @type {Chart}
  */
 let chartWalletBreakdown = null;
+let walletBreakdownSnapshot = null;
 
 /**
  * An element generated from the wallet for the purpose of charting or tables
@@ -42,11 +43,12 @@ let chartWalletBreakdown = null;
  * Generate an array of pie/doughnut charting data from the wallet's totals
  * @returns {Promise<Array<WalletDatasetPoint>>} - The charting data
  */
-async function getWalletDataset() {
+async function getWalletDataset(snapshot = null) {
     const arrBreakdown = [];
+    const wallet = snapshot?.wallet ?? activeWallet;
 
     // Public (Available)
-    const spendable_bal = activeWallet.balance;
+    const spendable_bal = snapshot?.balance ?? wallet.balance;
     if (spendable_bal > 0) {
         arrBreakdown.push({
             type: translation.chartPublicAvailable,
@@ -56,7 +58,8 @@ async function getWalletDataset() {
     }
 
     // Shielded (Available spendable)
-    const shield_spendable = await activeWallet.getShieldBalance();
+    const shield_spendable =
+        snapshot?.shieldBalance ?? (await wallet.getShieldBalance());
     if (shield_spendable > 0) {
         arrBreakdown.push({
             type: 'Shield Available',
@@ -66,7 +69,9 @@ async function getWalletDataset() {
     }
 
     // Shielded (Pending i.e still unspendable)
-    const shield_pending = await activeWallet.getPendingShieldBalance();
+    const shield_pending =
+        snapshot?.pendingShieldBalance ??
+        (await wallet.getPendingShieldBalance());
     if (shield_pending > 0) {
         arrBreakdown.push({
             type: 'Shield Pending',
@@ -75,7 +80,7 @@ async function getWalletDataset() {
         });
     }
 
-    const immature_bal = activeWallet.immatureBalance;
+    const immature_bal = snapshot?.immatureBalance ?? wallet.immatureBalance;
     if (immature_bal > 0) {
         arrBreakdown.push({
             type: translation.chartImmatureBalance,
@@ -84,7 +89,7 @@ async function getWalletDataset() {
         });
     }
     // Staking (Locked)
-    const spendable_cold_bal = activeWallet.coldBalance;
+    const spendable_cold_bal = snapshot?.coldBalance ?? wallet.coldBalance;
     if (spendable_cold_bal > 0) {
         arrBreakdown.push({
             type: 'Staking',
@@ -99,7 +104,7 @@ async function getWalletDataset() {
     // Masternode (Locked)
     for (const masternode of masternodes) {
         if (
-            activeWallet.isCoinLocked(
+            wallet.isCoinLocked(
                 new COutpoint({
                     txid: masternode.collateralTxId,
                     n: masternode.outidx,
@@ -181,7 +186,10 @@ export async function generateWalletBreakdown(arrBreakdown) {
         generateLegendBreakdown(arrBreakdown);
 
     // Set an interval internally to refresh the chart in real-time
-    chartWalletBreakdown.interval = setInterval(renderWalletBreakdown, 2500);
+    chartWalletBreakdown.interval = setInterval(
+        () => renderWalletBreakdown(walletBreakdownSnapshot),
+        2500
+    );
 }
 
 /**
@@ -214,12 +222,18 @@ export function generateLegendBreakdown(arrBreakdown) {
 /**
  * Render the wallet breakdown chart, or create it if not initialised
  */
-export async function renderWalletBreakdown() {
+export async function renderWalletBreakdown(snapshot = null) {
     // Only if the modal is open, to save performance and prevent rendering when it's not visible
     if (!doms.domModalWalletBreakdown.style.display === 'block') return;
 
+    if (snapshot) {
+        walletBreakdownSnapshot = snapshot;
+    }
+
     // Update the chart data with the new dataset
-    const arrBreakdown = await getWalletDataset();
+    const arrBreakdown = await getWalletDataset(
+        snapshot ?? walletBreakdownSnapshot
+    );
 
     // If no chart exists, create it
     if (!chartWalletBreakdown)

@@ -7,7 +7,7 @@ import Masternode from '../masternode.js';
 import RestoreWallet from '../dashboard/RestoreWallet.vue';
 import { cChainParams } from '../chain_params';
 import Modal from '../Modal.vue';
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import { getNetwork } from '../network/network_manager.js';
 import { translation, ALERTS } from '../i18n.js';
 import { generateMasternodePrivkey, parseIpAddress } from '../misc';
@@ -25,8 +25,11 @@ const { activeWallet: wallet, activeVault, vaults } = storeToRefs(useWallets());
 const showRestoreWallet = ref(false);
 const showMasternodePrivateKey = ref(false);
 const masternodePrivKey = ref('');
+const networkMasternodes = ref([]);
 // Array of possible masternode UTXOs
 const possibleUTXOs = ref(wallet.value.getMasternodeUTXOs());
+const hasWarnedAboutNetworkList = ref(false);
+let networkMasternodesInterval = null;
 
 const { balance, isViewOnly, isSynced, isHardwareWallet } =
     valuesToComputed(wallet);
@@ -69,12 +72,82 @@ function updatePossibleUTXOs() {
 onMounted(() => {
     document
         .getElementById('masternodeTab')
-        .addEventListener('click', updatePossibleUTXOs);
+        .addEventListener('click', onMasternodeTabClick);
 });
+
+onBeforeUnmount(() => {
+    document
+        .getElementById('masternodeTab')
+        ?.removeEventListener('click', onMasternodeTabClick);
+    clearInterval(networkMasternodesInterval);
+    networkMasternodesInterval = null;
+});
+
+function shouldRefreshNetworkMasternodes() {
+    return networkMasternodesInterval !== null;
+}
+
+function startNetworkMasternodesPolling() {
+    if (shouldRefreshNetworkMasternodes()) return;
+    networkMasternodesInterval = setInterval(fetchNetworkMasternodes, 30000);
+}
+
+function onMasternodeTabClick() {
+    updatePossibleUTXOs();
+    fetchNetworkMasternodes();
+    startNetworkMasternodesPolling();
+}
 
 watch(isSynced, () => {
     updatePossibleUTXOs();
+    if (shouldRefreshNetworkMasternodes()) {
+        fetchNetworkMasternodes();
+    }
 });
+
+function normalizeNetworkMasternode(rawMasternode, index) {
+    const status = String(rawMasternode.status || 'UNKNOWN').toUpperCase();
+    const addr = rawMasternode.addr || rawMasternode.address || 'Unknown';
+    const txid = rawMasternode.txhash || rawMasternode.txid || '';
+    const outidxRaw =
+        rawMasternode.outidx ?? rawMasternode.n ?? rawMasternode.vout;
+    const hasOutidx = Number.isFinite(Number(outidxRaw));
+    const outidx = hasOutidx ? Number(outidxRaw) : -1;
+    const lastSeenRaw = Number(rawMasternode.lastseen || rawMasternode.lastSeen);
+    const lastSeen = Number.isFinite(lastSeenRaw) ? lastSeenRaw * 1000 : 0;
+    const id = txid && hasOutidx ? `${txid}-${outidx}` : `${addr}-${index}`;
+    return {
+        id,
+        status,
+        addr,
+        txid,
+        outidx,
+        lastSeen,
+    };
+}
+
+async function fetchNetworkMasternodes() {
+    try {
+        const rawMasternodes = await getNetwork().getMasternodes();
+        if (!Array.isArray(rawMasternodes)) {
+            networkMasternodes.value = [];
+            return;
+        }
+        networkMasternodes.value = rawMasternodes
+            .map(normalizeNetworkMasternode)
+            .filter((masternode) =>
+                ['ENABLED', 'PRE_ENABLED'].includes(masternode.status)
+            )
+            .sort((a, b) => b.lastSeen - a.lastSeen);
+        hasWarnedAboutNetworkList.value = false;
+    } catch (_) {
+        networkMasternodes.value = [];
+        if (!hasWarnedAboutNetworkList.value) {
+            hasWarnedAboutNetworkList.value = true;
+            createAlert('warning', translation.failedToConnect, 4500);
+        }
+    }
+}
 /**
  * Start a Masternode via a signed network broadcast
  * @param {boolean} fRestart - Whether this is a Restart or a first Start
@@ -196,6 +269,7 @@ function openShowPrivKeyModal() {
 
     <NewMasternodeList
         :masternodes="masternodes"
+        :networkMasternodes="networkMasternodes"
         :possibleUTXOs="possibleUTXOs"
         :balance="balance"
         :synced="isSynced"

@@ -52,6 +52,11 @@ export let fAutoLockWallet = false;
 /** The user's transaction mode, `true` for public, `false` for private */
 export let fPublicMode = true;
 const THEME_STORAGE_KEY = 'walletTheme';
+const THEME_SYSTEM = 'system';
+
+let strThemePreference = THEME_SYSTEM;
+let cThemeMediaQuery = null;
+let fThemeMediaListenerBound = false;
 
 export class Settings {
     /**
@@ -113,18 +118,82 @@ export class Settings {
     }
 }
 
-function applyThemeClass(theme) {
-    const normalizedTheme = theme === 'dark' ? 'dark' : 'light';
-    document.body.classList.toggle('theme-dark', normalizedTheme === 'dark');
-    document.body.classList.toggle('theme-light', normalizedTheme !== 'dark');
-    return normalizedTheme;
+function getSystemThemeMode() {
+    if (!window.matchMedia) return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
 }
 
-export function setThemeMode(theme = 'light') {
+function normalizeThemePreference(theme) {
+    if (theme === 'dark') return 'dark';
+    if (theme === 'light') return 'light';
+    return THEME_SYSTEM;
+}
+
+function applyResolvedThemeClass(theme) {
+    document.body.classList.toggle('theme-dark', theme === 'dark');
+    document.body.classList.toggle('theme-light', theme !== 'dark');
+}
+
+function onSystemThemeChanged() {
+    if (strThemePreference !== THEME_SYSTEM) return;
+    applyResolvedThemeClass(getSystemThemeMode());
+}
+
+function syncThemeMediaListener() {
+    if (!window.matchMedia) return;
+    if (!cThemeMediaQuery) {
+        cThemeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    }
+    const hasModernListenerApi = Boolean(cThemeMediaQuery.addEventListener);
+    const hasLegacyListenerApi = Boolean(cThemeMediaQuery.addListener);
+    if (!hasModernListenerApi && !hasLegacyListenerApi) return;
+    const shouldListen = strThemePreference === THEME_SYSTEM;
+    if (shouldListen && !fThemeMediaListenerBound) {
+        if (hasModernListenerApi) {
+            cThemeMediaQuery.addEventListener('change', onSystemThemeChanged);
+        } else {
+            cThemeMediaQuery.addListener(onSystemThemeChanged);
+        }
+        fThemeMediaListenerBound = true;
+    } else if (!shouldListen && fThemeMediaListenerBound) {
+        if (hasModernListenerApi) {
+            cThemeMediaQuery.removeEventListener('change', onSystemThemeChanged);
+        } else {
+            cThemeMediaQuery.removeListener(onSystemThemeChanged);
+        }
+        fThemeMediaListenerBound = false;
+    }
+}
+
+function applyThemeClass(theme) {
+    strThemePreference = normalizeThemePreference(theme);
+    const resolvedTheme =
+        strThemePreference === THEME_SYSTEM
+            ? getSystemThemeMode()
+            : strThemePreference;
+    applyResolvedThemeClass(resolvedTheme);
+    syncThemeMediaListener();
+    return strThemePreference;
+}
+
+export function getThemePreference() {
+    return strThemePreference;
+}
+
+export function initializeThemeMode() {
+    const strSavedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    return setThemeMode(strSavedTheme);
+}
+
+export function setThemeMode(theme = THEME_SYSTEM) {
     const normalizedTheme = applyThemeClass(theme);
     localStorage.setItem(THEME_STORAGE_KEY, normalizedTheme);
     const domThemeSelect = document.getElementById('themeMode');
     if (domThemeSelect) domThemeSelect.value = normalizedTheme;
+    getEventEmitter().emit('theme-mode-changed', normalizedTheme);
+    return normalizedTheme;
 }
 
 // Users need not look below here.
@@ -213,9 +282,7 @@ export async function start() {
     nDisplayDecimals = displayDecimals;
     doms.domDisplayDecimalsSlider.value = nDisplayDecimals;
 
-    // Apply persisted theme mode (default to light).
-    const strSavedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-    setThemeMode(strSavedTheme === 'dark' ? 'dark' : 'light');
+    initializeThemeMode();
 
     // Subscribe to events
     subscribeToNetworkEvents();
@@ -391,52 +458,16 @@ export async function logOut() {
 export async function toggleTestnet(
     wantTestnet = !cChainParams.current.isTestnet
 ) {
-    if (activeWallet.isLoaded() && !activeWallet.isSynced) {
-        createAlert('warning', `${ALERTS.WALLET_NOT_SYNCED}`, 3000);
-        doms.domTestnetToggler.checked = cChainParams.current.isTestnet;
-        return;
+    if (doms.domTestnetToggler) {
+        doms.domTestnetToggler.checked = false;
     }
-    const cNextNetwork = wantTestnet ? cChainParams.testnet : cChainParams.main;
-
-    // If the current wallet is not saved, we'll ask the user for confirmation, since they'll lose their wallet if they switch with an unsaved wallet!
-    if (activeWallet.isLoaded() && !(await hasEncryptedWallet())) {
-        const fContinue = await confirmPopup({
-            title: tr(translation.netSwitchUnsavedWarningTitle, [
-                { network: cChainParams.current.name },
-            ]),
-            html: `<div style="color:#a6abc0;">
-            <b>${tr(translation.netSwitchUnsavedWarningSubtitle, [
-                { network: cChainParams.current.name },
-            ])}</b>
-            <br>
-            ${tr(translation.netSwitchUnsavedWarningSubtext, [
-                { network: cNextNetwork.name },
-            ])}
-            <br>
-            <br>
-            <i style="opacity:0.65">${
-                translation.netSwitchUnsavedWarningConfirmation
-            }</i>
-        </div>`,
-        });
-
-        if (!fContinue) {
-            // Kick back the "toggle" switch
-            doms.domTestnetToggler.checked = cChainParams.current.isTestnet;
-            return;
-        }
+    if (wantTestnet || cChainParams.current.isTestnet) {
+        cChainParams.current = cChainParams.main;
+        getNetwork().reset();
+        await start();
+        await refreshChainData();
+        getEventEmitter().emit('toggle-network');
     }
-
-    // Update current chain config
-    cChainParams.current = cNextNetwork;
-
-    // Update testnet toggle in settings
-    doms.domTestnetToggler.checked = cChainParams.current.isTestnet;
-    getNetwork().reset();
-    await start();
-    // Make sure we have the correct number of blocks before loading any wallet
-    await refreshChainData();
-    getEventEmitter().emit('toggle-network');
 }
 
 export function toggleDebug(newValue = !debug) {

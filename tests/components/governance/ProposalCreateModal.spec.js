@@ -1,8 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import ProposalCreateModal from '../../../scripts/governance/ProposalCreateModal.vue';
-import { vi } from 'vitest';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, nextTick } from 'vue';
 
 vi.stubGlobal(
     'Teleport',
@@ -35,6 +34,11 @@ describe('ProposalCreateModal component tests', () => {
     it('submits correctly', async () => {
         const wrapper = mount(ProposalCreateModal, {
             props: { advancedMode: true, isTest: true, show: true },
+            global: {
+                stubs: {
+                    teleport: true,
+                },
+            },
         });
         const proposalTitle = wrapper.find('[data-testid="proposalTitle"]');
         await proposalTitle.setValue('Proposal Title');
@@ -48,10 +52,12 @@ describe('ProposalCreateModal component tests', () => {
         await address.setValue('DLabsOops');
         const proposalSubmit = wrapper.find('[data-testid="proposalSubmit"]');
         await proposalSubmit.trigger('click');
+        await nextTick();
         // Nothing should be emitted because address is wrong
         expect(wrapper.emitted().create).toBeUndefined();
         await address.setValue('DLabsktzGMnsK5K9uRTMCF6NoYNY6ET4Bb');
         await proposalSubmit.trigger('click');
+        await nextTick();
         // Confirm the submission
         await wrapper
             .find('[data-testid="proposalConfirmSubmit"]')
@@ -69,6 +75,7 @@ describe('ProposalCreateModal component tests', () => {
         await wrapper.setProps({ advancedMode: false });
 
         await proposalSubmit.trigger('click');
+        await nextTick();
         // Confirm the submission
         await wrapper
             .find('[data-testid="proposalConfirmSubmit"]')

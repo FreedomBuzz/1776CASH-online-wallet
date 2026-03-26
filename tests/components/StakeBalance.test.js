@@ -66,14 +66,15 @@ describe('stake balance tests', () => {
         // Test that it is in focus
         expect(csaddrInput.element).toBe(document.activeElement);
         expect(csaddrInput.isVisible()).toBeTruthy();
-        const newCsAddr = 'SdgQDpS8jDRJDX8yK8m9KnTMarsE84zdsy';
-        csaddrInput.element.value = newCsAddr;
-        csaddrInput.trigger('input');
+        const newCsAddr = 'PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f';
+        await csaddrInput.setValue(newCsAddr);
         const confirmButton = wrapper
             .findComponent(Modal)
             .find('[data-testid=csAddrSubmit]');
         await confirmButton.trigger('click');
-        expect(wrapper.props().coldStakingAddress).toBe(newCsAddr);
+        expect(wrapper.emitted('update:coldStakingAddress')?.at(-1)?.[0]).toBe(
+            newCsAddr
+        );
     });
     it('cancels stake address without updating', async () => {
         const wrapper = mount({
@@ -90,13 +91,12 @@ describe('stake balance tests', () => {
             .findComponent(Modal)
             .find('[data-testid=csAddrInput]');
         expect(csaddrInput.isVisible()).toBeTruthy();
-        const newCsAddr = 'SdgQDpS8jDRJDX8yK8m9KnTMarsE84zdsy';
-        csaddrInput.element.value = newCsAddr;
-        csaddrInput.trigger('input');
+        const newCsAddr = 'PwGP8BzRUHQwchwwPuzAe9WqskgmbKp88f';
+        await csaddrInput.setValue(newCsAddr);
         const cancelButton = wrapper
             .findComponent(Modal)
             .find('[data-testid=csAddrCancel]');
         await cancelButton.trigger('click');
-        expect(wrapper.props().coldStakingAddress).toBe('oldcsaddr');
+        expect(wrapper.emitted('update:coldStakingAddress')).toBeUndefined();
     });
 });

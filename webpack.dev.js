@@ -44,7 +44,14 @@ export default merge(common, {
         },
         proxy: [
             {
-                context: ['/oracle'],
+                context: [
+                    '/oracle',
+                    '/mainnet',
+                    '/testnet',
+                    '/api',
+                    '/sapling-output.params',
+                    '/sapling-spend.params',
+                ],
                 target: 'https://1776cash.com',
                 changeOrigin: true,
                 secure: true,

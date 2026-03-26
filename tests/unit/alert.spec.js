@@ -1,11 +1,7 @@
-import { vi, expect, describe, it } from 'vitest';
-
 import { describe, it, expect, vi } from 'vitest';
-import {
-    Alert,
-    AlertController,
-    createAlert,
-} from '../../scripts/alerts/alert.js'; // Replace with your actual file path
+import * as alerts from '../../scripts/alerts/alert.js';
+
+const { Alert, AlertController, createAlert } = alerts;
 
 describe('Alert class', () => {
     it('should create an alert with provided parameters', () => {
@@ -63,6 +59,26 @@ describe('AlertController class', () => {
 
         expect(subscriberMock).toHaveBeenCalledTimes(1);
         expect(subscriberMock).toHaveBeenCalledWith(alert);
+    });
+
+    it('normalizes missing UI-facing errors to a stable fallback', () => {
+        expect(typeof alerts.getSafeAlertText).toBe('function');
+        expect(alerts.getSafeAlertText(undefined, undefined)).toBe(
+            'Unexpected error'
+        );
+        expect(alerts.getSafeAlertText('', { reason: 'fallback reason' })).toBe(
+            'fallback reason'
+        );
+        expect(alerts.getSafeAlertText({}, null)).toBe('Unexpected error');
+    });
+
+    it('can suppress empty global errors instead of surfacing a generic popup', () => {
+        expect(typeof alerts.tryGetSafeAlertText).toBe('function');
+        expect(alerts.tryGetSafeAlertText(undefined, undefined)).toBeNull();
+        expect(
+            alerts.tryGetSafeAlertText('', { reason: 'fallback reason' })
+        ).toBe('fallback reason');
+        expect(alerts.tryGetSafeAlertText({}, null)).toBeNull();
     });
 });
 

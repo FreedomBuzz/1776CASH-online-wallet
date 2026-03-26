@@ -10,12 +10,15 @@ import { debugLog, DebugTopics } from './debug.js';
 /**
  * @type {translation_template}
  */
-export let ALERTS = {};
+export let ALERTS = { ...template.ALERTS };
 
 /**
  * @type {translation_template}
  */
-export const translation = reactive({});
+export const translation = reactive({
+    ...template,
+    ALERTS: { ...template.ALERTS },
+});
 
 const defaultLang = 'en';
 
@@ -70,10 +73,9 @@ async function setTranslationKey(key, langName) {
  * @param {String} langName - language name
  */
 async function setAlertKey(langName) {
-    const lang = await getLanguage(langName);
-    translation['ALERTS'] = lang['ALERTS'];
+    translation['ALERTS'] = { ...template['ALERTS'] };
     for (const subKey in template['ALERTS']) {
-        setAlertSubKey(subKey, langName);
+        await setAlertSubKey(subKey, langName);
     }
 }
 
