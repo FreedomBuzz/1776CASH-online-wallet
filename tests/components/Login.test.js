@@ -182,4 +182,17 @@ describe('Login tests', () => {
             false
         );
     });
+    test('centers the remaining dashboard cards', () => {
+        const wrapper = shallowMount(Login, {
+            props: {
+                advancedMode: false,
+            },
+            attachTo: document.getElementById('app'),
+        });
+        expect(
+            wrapper
+                .find('[data-testid=loginCardGrid]')
+                .classes('justify-content-center')
+        ).toBe(true);
+    });
 });

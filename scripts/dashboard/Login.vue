@@ -21,7 +21,10 @@ function importWallet(importObj) {
 </script>
 
 <template>
-    <div class="row m-0">
+    <div
+        class="row m-0 justify-content-center"
+        data-testid="loginCardGrid"
+    >
         <CreateWallet
             :advanced-mode="advancedMode"
             @import-wallet="
@@ -36,9 +39,6 @@ function importWallet(importObj) {
             "
             :import-lock="importLock"
         />
-
-        <br />
-
         <VanityGen
             @import-wallet="
                 (wif, label) =>
