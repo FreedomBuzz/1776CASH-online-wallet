@@ -11,7 +11,7 @@ describe('MonthlyBudget component tests', () => {
             },
         });
         expect(wrapper.find('[data-testid="monthlyBudgetValue"]').text()).toBe(
-            '561,600'
+            '72,221.5'
         );
         expect(
             wrapper.find('[data-testid="monthlyBudgetCurrency"]').text()

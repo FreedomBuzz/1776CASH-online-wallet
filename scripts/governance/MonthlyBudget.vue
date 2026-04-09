@@ -19,7 +19,7 @@ const { currency, price } = toRefs(props);
             <span class="governBudgetPrimary governBudgetPrimaryValue"
                 ><span>
                     {{
-                        (cChainParams.current.maxPayment / COIN).toLocaleString(
+                        ((cChainParams.current.maxPayment * 2) / COIN).toLocaleString(
                             'en-gb',
                             ',',
                             '.'
@@ -37,7 +37,7 @@ const { currency, price } = toRefs(props);
                 ><span data-testid="monthlyBudgetValue">
                     {{
                         numberToCurrency(
-                            cChainParams.current.maxPayment / COIN,
+                            (cChainParams.current.maxPayment * 2) / COIN,
                             price
                         )
                     }}

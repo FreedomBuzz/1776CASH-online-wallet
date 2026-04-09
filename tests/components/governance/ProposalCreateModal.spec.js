@@ -55,7 +55,7 @@ describe('ProposalCreateModal component tests', () => {
         await nextTick();
         // Nothing should be emitted because address is wrong
         expect(wrapper.emitted().create).toBeUndefined();
-        await address.setValue('DLabsktzGMnsK5K9uRTMCF6NoYNY6ET4Bb');
+        await address.setValue('GT9FZJqN5XRHYr4TX2RKsU84BREPSey7BV');
         await proposalSubmit.trigger('click');
         await nextTick();
         // Confirm the submission
@@ -69,7 +69,7 @@ describe('ProposalCreateModal component tests', () => {
                 'https://proposal.com/',
                 3,
                 20,
-                'DLabsktzGMnsK5K9uRTMCF6NoYNY6ET4Bb',
+                'GT9FZJqN5XRHYr4TX2RKsU84BREPSey7BV',
             ],
         ]);
         await wrapper.setProps({ advancedMode: false });

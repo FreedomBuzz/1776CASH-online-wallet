@@ -57,4 +57,12 @@ describe('governance theme styling', () => {
             '<span class="governMarked">{{ tickerWithSpace }}</span>'
         );
     });
+
+    it('uses the treasury overview instead of the payout countdown meter', () => {
+        const governanceVue = readFileSync(governanceVuePath, 'utf8');
+        expect(governanceVue).toContain("import TreasuryOverview from './TreasuryOverview.vue';");
+        expect(governanceVue).not.toContain("import Flipdown from './Flipdown.vue';");
+        expect(governanceVue).toContain('<TreasuryOverview');
+        expect(governanceVue).not.toContain('govNextPayout');
+    });
 });

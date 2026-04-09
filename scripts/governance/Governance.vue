@@ -6,10 +6,8 @@ import { useWallets } from '../composables/use_wallet';
 import Masternode from '../masternode.js';
 import ProposalsTable from './ProposalsTable.vue';
 import RestoreWallet from '../dashboard/RestoreWallet.vue';
-import Flipdown from './Flipdown.vue';
 import ProposalCreateModal from './ProposalCreateModal.vue';
-import MonthlyBudget from './MonthlyBudget.vue';
-import BudgetAllocated from './BudgetAllocated.vue';
+import TreasuryOverview from './TreasuryOverview.vue';
 import { hasEncryptedWallet } from '../wallet';
 import { sanitizeHTML } from '../misc';
 import { ALERTS, tr, translation } from '../i18n';
@@ -34,7 +32,6 @@ const {
 } = storeToRefs(wallet.value);
 const proposals = ref([]);
 const contestedProposals = ref([]);
-const nextSuperBlock = ref(0);
 const masternodeCount = ref(1);
 const hasOpenedGovernance = ref(false);
 const allocatedBudget = computed(() => {
@@ -47,10 +44,6 @@ const allocatedBudget = computed(() => {
         0
     );
 });
-// This updates the timestamp every block.
-const flipdownTimeStamp = computed(
-    () => Date.now() / 1000 + (nextSuperBlock.value - blockCount.value) * 60
-);
 const showRestoreWallet = ref(false);
 const restoreWalletReason = ref('');
 
@@ -104,7 +97,6 @@ async function fetchProposals() {
             fAllowFinished: false,
         });
         if (!arrProposals) return;
-        nextSuperBlock.value = await getNetwork().getNextSuperblock();
         masternodeCount.value =
             (await getNetwork().getMasternodeCount())?.total;
 
@@ -367,53 +359,35 @@ async function vote(proposal, voteRequest) {
         @close="showCreateProposalModal = false"
         @create="createProposal"
     />
-        <div class="governanceRoot">
-            <div class="col-md-12 title-section rm-pd">
+    <div class="governanceRoot">
+        <section class="governanceHero">
+            <div class="col-md-12 title-section rm-pd governanceHero__copy">
                 <span class="governanceHeaderSubtitle">Vote on Governance</span>
-            <h3 data-i18n="navGovernance" class="pivx-bold-title center-text">
-                Proposals
-            </h3>
-            <p data-i18n="govSubtext" class="center-text">
-                Browse proposals, track their status, and vote in the <b>DAO</b>
-                with either a masternode or locked coins.
-            </p>
-        </div>
-
-        <div class="row mb-5">
-            <MonthlyBudget :price="price" :currency="strCurrency" />
-            <div class="col-6 col-lg-3 text-center governBudgetCard for-mobile">
-                <BudgetAllocated
-                    :currency="strCurrency"
-                    :price="price"
-                    :allocatedBudget="allocatedBudget"
-                />
+                <h3 data-i18n="navGovernance" class="pivx-bold-title center-text">
+                    Proposals
+                </h3>
+                <p data-i18n="govSubtext" class="center-text">
+                    Browse proposals, track their status, and vote in the <b>DAO</b>
+                    with either a masternode or locked coins.
+                </p>
             </div>
-            <div
-                class="col-12 col-lg-6 text-center governPayoutTime for-desktopTime"
+            <button
+                type="button"
+                class="pivx-button-small governanceHero__action"
+                @click="openCreateProposal()"
             >
-                <span
-                    data-i18n="govNextPayout"
-                    class="governanceNextPayoutTitle"
-                    >Next Treasury Payout</span
-                >
-                <Flipdown :timeStamp="flipdownTimeStamp" />
-            </div>
-            <div
-                class="col-12 col-lg-3 text-center governBudgetCard for-desktop"
-            >
-                <BudgetAllocated
-                    :currency="strCurrency"
-                    :price="price"
-                    :allocatedBudget="allocatedBudget"
-                />
-            </div>
-        </div>
+                <i class="fas fa-plus"></i>
+                <span>Create Proposal</span>
+            </button>
+        </section>
 
-        <div class="pivx-button-small governAdd" @click="openCreateProposal()">
-            <i class="fas fa-plus"></i>
-        </div>
+        <TreasuryOverview
+            :price="price"
+            :currency="strCurrency"
+            :allocatedBudget="allocatedBudget"
+        />
 
-        <div class="dcWallet-activity" style="padding: 16px">
+        <div class="dcWallet-activity governanceTableShell">
             <ProposalsTable
                 :proposals="proposals"
                 :localProposals="localProposals"
@@ -426,24 +400,15 @@ async function vote(proposal, voteRequest) {
             />
         </div>
 
-        <hr />
-        <br />
-        <span v-if="contestedProposals.length">
-            <h3
-                data-i18n="contestedProposalsTitle"
-                style="width: 100%; text-align: center"
-            >
+        <section v-if="contestedProposals.length" class="governanceContested">
+            <h3 data-i18n="contestedProposalsTitle" class="governanceContested__title">
                 Contested Proposals
             </h3>
-            <p
-                data-i18n="contestedProposalsDesc"
-                style="width: 100%; text-align: center"
-            >
+            <p data-i18n="contestedProposalsDesc" class="governanceContested__desc">
                 These are proposals that received an overwhelming amount of
                 downvotes, making it likely spam or a highly contestable
                 proposal.
             </p>
-            <br />
             <ProposalsTable
                 :proposals="contestedProposals"
                 :masternodeCount="masternodeCount"
@@ -451,7 +416,7 @@ async function vote(proposal, voteRequest) {
                 :price="price"
                 @vote="vote"
             />
-        </span>
+        </section>
     </div>
     <RestoreWallet
         :show="showRestoreWallet"

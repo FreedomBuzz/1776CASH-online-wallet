@@ -577,7 +577,7 @@ export default class Masternode {
         if (
             !Number.isInteger(monthlyPayment) ||
             monthlyPayment < 10 * COIN ||
-            monthlyPayment * nPayments > cChainParams.current.maxPayment
+            monthlyPayment > cChainParams.current.maxPayment
         ) {
             return { ok: false, err: 'invalid_monthly_payment' };
         }
